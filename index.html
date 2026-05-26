@@ -300,16 +300,28 @@
     font-size: 14px; color: var(--muted); margin-bottom: 10px;
   }
   .plan-feature span:first-child { font-size: 16px; }
-  .plan-link {
-    display: block; margin-top: 22px;
-    text-align: center;
-    border: 1.5px solid;
-    border-radius: 10px; padding: 12px 18px;
-    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13px;
-    letter-spacing: .5px; text-decoration: none;
-    transition: background .2s, transform .2s;
+  .plan-email-note {
+    font-size: 13px; color: var(--muted); line-height: 1.65;
+    margin-bottom: 18px;
   }
-  .plan-link:hover { background: rgba(255,255,255,.06); transform: translateY(-2px); }
+  .plan-email-note strong { color: var(--text); }
+  .plan-cta {
+    display: inline-block;
+    font-family: 'DM Mono', monospace; font-size: 12px;
+    font-weight: 500; letter-spacing: 1px; text-transform: uppercase;
+    padding: 11px 24px; border-radius: 10px;
+    border: 1.5px solid rgba(255,255,255,.15);
+    background: rgba(255,255,255,.05);
+    color: var(--text);
+    transition: background .2s, border-color .2s;
+  }
+  .plan-cta:hover { background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.3); }
+  .pc-starter .plan-cta { border-color: rgba(212,168,67,.4); color: var(--gold); }
+  .pc-starter .plan-cta:hover { background: rgba(212,168,67,.1); border-color: var(--gold); }
+  .pc-growth  .plan-cta { border-color: rgba(46,207,170,.4);  color: var(--teal); }
+  .pc-growth  .plan-cta:hover { background: rgba(46,207,170,.1); border-color: var(--teal); }
+  .pc-elite   .plan-cta { border-color: rgba(224,85,85,.4);   color: var(--red);  }
+  .pc-elite   .plan-cta:hover { background: rgba(224,85,85,.1); border-color: var(--red); }
 
   /* ─── HOW IT WORKS ─── */
   #how { background: var(--dark2); }
@@ -590,7 +602,9 @@
       <div class="plan-feature"><span>💸</span><span>Payout within 24h of maturity</span></div>
       <div class="plan-feature"><span>🔒</span><span>Capital + profit returned</span></div>
       <div class="plan-feature"><span>📊</span><span>Forex · Oil · Crypto exposure</span></div>
-      <a href="starter.html" class="plan-link" style="border-color:var(--gold);color:var(--gold);">Learn More About This Plan →</a>
+      <div class="plan-divider"></div>
+      <p class="plan-email-note">To get started, send us an email with <strong>"Starter Plan"</strong> as the subject — we will reply with the crypto deposit address of your choice.</p>
+      <a href="mailto:bestwincryptokenya@gmail.com?subject=Starter Plan" class="plan-cta">Start Now →</a>
     </div>
 
     <!-- Growth -->
@@ -607,7 +621,9 @@
       <div class="plan-feature"><span>💸</span><span>Payout within 24h of maturity</span></div>
       <div class="plan-feature"><span>🔒</span><span>Capital + profit returned</span></div>
       <div class="plan-feature"><span>📊</span><span>Forex · Oil · Crypto exposure</span></div>
-      <a href="growth.html" class="plan-link" style="border-color:var(--teal);color:var(--teal);">Learn More About This Plan →</a>
+      <div class="plan-divider"></div>
+      <p class="plan-email-note">To get started, send us an email with <strong>"Growth Plan"</strong> as the subject — we will reply with the crypto deposit address of your choice.</p>
+      <a href="mailto:bestwincryptokenya@gmail.com?subject=Growth Plan" class="plan-cta">Start Now →</a>
     </div>
 
     <!-- Elite -->
@@ -624,7 +640,9 @@
       <div class="plan-feature"><span>💸</span><span>Payout within 24h of maturity</span></div>
       <div class="plan-feature"><span>🔒</span><span>Capital + profit returned</span></div>
       <div class="plan-feature"><span>📊</span><span>Forex · Oil · Crypto exposure</span></div>
-      <a href="elite.html" class="plan-link" style="border-color:var(--red);color:var(--red);">Learn More About This Plan →</a>
+      <div class="plan-divider"></div>
+      <p class="plan-email-note">To get started, send us an email with <strong>"Elite Plan"</strong> as the subject — we will reply with the crypto deposit address of your choice.</p>
+      <a href="mailto:bestwincryptokenya@gmail.com?subject=Elite Plan" class="plan-cta">Start Now →</a>
     </div>
 
   </div>
@@ -687,7 +705,6 @@
         <div class="blog-cat" style="color:var(--gold)">Forex</div>
         <div class="blog-title">Why the USD/KES Pair Offers Unique Opportunities in 2025</div>
         <p class="blog-excerpt">Dollar strength against African currencies is creating recurring patterns that skilled traders can capitalize on every single week.</p>
-        <span class="blog-read">Read More →</span>
       </div>
     </div>
     <div class="blog-card">
@@ -696,7 +713,6 @@
         <div class="blog-cat" style="color:var(--red)">Oil</div>
         <div class="blog-title">OPEC Decisions and Their Impact on Short-Term Oil Trades</div>
         <p class="blog-excerpt">Understanding how production cuts and geopolitical events create predictable price windows for commodity traders.</p>
-        <span class="blog-read">Read More →</span>
       </div>
     </div>
     <div class="blog-card">
@@ -705,7 +721,6 @@
         <div class="blog-cat" style="color:var(--teal)">Crypto</div>
         <div class="blog-title">Bitcoin Cycles & African Crypto Adoption: What It Means for Investors</div>
         <p class="blog-excerpt">Africa is becoming one of the fastest-growing crypto markets. Here's how CAT positions itself to benefit from this structural shift.</p>
-        <span class="blog-read">Read More →</span>
       </div>
     </div>
   </div>
