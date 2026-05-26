@@ -1,1 +1,745 @@
 # CAT-Blog
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CAT — Change Africa Today</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --gold:   #D4A843;
+    --teal:   #2ECFAA;
+    --red:    #E05555;
+    --dark:   #080C10;
+    --dark2:  #0E1318;
+    --dark3:  #141C24;
+    --text:   #E8EDF2;
+    --muted:  rgba(232,237,242,0.5);
+    --border: rgba(255,255,255,0.07);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--dark);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    overflow-x: hidden;
+    line-height: 1.6;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  /* ─── NAV ─── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 5vw;
+    height: 64px;
+    background: rgba(8,12,16,0.88);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    display: flex; align-items: center; gap: 10px;
+  }
+  .logo-badge {
+    width: 38px; height: 38px; border-radius: 10px;
+    background: linear-gradient(135deg, var(--gold), var(--red));
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: 14px; color: var(--dark); letter-spacing: 1px;
+  }
+  .logo-text {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: 15px; letter-spacing: 1px;
+    line-height: 1.2;
+  }
+  .logo-sub {
+    font-family: 'DM Mono', monospace; font-size: 9px;
+    color: var(--teal); letter-spacing: 2px; text-transform: uppercase;
+  }
+  .nav-links { display: flex; gap: 32px; }
+  .nav-links a {
+    font-size: 13px; font-weight: 600; letter-spacing: 0.5px;
+    color: var(--muted); transition: color .2s;
+    text-transform: uppercase;
+  }
+  .nav-links a:hover { color: var(--text); }
+  .nav-cta {
+    background: var(--gold); color: var(--dark) !important;
+    padding: 7px 18px; border-radius: 8px;
+    font-weight: 800 !important; color: var(--dark) !important;
+    transition: opacity .2s !important;
+  }
+  .nav-cta:hover { opacity: .85; }
+
+  /* ─── HERO ─── */
+  .hero {
+    position: relative; min-height: 92vh;
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    text-align: center;
+    padding: 80px 5vw 60px;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse 70% 60% at 20% 40%, rgba(212,168,67,.13) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 55% at 80% 60%, rgba(224,85,85,.10) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 50% at 50% 10%, rgba(46,207,170,.08) 0%, transparent 60%);
+  }
+  .hero-grid {
+    position: absolute; inset: 0; pointer-events: none; opacity: .06;
+    background-image: linear-gradient(var(--border) 1px, transparent 1px),
+                      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    border: 1px solid rgba(212,168,67,.3);
+    background: rgba(212,168,67,.07);
+    border-radius: 30px; padding: 6px 18px;
+    font-family: 'DM Mono', monospace; font-size: 11px;
+    color: var(--gold); letter-spacing: 2px; text-transform: uppercase;
+    margin-bottom: 28px;
+    animation: fadeUp .6s ease both;
+  }
+  .dot-live {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--teal); animation: pulse 1.5s infinite;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(42px, 7vw, 90px);
+    font-weight: 900; line-height: 1.05;
+    margin-bottom: 24px;
+    animation: fadeUp .7s .1s ease both;
+  }
+  .hero h1 em {
+    font-style: normal;
+    background: linear-gradient(90deg, var(--gold) 0%, var(--red) 50%, var(--teal) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .hero-sub {
+    max-width: 600px; font-size: 17px; color: var(--muted);
+    line-height: 1.75; margin-bottom: 40px;
+    animation: fadeUp .7s .2s ease both;
+  }
+  .hero-markets {
+    display: flex; gap: 14px; flex-wrap: wrap; justify-content: center;
+    margin-bottom: 44px;
+    animation: fadeUp .7s .3s ease both;
+  }
+  .market-chip {
+    display: flex; align-items: center; gap: 7px;
+    background: rgba(255,255,255,.04);
+    border: 1px solid rgba(255,255,255,.10);
+    border-radius: 30px; padding: 8px 18px;
+    font-family: 'DM Mono', monospace; font-size: 12px;
+    letter-spacing: .5px;
+  }
+  .hero-btn {
+    display: inline-block;
+    background: linear-gradient(90deg, var(--gold), var(--red));
+    color: var(--dark); font-weight: 800; font-size: 16px;
+    padding: 16px 44px; border-radius: 12px;
+    letter-spacing: .5px; transition: transform .2s, box-shadow .2s;
+    animation: fadeUp .7s .4s ease both;
+    cursor: pointer; border: none;
+  }
+  .hero-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(212,168,67,.3);
+  }
+
+  /* ─── STATS BAR ─── */
+  .stats-bar {
+    display: flex; justify-content: center; gap: 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: var(--dark2);
+    flex-wrap: wrap;
+  }
+  .stat-item {
+    flex: 1; min-width: 140px; padding: 28px 20px;
+    text-align: center;
+    border-right: 1px solid var(--border);
+  }
+  .stat-item:last-child { border-right: none; }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 40px; font-weight: 900;
+    line-height: 1; margin-bottom: 6px;
+  }
+  .stat-label {
+    font-family: 'DM Mono', monospace; font-size: 10px;
+    color: var(--muted); text-transform: uppercase; letter-spacing: 1.5px;
+  }
+
+  /* ─── SECTIONS ─── */
+  section { padding: 90px 5vw; }
+  .section-tag {
+    font-family: 'DM Mono', monospace; font-size: 11px;
+    color: var(--teal); letter-spacing: 2.5px; text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(30px, 4vw, 52px);
+    font-weight: 900; line-height: 1.1;
+    margin-bottom: 16px;
+  }
+  .section-lead {
+    font-size: 16px; color: var(--muted);
+    max-width: 560px; line-height: 1.8;
+    margin-bottom: 48px;
+  }
+
+  /* ─── MARKETS ─── */
+  #markets { background: var(--dark2); }
+  .markets-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+  }
+  .market-card {
+    background: rgba(255,255,255,.03);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 32px 26px;
+    transition: transform .25s, border-color .25s, box-shadow .25s;
+    position: relative; overflow: hidden;
+  }
+  .market-card::before {
+    content: ''; position: absolute;
+    top: -40px; right: -40px;
+    width: 120px; height: 120px;
+    border-radius: 50%; opacity: .3;
+    filter: blur(50px);
+    transition: opacity .3s;
+  }
+  .market-card:hover { transform: translateY(-4px); }
+  .market-card:hover::before { opacity: .6; }
+  .mc-forex::before { background: var(--gold); }
+  .mc-oil::before   { background: var(--red); }
+  .mc-crypto::before{ background: var(--teal); }
+  .market-card:hover { border-color: rgba(255,255,255,.18); }
+  .mc-icon { font-size: 38px; margin-bottom: 16px; }
+  .mc-title {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: 22px; margin-bottom: 10px;
+  }
+  .mc-desc {
+    font-size: 14px; color: var(--muted); line-height: 1.75;
+  }
+  .mc-tag {
+    display: inline-block; margin-top: 18px;
+    font-family: 'DM Mono', monospace; font-size: 10px;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 4px 12px; border-radius: 20px;
+  }
+  .tag-gold  { background: rgba(212,168,67,.15); color: var(--gold); }
+  .tag-red   { background: rgba(224,85,85,.15);  color: var(--red);  }
+  .tag-teal  { background: rgba(46,207,170,.15); color: var(--teal); }
+
+  /* ─── PLANS ─── */
+  #plans { background: var(--dark); }
+  .plans-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 22px;
+  }
+  .plan-card {
+    border-radius: 24px; padding: 36px 28px;
+    position: relative; overflow: hidden;
+    border: 1.5px solid;
+    transition: transform .25s, box-shadow .25s;
+    cursor: default;
+  }
+  .plan-card:hover { transform: translateY(-5px); }
+  .pc-starter { border-color: rgba(212,168,67,.35); background: rgba(212,168,67,.04); }
+  .pc-growth  { border-color: rgba(46,207,170,.35); background: rgba(46,207,170,.04); }
+  .pc-elite   { border-color: rgba(224,85,85,.35);  background: rgba(224,85,85,.04);  }
+  .pc-starter:hover { box-shadow: 0 20px 60px rgba(212,168,67,.18); }
+  .pc-growth:hover  { box-shadow: 0 20px 60px rgba(46,207,170,.18); }
+  .pc-elite:hover   { box-shadow: 0 20px 60px rgba(224,85,85,.18);  }
+  .plan-glow {
+    position: absolute; top: -50px; right: -50px;
+    width: 160px; height: 160px; border-radius: 50%;
+    filter: blur(60px); opacity: .4; pointer-events: none;
+  }
+  .plan-badge {
+    display: inline-block; font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 4px 12px; border-radius: 20px; margin-bottom: 22px;
+  }
+  .plan-icon { font-size: 40px; margin-bottom: 14px; }
+  .plan-name {
+    font-family: 'Playfair Display', serif; font-weight: 900;
+    font-size: 28px; margin-bottom: 4px;
+  }
+  .plan-range {
+    font-family: 'DM Mono', monospace; font-size: 13px;
+    color: var(--muted); margin-bottom: 24px;
+  }
+  .plan-interest {
+    font-family: 'Playfair Display', serif; font-weight: 900;
+    font-size: 64px; line-height: 1; margin-bottom: 4px;
+  }
+  .plan-interest-sub {
+    font-family: 'DM Mono', monospace; font-size: 11px;
+    color: var(--muted); letter-spacing: 1px; text-transform: uppercase;
+    margin-bottom: 28px;
+  }
+  .plan-divider {
+    height: 1px; background: rgba(255,255,255,.07); margin-bottom: 20px;
+  }
+  .plan-feature {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 14px; color: var(--muted); margin-bottom: 10px;
+  }
+  .plan-feature span:first-child { font-size: 16px; }
+  .plan-link {
+    display: block; margin-top: 22px;
+    text-align: center;
+    border: 1.5px solid;
+    border-radius: 10px; padding: 12px 18px;
+    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13px;
+    letter-spacing: .5px; text-decoration: none;
+    transition: background .2s, transform .2s;
+  }
+  .plan-link:hover { background: rgba(255,255,255,.06); transform: translateY(-2px); }
+
+  /* ─── HOW IT WORKS ─── */
+  #how { background: var(--dark2); }
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 30px;
+  }
+  .step {
+    position: relative; padding-left: 24px;
+  }
+  .step-num {
+    font-family: 'Playfair Display', serif; font-weight: 900;
+    font-size: 72px; color: rgba(255,255,255,.06);
+    line-height: 1; margin-bottom: -18px; margin-left: -8px;
+  }
+  .step-title {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: 18px; margin-bottom: 10px;
+  }
+  .step-desc { font-size: 14px; color: var(--muted); line-height: 1.75; }
+  .step-line {
+    position: absolute; left: 0; top: 64px; bottom: 0;
+    width: 2px; background: var(--border);
+  }
+
+  /* ─── BLOG POSTS ─── */
+  #blog { background: var(--dark); }
+  .blog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+  }
+  .blog-card {
+    background: var(--dark2);
+    border: 1px solid var(--border);
+    border-radius: 20px; overflow: hidden;
+    transition: transform .25s, border-color .25s;
+  }
+  .blog-card:hover { transform: translateY(-4px); border-color: rgba(255,255,255,.16); }
+  .blog-thumb {
+    height: 160px; display: flex; align-items: center; justify-content: center;
+    font-size: 52px;
+  }
+  .bt-forex  { background: linear-gradient(135deg, rgba(212,168,67,.2), rgba(212,168,67,.05)); }
+  .bt-oil    { background: linear-gradient(135deg, rgba(224,85,85,.2),  rgba(224,85,85,.05));  }
+  .bt-crypto { background: linear-gradient(135deg, rgba(46,207,170,.2), rgba(46,207,170,.05)); }
+  .blog-body { padding: 22px; }
+  .blog-cat {
+    font-family: 'DM Mono', monospace; font-size: 10px;
+    letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 10px;
+  }
+  .blog-title {
+    font-family: 'Playfair Display', serif; font-size: 19px;
+    font-weight: 700; line-height: 1.3; margin-bottom: 10px;
+  }
+  .blog-excerpt { font-size: 13px; color: var(--muted); line-height: 1.7; }
+  .blog-read {
+    display: inline-block; margin-top: 16px;
+    font-family: 'DM Mono', monospace; font-size: 11px;
+    letter-spacing: 1px; text-transform: uppercase;
+    color: var(--teal); transition: letter-spacing .2s;
+  }
+  .blog-card:hover .blog-read { letter-spacing: 2px; }
+
+  /* ─── CONTACT ─── */
+  #contact {
+    background: var(--dark2);
+    text-align: center;
+  }
+  .contact-box {
+    max-width: 560px; margin: 0 auto;
+    background: rgba(255,255,255,.03);
+    border: 1px solid var(--border);
+    border-radius: 28px; padding: 52px 40px;
+    position: relative; overflow: hidden;
+  }
+  .contact-glow {
+    position: absolute; inset: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse 70% 60% at 30% 40%, rgba(212,168,67,.09), transparent),
+      radial-gradient(ellipse 60% 50% at 70% 60%, rgba(46,207,170,.07), transparent);
+  }
+  .contact-icon { font-size: 52px; margin-bottom: 20px; }
+  .contact-title {
+    font-family: 'Playfair Display', serif; font-size: 32px;
+    font-weight: 900; margin-bottom: 12px;
+  }
+  .contact-sub { font-size: 15px; color: var(--muted); margin-bottom: 30px; line-height: 1.7; }
+  .contact-email {
+    font-family: 'DM Mono', monospace; font-size: 15px;
+    color: var(--teal);
+    background: rgba(46,207,170,.08);
+    border: 1.5px solid rgba(46,207,170,.25);
+    border-radius: 12px; padding: 14px 24px;
+    display: inline-block; margin-bottom: 22px;
+    transition: background .2s;
+  }
+  .contact-email:hover { background: rgba(46,207,170,.15); }
+  .contact-btn {
+    display: inline-block;
+    background: linear-gradient(90deg, var(--teal), #3E9FCF);
+    color: var(--dark); font-weight: 800; font-size: 15px;
+    padding: 15px 42px; border-radius: 12px;
+    letter-spacing: .5px; transition: transform .2s, box-shadow .2s;
+    cursor: pointer; border: none;
+  }
+  .contact-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 36px rgba(46,207,170,.25);
+  }
+  .disclaimer {
+    margin-top: 28px; font-size: 12px; color: rgba(255,255,255,.25);
+    font-family: 'DM Mono', monospace; line-height: 1.6;
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--dark);
+    border-top: 1px solid var(--border);
+    padding: 30px 5vw;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 12px;
+  }
+  .footer-logo {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: 14px; letter-spacing: 1px;
+  }
+  .footer-copy {
+    font-family: 'DM Mono', monospace; font-size: 11px;
+    color: var(--muted); letter-spacing: .5px;
+  }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(22px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 1; transform: scale(1); }
+    50%      { opacity: .5; transform: scale(.85); }
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 640px) {
+    .nav-links { display: none; }
+    .hero h1   { font-size: 38px; }
+    .stats-bar { flex-direction: column; }
+    .stat-item { border-right: none; border-bottom: 1px solid var(--border); }
+    .contact-box { padding: 36px 22px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <div class="logo-badge">CAT</div>
+    <div>
+      <div class="logo-text">CHANGE AFRICA TODAY</div>
+      <div class="logo-sub">Forex · Oil · Crypto</div>
+    </div>
+  </div>
+  <div class="nav-links">
+    <a href="#markets">Markets</a>
+    <a href="#plans">Plans</a>
+    <a href="#how">How It Works</a>
+    <a href="#blog">Blog</a>
+    <a href="#contact" class="nav-cta">Get Started</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-eyebrow">
+    <div class="dot-live"></div>
+    Investment Platform · Open Now
+  </div>
+  <h1>Exceptional Returns<br/>Across <em>Africa</em></h1>
+  <p class="hero-sub">
+    CAT harnesses the power of Forex, Oil commodities, and Cryptocurrency markets
+    to deliver outstanding weekly returns — simple, fast, and transparent.
+  </p>
+  <div class="hero-markets">
+    <div class="market-chip">📊 Forex Trading</div>
+    <div class="market-chip">🛢 Oil Commodities</div>
+    <div class="market-chip">₿ Cryptocurrency</div>
+  </div>
+  <a href="#plans" class="hero-btn">Discover Our Plans →</a>
+</div>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stat-item">
+    <div class="stat-num" style="color:var(--gold)">20%</div>
+    <div class="stat-label">Max Weekly Return</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num" style="color:var(--teal)">7</div>
+    <div class="stat-label">Days per Contract</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num" style="color:var(--text)">24h</div>
+    <div class="stat-label">Payout Delay</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num" style="color:var(--red)">3</div>
+    <div class="stat-label">Investment Tiers</div>
+  </div>
+</div>
+
+<!-- MARKETS -->
+<section id="markets">
+  <div class="section-tag">Our Engines</div>
+  <h2 class="section-title">3 Powerful Markets,<br/>1 Platform</h2>
+  <p class="section-lead">
+    Our expert traders operate daily across three of the most dynamic global
+    markets to generate consistent, above-market weekly returns.
+  </p>
+  <div class="markets-grid">
+    <div class="market-card mc-forex">
+      <div class="mc-icon">📊</div>
+      <div class="mc-title">Forex Trading</div>
+      <p class="mc-desc">
+        The world's largest financial market with over $7 trillion traded daily.
+        Our teams exploit short-term currency pair movements across major, minor
+        and exotic pairs with disciplined risk management.
+      </p>
+      <div class="mc-tag tag-gold">24/5 Market</div>
+    </div>
+    <div class="market-card mc-oil">
+      <div class="mc-icon">🛢</div>
+      <div class="mc-title">Oil Commodities</div>
+      <p class="mc-desc">
+        Crude oil and energy futures remain among the most lucrative commodity
+        markets. We leverage geopolitical events, supply data, and technical
+        analysis to capitalize on price swings in Brent and WTI.
+      </p>
+      <div class="mc-tag tag-red">High Volatility</div>
+    </div>
+    <div class="market-card mc-crypto">
+      <div class="mc-icon">₿</div>
+      <div class="mc-title">Cryptocurrency</div>
+      <p class="mc-desc">
+        Bitcoin, Ethereum, and high-cap altcoins offer unmatched opportunities
+        around the clock. Our crypto desk captures momentum-driven trades across
+        spot and derivatives markets with precision.
+      </p>
+      <div class="mc-tag tag-teal">24/7 Market</div>
+    </div>
+  </div>
+</section>
+
+<!-- PLANS -->
+<section id="plans">
+  <div class="section-tag">Investment Plans</div>
+  <h2 class="section-title">Choose Your<br/>Contract</h2>
+  <p class="section-lead">
+    Three tiers. Seven days. Payout within 24 hours of maturity.
+    Pick the plan that fits your goals and start earning.
+  </p>
+  <div class="plans-grid">
+
+    <!-- Starter -->
+    <div class="plan-card pc-starter">
+      <div class="plan-glow" style="background:var(--gold)"></div>
+      <div class="plan-badge tag-gold">Entry Level</div>
+      <div class="plan-icon">🌱</div>
+      <div class="plan-name">Starter</div>
+      <div class="plan-range">$10 — $50</div>
+      <div class="plan-interest" style="color:var(--gold)">10%</div>
+      <div class="plan-interest-sub">Weekly Interest</div>
+      <div class="plan-divider"></div>
+      <div class="plan-feature"><span>📅</span><span>7-day contract duration</span></div>
+      <div class="plan-feature"><span>💸</span><span>Payout within 24h of maturity</span></div>
+      <div class="plan-feature"><span>🔒</span><span>Capital + profit returned</span></div>
+      <div class="plan-feature"><span>📊</span><span>Forex · Oil · Crypto exposure</span></div>
+      <a href="starter.html" class="plan-link" style="border-color:var(--gold);color:var(--gold);">Learn More About This Plan →</a>
+    </div>
+
+    <!-- Growth -->
+    <div class="plan-card pc-growth">
+      <div class="plan-glow" style="background:var(--teal)"></div>
+      <div class="plan-badge tag-teal">Most Popular</div>
+      <div class="plan-icon">🚀</div>
+      <div class="plan-name">Growth</div>
+      <div class="plan-range">$51 — $150</div>
+      <div class="plan-interest" style="color:var(--teal)">15%</div>
+      <div class="plan-interest-sub">Weekly Interest</div>
+      <div class="plan-divider"></div>
+      <div class="plan-feature"><span>📅</span><span>7-day contract duration</span></div>
+      <div class="plan-feature"><span>💸</span><span>Payout within 24h of maturity</span></div>
+      <div class="plan-feature"><span>🔒</span><span>Capital + profit returned</span></div>
+      <div class="plan-feature"><span>📊</span><span>Forex · Oil · Crypto exposure</span></div>
+      <a href="growth.html" class="plan-link" style="border-color:var(--teal);color:var(--teal);">Learn More About This Plan →</a>
+    </div>
+
+    <!-- Elite -->
+    <div class="plan-card pc-elite">
+      <div class="plan-glow" style="background:var(--red)"></div>
+      <div class="plan-badge tag-red">Maximum Return</div>
+      <div class="plan-icon">💎</div>
+      <div class="plan-name">Elite</div>
+      <div class="plan-range">$151 — $300</div>
+      <div class="plan-interest" style="color:var(--red)">20%</div>
+      <div class="plan-interest-sub">Weekly Interest</div>
+      <div class="plan-divider"></div>
+      <div class="plan-feature"><span>📅</span><span>7-day contract duration</span></div>
+      <div class="plan-feature"><span>💸</span><span>Payout within 24h of maturity</span></div>
+      <div class="plan-feature"><span>🔒</span><span>Capital + profit returned</span></div>
+      <div class="plan-feature"><span>📊</span><span>Forex · Oil · Crypto exposure</span></div>
+      <a href="elite.html" class="plan-link" style="border-color:var(--red);color:var(--red);">Learn More About This Plan →</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="section-tag">Process</div>
+  <h2 class="section-title">How It Works</h2>
+  <p class="section-lead">
+    Getting started with CAT takes less than 5 minutes.
+    Three simple steps to put your capital to work.
+  </p>
+  <div class="steps">
+    <div class="step">
+      <div class="step-line"></div>
+      <div class="step-num">01</div>
+      <div class="step-title">Choose Your Plan</div>
+      <p class="step-desc">
+        Select the investment tier that matches your budget — Starter, Growth, or Elite. Each plan runs for exactly 7 days.
+      </p>
+    </div>
+    <div class="step">
+      <div class="step-line"></div>
+      <div class="step-num">02</div>
+      <div class="step-title">Fund Your Contract</div>
+      <p class="step-desc">
+        Contact us by email to confirm your investment. Your capital is immediately deployed across Forex, Oil, and Crypto markets.
+      </p>
+    </div>
+    <div class="step">
+      <div class="step-line"></div>
+      <div class="step-num">03</div>
+      <div class="step-title">Receive Your Payout</div>
+      <p class="step-desc">
+        After 7 days, your initial capital plus the full earned interest is paid back to you within 24 hours — no delays.
+      </p>
+    </div>
+    <div class="step">
+      <div class="step-num">04</div>
+      <div class="step-title">Reinvest & Grow</div>
+      <p class="step-desc">
+        Compound your gains by reinvesting — move up to a higher tier as your capital grows and multiply your returns.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- BLOG -->
+<section id="blog">
+  <div class="section-tag">Latest Articles</div>
+  <h2 class="section-title">Market Insights</h2>
+  <p class="section-lead">
+    Stay informed with our latest analysis on Forex trends, Oil market dynamics, and Crypto opportunities across Africa.
+  </p>
+  <div class="blog-grid">
+    <div class="blog-card">
+      <div class="blog-thumb bt-forex">📊</div>
+      <div class="blog-body">
+        <div class="blog-cat" style="color:var(--gold)">Forex</div>
+        <div class="blog-title">Why the USD/KES Pair Offers Unique Opportunities in 2025</div>
+        <p class="blog-excerpt">Dollar strength against African currencies is creating recurring patterns that skilled traders can capitalize on every single week.</p>
+        <span class="blog-read">Read More →</span>
+      </div>
+    </div>
+    <div class="blog-card">
+      <div class="blog-thumb bt-oil">🛢</div>
+      <div class="blog-body">
+        <div class="blog-cat" style="color:var(--red)">Oil</div>
+        <div class="blog-title">OPEC Decisions and Their Impact on Short-Term Oil Trades</div>
+        <p class="blog-excerpt">Understanding how production cuts and geopolitical events create predictable price windows for commodity traders.</p>
+        <span class="blog-read">Read More →</span>
+      </div>
+    </div>
+    <div class="blog-card">
+      <div class="blog-thumb bt-crypto">₿</div>
+      <div class="blog-body">
+        <div class="blog-cat" style="color:var(--teal)">Crypto</div>
+        <div class="blog-title">Bitcoin Cycles & African Crypto Adoption: What It Means for Investors</div>
+        <p class="blog-excerpt">Africa is becoming one of the fastest-growing crypto markets. Here's how CAT positions itself to benefit from this structural shift.</p>
+        <span class="blog-read">Read More →</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-box">
+    <div class="contact-glow"></div>
+    <div class="contact-icon">✉️</div>
+    <div class="contact-title">Ready to Start?</div>
+    <p class="contact-sub">
+      Contact our team directly. We'll guide you through your first contract
+      step by step and answer any questions you have.
+    </p>
+    <a href="mailto:bestwincryptokenya@gmail.com" class="contact-email">
+      bestwincryptokenya@gmail.com
+    </a><br/>
+    <a href="mailto:bestwincryptokenya@gmail.com" class="contact-btn">
+      Send Us an Email →
+    </a>
+    <p class="disclaimer">
+      ⚠ All investments carry risk. Past performance does not guarantee future results.<br/>
+      Only invest capital you can afford to lose.
+    </p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">CAT — CHANGE AFRICA TODAY</div>
+  <div class="footer-copy">© 2025 · Forex · Oil · Crypto · All rights reserved</div>
+</footer>
+
+</body>
+</html>
