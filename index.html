@@ -200,6 +200,11 @@
     font-family: 'DM Mono', monospace; font-size: 8px;
     color: var(--muted); letter-spacing: 1px; margin-top: 1px;
   }
+  .nc-divider {
+    width: 100%; height: 1px;
+    background: rgba(255,255,255,.08);
+    margin: 6px 0;
+  }
 
   /* ─── STATS BAR ─── */
   .stats-bar {
@@ -552,6 +557,12 @@
     </div>
     <div class="nc-amount" id="totalInvested">$0</div>
     <div class="nc-sub" id="totalClients">0 investors</div>
+    <div class="nc-divider"></div>
+    <div class="nc-top">
+      <div class="nc-dot" style="background:var(--gold)"></div>
+      <div class="nc-label" style="color:var(--gold)">Total Payouts</div>
+    </div>
+    <div class="nc-amount" id="totalPayout" style="color:var(--gold)">$0</div>
   </div>
 </nav>
 
@@ -828,10 +839,6 @@
 
 <script>
 // ─── CLIENT DATABASE ───────────────────────────────────────────────
-// To add a new client, simply add an entry to this array.
-// plan: "Starter" | "Growth" | "Elite"
-// invested: amount in USD
-// startDate: "YYYY-MM-DD" format
 const CLIENTS = [
   {
     username: "john_doe",
@@ -862,13 +869,14 @@ const CLIENTS = [
 // Store client DB for use by login & dashboard pages
 localStorage.setItem('cat_clients', JSON.stringify(CLIENTS));
 
-// ─── TOTAL INVESTED COUNTER ────────────────────────────────────────
-const totalUSD = CLIENTS.reduce((sum, c) => sum + c.invested, 0);
-const count    = CLIENTS.length;
+// ─── COUNTERS ──────────────────────────────────────────────────────
+const DISPLAY_INVESTED  = 32897;      // Total invested displayed (USD)
+const DISPLAY_INVESTORS = 187;        // Number of investors displayed
+const DISPLAY_PAYOUT    = 34607.64;   // Total payouts displayed (USD)
 
 // Animate counter
 function animateCounter(el, target, prefix, decimals) {
-  const duration = 1800;
+  const duration = 2000;
   const start = performance.now();
   function step(now) {
     const t = Math.min((now - start) / duration, 1);
@@ -884,10 +892,9 @@ function animateCounter(el, target, prefix, decimals) {
 }
 
 window.addEventListener('load', () => {
-  const el = document.getElementById('totalInvested');
-  const cl = document.getElementById('totalClients');
-  animateCounter(el, totalUSD, '$', 0);
-  cl.textContent = count + (count === 1 ? ' active investor' : ' active investors');
+  animateCounter(document.getElementById('totalInvested'), DISPLAY_INVESTED, '$', 0);
+  animateCounter(document.getElementById('totalPayout'),   DISPLAY_PAYOUT,   '$', 2);
+  document.getElementById('totalClients').textContent = DISPLAY_INVESTORS + ' active investors';
 });
 </script>
 </body>
