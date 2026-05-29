@@ -163,47 +163,42 @@
   }
   .nav-client-login:hover { background: rgba(46,207,170,.22) !important; border-color: var(--teal); }
 
-  /* ─── NAV COUNTER WIDGET ─── */
-  .nav-counter {
-    display: flex; flex-direction: column; align-items: flex-start;
-    background: rgba(46,207,170,.07);
-    border: 1px solid rgba(46,207,170,.28);
-    border-radius: 12px;
-    padding: 6px 14px 6px;
-    line-height: 1.2;
-    min-width: 130px;
-    box-shadow: 0 0 18px rgba(46,207,170,.08);
-    transition: box-shadow .3s, background .3s;
+  /* ─── TICKER BAR ─── */
+  .ticker-bar {
+    display: flex; align-items: center; justify-content: center;
+    gap: 0; flex-wrap: wrap;
+    background: var(--dark2);
+    border-bottom: 1px solid rgba(46,207,170,.15);
+    padding: 0 5vw;
+    height: 48px;
   }
-  .nav-counter:hover {
-    background: rgba(46,207,170,.12);
-    box-shadow: 0 0 28px rgba(46,207,170,.18);
+  .ticker-item {
+    display: flex; align-items: center; gap: 8px;
+    padding: 0 28px;
   }
-  .nc-top {
-    display: flex; align-items: center; gap: 6px; margin-bottom: 1px;
+  .ticker-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    animation: pulse 1.5s infinite; flex-shrink: 0;
   }
-  .nc-dot {
-    width: 6px; height: 6px; border-radius: 50%;
-    background: var(--teal); animation: pulse 1.5s infinite;
-    flex-shrink: 0;
+  .ticker-label {
+    font-family: 'DM Mono', monospace; font-size: 10px;
+    color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase;
+    white-space: nowrap;
   }
-  .nc-label {
-    font-family: 'DM Mono', monospace; font-size: 8px;
-    color: var(--teal); letter-spacing: 1.5px; text-transform: uppercase;
-  }
-  .nc-amount {
+  .ticker-value {
     font-family: 'Playfair Display', serif; font-weight: 900;
-    font-size: 22px; color: var(--teal);
-    letter-spacing: -0.5px; line-height: 1.1;
+    font-size: 20px; color: var(--text); white-space: nowrap;
   }
-  .nc-sub {
-    font-family: 'DM Mono', monospace; font-size: 8px;
-    color: var(--muted); letter-spacing: 1px; margin-top: 1px;
+  .ticker-value.teal { color: var(--teal); }
+  .ticker-value.gold { color: var(--gold); }
+  .ticker-sep {
+    width: 1px; height: 28px;
+    background: var(--border); flex-shrink: 0;
   }
-  .nc-divider {
-    width: 100%; height: 1px;
-    background: rgba(255,255,255,.08);
-    margin: 6px 0;
+  @media (max-width: 640px) {
+    .ticker-bar { height: auto; padding: 10px 5vw; gap: 6px; }
+    .ticker-item { padding: 4px 12px; }
+    .ticker-sep  { display: none; }
   }
 
   /* ─── STATS BAR ─── */
@@ -522,7 +517,6 @@
   /* ─── RESPONSIVE ─── */
   @media (max-width: 640px) {
     .nav-links { display: none; }
-    .nav-counter { display: none; }
     .hero h1   { font-size: 38px; }
     .stats-bar { flex-direction: column; }
     .stat-item { border-right: none; border-bottom: 1px solid var(--border); }
@@ -550,21 +544,28 @@
     <a href="login.html" class="nav-client-login">🔐 Client Login</a>
   </div>
   <!-- TOTAL INVESTED COUNTER — top right -->
-  <div class="nav-counter">
-    <div class="nc-top">
-      <div class="nc-dot"></div>
-      <div class="nc-label">Total Invested</div>
-    </div>
-    <div class="nc-amount" id="totalInvested">$0</div>
-    <div class="nc-sub" id="totalClients">0 investors</div>
-    <div class="nc-divider"></div>
-    <div class="nc-top">
-      <div class="nc-dot" style="background:var(--gold)"></div>
-      <div class="nc-label" style="color:var(--gold)">Total Payouts</div>
-    </div>
-    <div class="nc-amount" id="totalPayout" style="color:var(--gold)">$0</div>
-  </div>
 </nav>
+
+<!-- STATS TICKER BAR -->
+<div class="ticker-bar">
+  <div class="ticker-item">
+    <div class="ticker-dot" style="background:var(--teal)"></div>
+    <div class="ticker-label">Total Invested</div>
+    <div class="ticker-value teal" id="totalInvested">$0</div>
+  </div>
+  <div class="ticker-sep"></div>
+  <div class="ticker-item">
+    <div class="ticker-dot" style="background:var(--gold)"></div>
+    <div class="ticker-label">Total Payouts</div>
+    <div class="ticker-value gold" id="totalPayout">$0</div>
+  </div>
+  <div class="ticker-sep"></div>
+  <div class="ticker-item">
+    <div class="ticker-dot" style="background:var(--muted)"></div>
+    <div class="ticker-label">Active Investors</div>
+    <div class="ticker-value" id="totalClients">0</div>
+  </div>
+</div>
 
 <!-- HERO -->
 <div class="hero">
