@@ -153,6 +153,54 @@
     box-shadow: 0 12px 40px rgba(212,168,67,.3);
   }
 
+  .nav-client-login {
+    background: rgba(46,207,170,.12);
+    border: 1px solid rgba(46,207,170,.3);
+    color: var(--teal) !important;
+    padding: 7px 16px; border-radius: 8px;
+    font-size: 12px !important; font-weight: 700 !important;
+    letter-spacing: .5px; transition: background .2s, border-color .2s !important;
+  }
+  .nav-client-login:hover { background: rgba(46,207,170,.22) !important; border-color: var(--teal); }
+
+  /* ─── NAV COUNTER WIDGET ─── */
+  .nav-counter {
+    display: flex; flex-direction: column; align-items: flex-start;
+    background: rgba(46,207,170,.07);
+    border: 1px solid rgba(46,207,170,.28);
+    border-radius: 12px;
+    padding: 6px 14px 6px;
+    line-height: 1.2;
+    min-width: 130px;
+    box-shadow: 0 0 18px rgba(46,207,170,.08);
+    transition: box-shadow .3s, background .3s;
+  }
+  .nav-counter:hover {
+    background: rgba(46,207,170,.12);
+    box-shadow: 0 0 28px rgba(46,207,170,.18);
+  }
+  .nc-top {
+    display: flex; align-items: center; gap: 6px; margin-bottom: 1px;
+  }
+  .nc-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--teal); animation: pulse 1.5s infinite;
+    flex-shrink: 0;
+  }
+  .nc-label {
+    font-family: 'DM Mono', monospace; font-size: 8px;
+    color: var(--teal); letter-spacing: 1.5px; text-transform: uppercase;
+  }
+  .nc-amount {
+    font-family: 'Playfair Display', serif; font-weight: 900;
+    font-size: 22px; color: var(--teal);
+    letter-spacing: -0.5px; line-height: 1.1;
+  }
+  .nc-sub {
+    font-family: 'DM Mono', monospace; font-size: 8px;
+    color: var(--muted); letter-spacing: 1px; margin-top: 1px;
+  }
+
   /* ─── STATS BAR ─── */
   .stats-bar {
     display: flex; justify-content: center; gap: 0;
@@ -469,6 +517,7 @@
   /* ─── RESPONSIVE ─── */
   @media (max-width: 640px) {
     .nav-links { display: none; }
+    .nav-counter { display: none; }
     .hero h1   { font-size: 38px; }
     .stats-bar { flex-direction: column; }
     .stat-item { border-right: none; border-bottom: 1px solid var(--border); }
@@ -493,6 +542,16 @@
     <a href="#how">How It Works</a>
     <a href="#blog">Blog</a>
     <a href="#contact" class="nav-cta">Get Started</a>
+    <a href="login.html" class="nav-client-login">🔐 Client Login</a>
+  </div>
+  <!-- TOTAL INVESTED COUNTER — top right -->
+  <div class="nav-counter">
+    <div class="nc-top">
+      <div class="nc-dot"></div>
+      <div class="nc-label">Total Invested</div>
+    </div>
+    <div class="nc-amount" id="totalInvested">$0</div>
+    <div class="nc-sub" id="totalClients">0 investors</div>
   </div>
 </nav>
 
@@ -616,7 +675,7 @@
       <div class="plan-feature"><span>📊</span><span>Forex · Oil · Crypto · Gold exposure</span></div>
       <div class="plan-divider"></div>
       <p class="plan-email-note">To get started, send us an email with <strong>"Starter Plan"</strong> as the subject — we will reply with the crypto deposit address of your choice.</p>
-      <a href="mailto:bestwincryptokenya@gmail.com?subject=Starter Plan" class="plan-cta">Start Now →</a>
+      <a href="register.html?plan=Starter" class="plan-cta">Start Now →</a>
     </div>
 
     <!-- Growth -->
@@ -635,7 +694,7 @@
       <div class="plan-feature"><span>📊</span><span>Forex · Oil · Crypto · Gold exposure</span></div>
       <div class="plan-divider"></div>
       <p class="plan-email-note">To get started, send us an email with <strong>"Growth Plan"</strong> as the subject — we will reply with the crypto deposit address of your choice.</p>
-      <a href="mailto:bestwincryptokenya@gmail.com?subject=Growth Plan" class="plan-cta">Start Now →</a>
+      <a href="register.html?plan=Growth" class="plan-cta">Start Now →</a>
     </div>
 
     <!-- Elite -->
@@ -654,7 +713,7 @@
       <div class="plan-feature"><span>📊</span><span>Forex · Oil · Crypto · Gold exposure</span></div>
       <div class="plan-divider"></div>
       <p class="plan-email-note">To get started, send us an email with <strong>"Elite Plan"</strong> as the subject — we will reply with the crypto deposit address of your choice.</p>
-      <a href="mailto:bestwincryptokenya@gmail.com?subject=Elite Plan" class="plan-cta">Start Now →</a>
+      <a href="register.html?plan=Elite" class="plan-cta">Start Now →</a>
     </div>
 
   </div>
@@ -715,7 +774,7 @@
       <div class="blog-thumb bt-forex">📊</div>
       <div class="blog-body">
         <div class="blog-cat" style="color:var(--gold)">Forex</div>
-        <div class="blog-title">Why the USD/KES Pair Offers Unique Opportunities in 2025</div>
+        <div class="blog-title">Why the USD/KES Pair Offers Unique Opportunities in 2026</div>
         <p class="blog-excerpt">Dollar strength against African currencies is creating recurring patterns that skilled traders can capitalize on every single week.</p>
       </div>
     </div>
@@ -767,5 +826,69 @@
   <div class="footer-copy">© 2026 · Forex · Oil · Crypto · Gold · All rights reserved</div>
 </footer>
 
+<script>
+// ─── CLIENT DATABASE ───────────────────────────────────────────────
+// To add a new client, simply add an entry to this array.
+// plan: "Starter" | "Growth" | "Elite"
+// invested: amount in USD
+// startDate: "YYYY-MM-DD" format
+const CLIENTS = [
+  {
+    username: "john_doe",
+    password: "cat2024",
+    name: "John Doe",
+    plan: "Growth",
+    invested: 100,
+    startDate: "2026-05-22"
+  },
+  {
+    username: "marie_k",
+    password: "secure88",
+    name: "Marie Kamau",
+    plan: "Elite",
+    invested: 250,
+    startDate: "2026-05-25"
+  },
+  {
+    username: "demo_client",
+    password: "demo123",
+    name: "Demo Investor",
+    plan: "Starter",
+    invested: 30,
+    startDate: "2026-05-28"
+  }
+];
+
+// Store client DB for use by login & dashboard pages
+localStorage.setItem('cat_clients', JSON.stringify(CLIENTS));
+
+// ─── TOTAL INVESTED COUNTER ────────────────────────────────────────
+const totalUSD = CLIENTS.reduce((sum, c) => sum + c.invested, 0);
+const count    = CLIENTS.length;
+
+// Animate counter
+function animateCounter(el, target, prefix, decimals) {
+  const duration = 1800;
+  const start = performance.now();
+  function step(now) {
+    const t = Math.min((now - start) / duration, 1);
+    const ease = 1 - Math.pow(1 - t, 4);
+    const val = ease * target;
+    el.textContent = prefix + val.toLocaleString('en-US', {
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals
+    });
+    if (t < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+window.addEventListener('load', () => {
+  const el = document.getElementById('totalInvested');
+  const cl = document.getElementById('totalClients');
+  animateCounter(el, totalUSD, '$', 0);
+  cl.textContent = count + (count === 1 ? ' active investor' : ' active investors');
+});
+</script>
 </body>
 </html>

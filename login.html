@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Client Login — CAT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --gold:   #D4A843;
+    --teal:   #2ECFAA;
+    --red:    #E05555;
+    --dark:   #080C10;
+    --dark2:  #0E1318;
+    --dark3:  #141C24;
+    --text:   #E8EDF2;
+    --muted:  rgba(232,237,242,0.5);
+    --border: rgba(255,255,255,0.07);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--dark);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 5vw; height: 64px;
+    background: rgba(8,12,16,0.88);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo { display: flex; align-items: center; gap: 10px; }
+  .logo-badge {
+    width: 38px; height: 38px; border-radius: 10px;
+    background: linear-gradient(135deg, var(--gold), var(--red));
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: 14px; color: var(--dark); letter-spacing: 1px;
+  }
+  .logo-text { font-weight: 800; font-size: 15px; letter-spacing: 1px; }
+  .logo-sub { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--teal); letter-spacing: 2px; text-transform: uppercase; }
+  .nav-back {
+    font-family: 'DM Mono', monospace; font-size: 12px;
+    color: var(--muted); letter-spacing: 1px;
+    transition: color .2s;
+  }
+  .nav-back:hover { color: var(--text); }
+
+  /* MAIN */
+  .page {
+    flex: 1; display: flex; align-items: center; justify-content: center;
+    padding: 60px 5vw;
+    position: relative; overflow: hidden;
+  }
+  .bg-glow {
+    position: absolute; inset: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse 60% 60% at 20% 50%, rgba(212,168,67,.08) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 50% at 80% 50%, rgba(46,207,170,.07) 0%, transparent 60%);
+  }
+  .bg-grid {
+    position: absolute; inset: 0; pointer-events: none; opacity: .04;
+    background-image: linear-gradient(var(--border) 1px, transparent 1px),
+                      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+
+  .login-card {
+    position: relative; z-index: 1;
+    background: rgba(255,255,255,.03);
+    border: 1px solid var(--border);
+    border-radius: 28px; padding: 52px 44px;
+    width: 100%; max-width: 440px;
+    animation: fadeUp .6s ease both;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .login-eyebrow {
+    font-family: 'DM Mono', monospace; font-size: 10px;
+    color: var(--teal); letter-spacing: 2.5px; text-transform: uppercase;
+    margin-bottom: 12px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); animation: pulse 1.5s infinite; }
+  @keyframes pulse { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:.4; transform:scale(.8); } }
+
+  .login-title {
+    font-family: 'Playfair Display', serif; font-weight: 900;
+    font-size: 36px; line-height: 1.1; margin-bottom: 8px;
+  }
+  .login-sub {
+    font-size: 14px; color: var(--muted); margin-bottom: 36px; line-height: 1.7;
+  }
+
+  .field { margin-bottom: 20px; }
+  .field label {
+    display: block;
+    font-family: 'DM Mono', monospace; font-size: 10px;
+    color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .field input {
+    width: 100%; padding: 14px 18px;
+    background: rgba(255,255,255,.05);
+    border: 1px solid rgba(255,255,255,.10);
+    border-radius: 12px;
+    font-family: 'DM Mono', monospace; font-size: 14px;
+    color: var(--text);
+    outline: none; transition: border-color .2s, background .2s;
+  }
+  .field input:focus {
+    border-color: rgba(46,207,170,.4);
+    background: rgba(46,207,170,.05);
+  }
+  .field input::placeholder { color: rgba(232,237,242,.2); }
+
+  .login-btn {
+    width: 100%; padding: 15px;
+    background: linear-gradient(90deg, var(--gold), var(--red));
+    color: var(--dark); font-family: 'Syne', sans-serif;
+    font-weight: 800; font-size: 16px; letter-spacing: .5px;
+    border: none; border-radius: 12px; cursor: pointer;
+    transition: transform .2s, box-shadow .2s;
+    margin-top: 8px;
+  }
+  .login-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 36px rgba(212,168,67,.3);
+  }
+
+  .error-msg {
+    display: none;
+    background: rgba(224,85,85,.12);
+    border: 1px solid rgba(224,85,85,.3);
+    border-radius: 10px; padding: 12px 16px;
+    font-family: 'DM Mono', monospace; font-size: 12px;
+    color: var(--red); letter-spacing: .5px;
+    margin-top: 16px; text-align: center;
+  }
+
+  .back-link {
+    display: block; text-align: center; margin-top: 28px;
+    font-family: 'DM Mono', monospace; font-size: 11px;
+    color: var(--muted); letter-spacing: 1px;
+    transition: color .2s;
+  }
+  .back-link:hover { color: var(--text); }
+
+  footer {
+    background: var(--dark);
+    border-top: 1px solid var(--border);
+    padding: 22px 5vw;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 12px;
+  }
+  .footer-logo { font-weight: 800; font-size: 13px; letter-spacing: 1px; }
+  .footer-copy { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">
+    <div class="logo-badge">CAT</div>
+    <div>
+      <div class="logo-text">CHANGE AFRICA TODAY</div>
+      <div class="logo-sub">Forex · Oil · Crypto · Gold</div>
+    </div>
+  </a>
+  <a href="index.html" class="nav-back">← Back to Home</a>
+</nav>
+
+<div class="page">
+  <div class="bg-glow"></div>
+  <div class="bg-grid"></div>
+
+  <div class="login-card">
+    <div class="login-eyebrow"><div class="dot"></div> Secure Portal</div>
+    <div class="login-title">Client<br/>Dashboard</div>
+    <p class="login-sub">Sign in with your username and password to view your investment portfolio.</p>
+
+    <div class="field">
+      <label>Username</label>
+      <input type="text" id="username" placeholder="your_username" autocomplete="username"/>
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <input type="password" id="password" placeholder="••••••••" autocomplete="current-password"/>
+    </div>
+
+    <button class="login-btn" onclick="doLogin()">Access My Portfolio →</button>
+    <div class="error-msg" id="errorMsg">❌ Invalid username or password. Please try again.</div>
+
+    <a href="index.html" class="back-link">← Return to main site</a>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-logo">CAT — CHANGE AFRICA TODAY</div>
+  <div class="footer-copy">© 2026 · Secure Client Portal</div>
+</footer>
+
+<script>
+  // Allow Enter key
+  document.getElementById('password').addEventListener('keydown', e => {
+    if (e.key === 'Enter') doLogin();
+  });
+  document.getElementById('username').addEventListener('keydown', e => {
+    if (e.key === 'Enter') doLogin();
+  });
+
+  function doLogin() {
+    const username = document.getElementById('username').value.trim().toLowerCase();
+    const password = document.getElementById('password').value;
+    const errorEl  = document.getElementById('errorMsg');
+
+    // Load clients (set by index.html). Fallback hardcoded for direct access.
+    let clients = [];
+    try {
+      clients = JSON.parse(localStorage.getItem('cat_clients') || '[]');
+    } catch(e) {}
+
+    if (!clients.length) {
+      // Fallback: hardcoded demo so login.html works standalone
+      clients = [
+        { username: "john_doe",     password: "cat2024",   name: "John Doe",       plan: "Growth",  invested: 100, startDate: "2026-05-22" },
+        { username: "marie_k",      password: "secure88",  name: "Marie Kamau",    plan: "Elite",   invested: 250, startDate: "2026-05-25" },
+        { username: "demo_client",  password: "demo123",   name: "Demo Investor",  plan: "Starter", invested: 30,  startDate: "2026-05-28" }
+      ];
+    }
+
+    const client = clients.find(c => c.username.toLowerCase() === username && c.password === password);
+
+    if (client) {
+      // Store logged-in client and redirect
+      sessionStorage.setItem('cat_logged_client', JSON.stringify(client));
+      window.location.href = 'dashboard.html';
+    } else {
+      errorEl.style.display = 'block';
+      document.getElementById('password').value = '';
+      document.getElementById('password').focus();
+      setTimeout(() => { errorEl.style.display = 'none'; }, 4000);
+    }
+  }
+</script>
+</body>
+</html>
