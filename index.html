@@ -839,51 +839,50 @@
 </footer>
 
 <script>
-// ─── CLIENT DATABASE ───────────────────────────────────────────────
-const CLIENTS = [
-  {
-    username: "john_doe",
-    password: "cat2024",
-    name: "John Doe",
-    plan: "Growth",
-    invested: 100,
-    startDate: "2026-05-22"
-  },
-  {
-    username: "marie_k",
-    password: "secure88",
-    name: "Marie Kamau",
-    plan: "Elite",
-    invested: 250,
-    startDate: "2026-05-25"
-  },
-  {
-    username: "demo_client",
-    password: "demo123",
-    name: "Demo Investor",
-    plan: "Starter",
-    invested: 30,
-    startDate: "2026-05-28"
-  }
+// ─── CLIENT DATABASE (demo accounts) ──────────────────────────────
+const BASE_CLIENTS = [
+  { username: "john_doe",    password: "cat2024",  name: "John Doe",      plan: "Growth",  invested: 100, startDate: "2026-05-22" },
+  { username: "marie_k",     password: "secure88", name: "Marie Kamau",   plan: "Elite",   invested: 250, startDate: "2026-05-25" },
+  { username: "demo_client", password: "demo123",  name: "Demo Investor", plan: "Starter", invested: 30,  startDate: "2026-05-28" }
 ];
 
-// Store client DB for use by login & dashboard pages
-localStorage.setItem('cat_clients', JSON.stringify(CLIENTS));
+// Merge base clients with any newly registered clients from localStorage
+// (avoid duplicating base accounts if page is reloaded)
+let stored = [];
+try { stored = JSON.parse(localStorage.getItem('cat_clients') || '[]'); } catch(e) {}
 
-// ─── COUNTERS ──────────────────────────────────────────────────────
-const DISPLAY_INVESTED  = 32897;      // Total invested displayed (USD)
-const DISPLAY_INVESTORS = 187;        // Number of investors displayed
-const DISPLAY_PAYOUT    = 34607.64;   // Total payouts displayed (USD)
+const baseUsernames = BASE_CLIENTS.map(c => c.username);
+const newClients    = stored.filter(c => !baseUsernames.includes(c.username));
+const ALL_CLIENTS   = [...BASE_CLIENTS, ...newClients];
 
-// Animate counter
+// Save merged list so login & dashboard always have full data
+localStorage.setItem('cat_clients', JSON.stringify(ALL_CLIENTS));
+
+// ─── BASE STATS (historical, before this site launched) ────────────
+const BASE_INVESTED   = 32897;     // USD
+const BASE_INVESTORS  = 187;
+const BASE_PAYOUT     = 34607.64;  // USD
+
+// ─── PLAN ROI RATES ────────────────────────────────────────────────
+const RATES = { Starter: 0.03, Growth: 0.05, Elite: 0.07 };
+
+// ─── ADD LIVE REGISTRATIONS ON TOP ────────────────────────────────
+const liveInvested   = newClients.reduce((s, c) => s + c.invested, 0);
+const livePayout     = newClients.reduce((s, c) => s + c.invested + c.invested * (RATES[c.plan] || 0.05), 0);
+const liveInvestors  = newClients.length;
+
+const totalInvested  = BASE_INVESTED  + liveInvested;
+const totalPayout    = BASE_PAYOUT    + livePayout;
+const totalInvestors = BASE_INVESTORS + liveInvestors;
+
+// ─── ANIMATE COUNTER ──────────────────────────────────────────────
 function animateCounter(el, target, prefix, decimals) {
   const duration = 2000;
   const start = performance.now();
   function step(now) {
-    const t = Math.min((now - start) / duration, 1);
+    const t   = Math.min((now - start) / duration, 1);
     const ease = 1 - Math.pow(1 - t, 4);
-    const val = ease * target;
-    el.textContent = prefix + val.toLocaleString('en-US', {
+    el.textContent = prefix + (ease * target).toLocaleString('en-US', {
       minimumFractionDigits: decimals,
       maximumFractionDigits: decimals
     });
@@ -893,9 +892,9 @@ function animateCounter(el, target, prefix, decimals) {
 }
 
 window.addEventListener('load', () => {
-  animateCounter(document.getElementById('totalInvested'), DISPLAY_INVESTED, '$', 0);
-  animateCounter(document.getElementById('totalPayout'),   DISPLAY_PAYOUT,   '$', 2);
-  document.getElementById('totalClients').textContent = DISPLAY_INVESTORS + ' active investors';
+  animateCounter(document.getElementById('totalInvested'), totalInvested, '$', 0);
+  animateCounter(document.getElementById('totalPayout'),   totalPayout,   '$', 2);
+  document.getElementById('totalClients').textContent = totalInvestors + ' active investors';
 });
 </script>
 </body>
