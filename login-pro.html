@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Pro Investor Login — CAT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root{--gold:#D4A843;--teal:#2ECFAA;--red:#E05555;--dark:#080C10;--dark2:#0E1318;--text:#E8EDF2;--muted:rgba(232,237,242,0.5);--border:rgba(255,255,255,0.07)}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--dark);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh;display:flex;flex-direction:column}
+  a{color:inherit;text-decoration:none}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.8)}}
+
+  nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 5vw;height:64px;background:rgba(8,12,16,.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+  .nav-logo{display:flex;align-items:center;gap:10px}
+  .logo-badge{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--gold),var(--red));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;color:var(--dark);letter-spacing:1px}
+  .logo-text{font-weight:800;font-size:15px;letter-spacing:1px}
+  .logo-sub{font-family:'DM Mono',monospace;font-size:9px;color:var(--teal);letter-spacing:2px;text-transform:uppercase}
+  .nav-back{font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);letter-spacing:1px;transition:color .2s}
+  .nav-back:hover{color:var(--text)}
+
+  .page{flex:1;display:flex;align-items:center;justify-content:center;padding:60px 5vw;position:relative;overflow:hidden}
+  .bg-glow{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 60% 60% at 20% 50%,rgba(212,168,67,.10) 0%,transparent 60%),radial-gradient(ellipse 50% 50% at 80% 50%,rgba(212,168,67,.06) 0%,transparent 60%)}
+  .bg-grid{position:absolute;inset:0;pointer-events:none;opacity:.04;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:48px 48px}
+
+  .login-card{position:relative;z-index:1;background:rgba(255,255,255,.03);border:1px solid rgba(212,168,67,.15);border-radius:28px;padding:52px 44px;width:100%;max-width:460px;animation:fadeUp .6s ease both}
+
+  .login-eyebrow{font-family:'DM Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:2.5px;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+  .dot{width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 1.5s infinite}
+  .login-title{font-family:'Playfair Display',serif;font-weight:900;font-size:36px;line-height:1.1;margin-bottom:8px}
+  .login-title em{font-style:normal;color:var(--gold)}
+  .login-sub{font-size:14px;color:var(--muted);margin-bottom:24px;line-height:1.7}
+
+  .roi-chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:28px}
+  .roi-chip{font-family:'DM Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:1px;border:1px solid rgba(212,168,67,.25);background:rgba(212,168,67,.07);border-radius:20px;padding:4px 12px}
+
+  .field{margin-bottom:20px}
+  .field label{display:block;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px}
+  .field input{width:100%;padding:14px 18px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.10);border-radius:12px;font-family:'DM Mono',monospace;font-size:14px;color:var(--text);outline:none;transition:border-color .2s,background .2s}
+  .field input:focus{border-color:rgba(212,168,67,.4);background:rgba(212,168,67,.05)}
+  .field input::placeholder{color:rgba(232,237,242,.2)}
+
+  .login-btn{width:100%;padding:15px;background:linear-gradient(90deg,var(--gold),#B8861A);color:var(--dark);font-family:'Syne',sans-serif;font-weight:800;font-size:16px;letter-spacing:.5px;border:none;border-radius:12px;cursor:pointer;transition:transform .2s,box-shadow .2s;margin-top:8px}
+  .login-btn:hover{transform:translateY(-2px);box-shadow:0 12px 36px rgba(212,168,67,.3)}
+
+  .error-msg{display:none;background:rgba(224,85,85,.12);border:1px solid rgba(224,85,85,.3);border-radius:10px;padding:12px 16px;font-family:'DM Mono',monospace;font-size:12px;color:var(--red);letter-spacing:.5px;margin-top:16px;text-align:center}
+
+  .links-block{border-top:1px solid var(--border);margin-top:28px;padding-top:22px;display:flex;flex-direction:column;gap:10px;text-align:center}
+  .link-main{font-family:'DM Mono',monospace;font-size:11px;color:rgba(212,168,67,.6);letter-spacing:1px;transition:color .2s}
+  .link-main:hover{color:var(--gold)}
+  .link-back{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:1px;transition:color .2s}
+  .link-back:hover{color:var(--text)}
+  .link-private{font-family:'DM Mono',monospace;font-size:10px;color:rgba(232,237,242,.25);letter-spacing:1px;transition:color .2s}
+  .link-private:hover{color:var(--muted)}
+
+  footer{background:var(--dark);border-top:1px solid var(--border);padding:22px 5vw;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+  .footer-logo{font-weight:800;font-size:13px;letter-spacing:1px}
+  .footer-copy{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">
+    <div class="logo-badge">CAT</div>
+    <div>
+      <div class="logo-text">CHANGE AFRICA TODAY</div>
+      <div class="logo-sub">Forex · Oil · Crypto · Gold</div>
+    </div>
+  </a>
+  <a href="index.html" class="nav-back">← Back to Home</a>
+</nav>
+
+<div class="page">
+  <div class="bg-glow"></div>
+  <div class="bg-grid"></div>
+
+  <div class="login-card">
+    <div class="login-eyebrow"><div class="dot"></div> Professional Portal</div>
+    <div class="login-title">Pro Investor<br/><em>Dashboard</em></div>
+    <p class="login-sub">Sign in to access your professional investment dashboard and track your active projects.</p>
+
+    <div class="roi-chips">
+      <div class="roi-chip">15–20% / year</div>
+      <div class="roi-chip">Quarterly payouts</div>
+      <div class="roi-chip">Active projects</div>
+    </div>
+
+    <div class="field">
+      <label>Username</label>
+      <input type="text" id="username" placeholder="your_pro_username" autocomplete="username"/>
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <input type="password" id="password" placeholder="••••••••" autocomplete="current-password"/>
+    </div>
+
+    <button class="login-btn" onclick="doLogin()">Access My Pro Dashboard →</button>
+    <div class="error-msg" id="errorMsg">❌ Invalid username or password. Please try again.</div>
+
+    <div style="text-align:center; margin-top:14px;">
+      <a href="forgot.html?type=pro" style="font-family:'DM Mono',monospace; font-size:11px; color:var(--muted); letter-spacing:1px; transition:color .2s;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='rgba(232,237,242,0.5)'">Forgot your username or password?</a>
+    </div>
+
+    <div class="links-block">
+      <a href="register-pro.html" class="link-main">No account yet? → Register as Pro Investor</a>
+      <a href="index.html" class="link-back">← Return to main site</a>
+      <a href="login-private.html" class="link-private">Private investor? → Private Client Portal</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-logo">CAT — CHANGE AFRICA TODAY</div>
+  <div class="footer-copy">© 2026 · Professional Investor Portal</div>
+</footer>
+
+<script>
+  document.getElementById('password').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+  document.getElementById('username').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+  function doLogin() {
+    const username = document.getElementById('username').value.trim().toLowerCase();
+    const password = document.getElementById('password').value;
+    const errorEl  = document.getElementById('errorMsg');
+
+    let clients = [];
+    try { clients = JSON.parse(localStorage.getItem('cat_pro_clients') || '[]'); } catch(e) {}
+
+    // Demo accounts for standalone testing
+    const DEMO = [
+      { username:'pro_demo',   password:'invest2026', name:'Demo Pro Investor', company:'Demo Corp', plan:'Gold',     invested:10000, startDate:'2026-01-01', type:'pro', status:'active' },
+      { username:'atlas_fund', password:'atlas2026',  name:'Atlas Capital',     company:'Atlas Fund', plan:'Platinum', invested:50000, startDate:'2026-02-15', type:'pro', status:'active' }
+    ];
+    const baseNames = DEMO.map(c => c.username);
+    const all = [...DEMO, ...clients.filter(c => !baseNames.includes(c.username))];
+
+    const client = all.find(c => c.username.toLowerCase() === username && c.password === password);
+
+    if (client) {
+      sessionStorage.setItem('cat_logged_pro', JSON.stringify(client));
+      window.location.href = 'dashboard-pro.html';
+    } else {
+      // Check if they accidentally used a private account
+      let privClients = [];
+      try { privClients = JSON.parse(localStorage.getItem('cat_clients') || '[]'); } catch(e) {}
+      const isPrivate = privClients.find(c => c.username.toLowerCase() === username);
+      if (isPrivate) {
+        errorEl.textContent = '⚠️ This is a Private account. Please use the Private Client Portal.';
+      } else {
+        errorEl.textContent = '❌ Invalid username or password. Please try again.';
+      }
+      errorEl.style.display = 'block';
+      document.getElementById('password').value = '';
+      document.getElementById('password').focus();
+      setTimeout(() => { errorEl.style.display = 'none'; }, 5000);
+    }
+  }
+</script>
+</body>
+</html>

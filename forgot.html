@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Forgot Credentials — CAT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --gold:   #D4A843;
+    --teal:   #2ECFAA;
+    --red:    #E05555;
+    --dark:   #080C10;
+    --dark2:  #0E1318;
+    --text:   #E8EDF2;
+    --muted:  rgba(232,237,242,0.5);
+    --border: rgba(255,255,255,0.07);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--dark); color: var(--text); font-family: 'Syne', sans-serif; min-height: 100vh; display: flex; flex-direction: column; }
+  a { color: inherit; text-decoration: none; }
+
+  @keyframes fadeUp  { from { opacity:0; transform:translateY(22px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes pulse   { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:.4;transform:scale(.8);} }
+  @keyframes spin    { to { transform: rotate(360deg); } }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 5vw; height: 64px;
+    background: rgba(8,12,16,.92); backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo { display: flex; align-items: center; gap: 10px; }
+  .logo-badge { width:38px; height:38px; border-radius:10px; background:linear-gradient(135deg,var(--gold),var(--red)); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:14px; color:var(--dark); letter-spacing:1px; }
+  .logo-text  { font-weight:800; font-size:15px; letter-spacing:1px; }
+  .logo-sub   { font-family:'DM Mono',monospace; font-size:9px; color:var(--teal); letter-spacing:2px; text-transform:uppercase; }
+  .nav-back   { font-family:'DM Mono',monospace; font-size:12px; color:var(--muted); letter-spacing:1px; transition:color .2s; }
+  .nav-back:hover { color: var(--text); }
+
+  /* PAGE */
+  .page {
+    flex: 1; display: flex; align-items: center; justify-content: center;
+    padding: 60px 5vw; position: relative; overflow: hidden;
+  }
+  .bg-glow {
+    position:absolute; inset:0; pointer-events:none;
+    background:
+      radial-gradient(ellipse 55% 55% at 20% 50%, rgba(212,168,67,.08) 0%, transparent 60%),
+      radial-gradient(ellipse 45% 45% at 80% 50%, rgba(46,207,170,.06)  0%, transparent 60%);
+  }
+  .bg-grid {
+    position:absolute; inset:0; pointer-events:none; opacity:.04;
+    background-image: linear-gradient(var(--border) 1px,transparent 1px),
+                      linear-gradient(90deg,var(--border) 1px,transparent 1px);
+    background-size: 48px 48px;
+  }
+
+  /* CARD */
+  .card {
+    position:relative; z-index:1;
+    background: rgba(255,255,255,.03);
+    border: 1px solid var(--border);
+    border-radius: 28px; padding: 52px 44px;
+    width: 100%; max-width: 480px;
+    animation: fadeUp .6s ease both;
+  }
+
+  /* STEPS NAV */
+  .steps-nav {
+    display: flex; gap: 6px; margin-bottom: 32px;
+  }
+  .step-dot {
+    height: 4px; flex: 1; border-radius: 4px;
+    background: var(--border); transition: background .3s;
+  }
+  .step-dot.active  { background: var(--gold); }
+  .step-dot.done    { background: rgba(212,168,67,.4); }
+
+  /* EYEBROW */
+  .eyebrow {
+    font-family:'DM Mono',monospace; font-size:10px;
+    color: var(--gold); letter-spacing:2.5px; text-transform:uppercase;
+    margin-bottom:12px; display:flex; align-items:center; gap:8px;
+  }
+  .dot { width:6px; height:6px; border-radius:50%; background:var(--gold); animation:pulse 1.5s infinite; }
+
+  .card-title { font-family:'Playfair Display',serif; font-weight:900; font-size:34px; line-height:1.1; margin-bottom:8px; }
+  .card-sub   { font-size:14px; color:var(--muted); line-height:1.7; margin-bottom:28px; }
+
+  /* TOGGLE TABS */
+  .type-toggle {
+    display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:24px;
+  }
+  .type-btn {
+    padding:11px; border-radius:11px;
+    border:1.5px solid var(--border);
+    background:rgba(255,255,255,.03);
+    color:var(--muted); font-family:'DM Mono',monospace;
+    font-size:11px; letter-spacing:1px; text-transform:uppercase;
+    cursor:pointer; transition:all .2s; text-align:center;
+  }
+  .type-btn.selected {
+    border-color: rgba(212,168,67,.45);
+    background: rgba(212,168,67,.09);
+    color: var(--gold);
+  }
+
+  /* FIELDS */
+  .field { margin-bottom:20px; }
+  .field label { display:block; font-family:'DM Mono',monospace; font-size:10px; color:var(--muted); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:8px; }
+  .field input {
+    width:100%; padding:14px 18px;
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.10);
+    border-radius:12px;
+    font-family:'DM Mono',monospace; font-size:14px; color:var(--text);
+    outline:none; transition:border-color .2s,background .2s;
+  }
+  .field input:focus { border-color:rgba(212,168,67,.4); background:rgba(212,168,67,.04); }
+  .field input::placeholder { color:rgba(232,237,242,.2); }
+
+  /* BUTTON */
+  .main-btn {
+    width:100%; padding:15px;
+    background:linear-gradient(90deg,var(--gold),#B8861A);
+    color:var(--dark); font-family:'Syne',sans-serif;
+    font-weight:800; font-size:16px; letter-spacing:.5px;
+    border:none; border-radius:12px; cursor:pointer;
+    transition:transform .2s, box-shadow .2s;
+    margin-top:4px; display:flex; align-items:center; justify-content:center; gap:8px;
+  }
+  .main-btn:hover { transform:translateY(-2px); box-shadow:0 12px 36px rgba(212,168,67,.3); }
+  .main-btn:disabled { opacity:.55; cursor:default; transform:none; box-shadow:none; }
+  .spinner { width:16px; height:16px; border:2px solid rgba(8,12,16,.3); border-top-color:var(--dark); border-radius:50%; animation:spin .7s linear infinite; display:none; }
+
+  /* MESSAGES */
+  .error-msg {
+    display:none; background:rgba(224,85,85,.12); border:1px solid rgba(224,85,85,.3);
+    border-radius:10px; padding:12px 16px;
+    font-family:'DM Mono',monospace; font-size:12px; color:var(--red);
+    letter-spacing:.5px; margin-top:14px;
+  }
+
+  /* RESULT BOX */
+  .result-box {
+    display:none;
+    background:rgba(212,168,67,.07); border:1px solid rgba(212,168,67,.25);
+    border-radius:14px; padding:20px 22px; margin-bottom:20px;
+  }
+  .result-row { display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid rgba(255,255,255,.05); font-family:'DM Mono',monospace; font-size:12px; }
+  .result-row:last-child { border-bottom:none; }
+  .result-key { color:var(--muted); letter-spacing:.5px; }
+  .result-val { color:var(--text); font-weight:500; }
+
+  /* SUCCESS */
+  .success-screen { display:none; text-align:center; animation:fadeUp .5s ease both; }
+  .success-icon  { font-size:56px; margin-bottom:16px; }
+  .success-title { font-family:'Playfair Display',serif; font-weight:900; font-size:28px; color:var(--gold); margin-bottom:10px; }
+  .success-sub   { font-size:14px; color:var(--muted); line-height:1.7; margin-bottom:24px; }
+  .success-note  {
+    background:rgba(46,207,170,.07); border:1px solid rgba(46,207,170,.2);
+    border-radius:12px; padding:16px 18px;
+    font-family:'DM Mono',monospace; font-size:11px; color:var(--teal);
+    letter-spacing:.5px; line-height:1.6; margin-bottom:24px; text-align:left;
+  }
+
+  /* BACK LINK */
+  .back-link { display:block; text-align:center; margin-top:22px; font-family:'DM Mono',monospace; font-size:11px; color:var(--muted); letter-spacing:1px; transition:color .2s; }
+  .back-link:hover { color:var(--text); }
+
+  /* FOOTER */
+  footer { background:var(--dark); border-top:1px solid var(--border); padding:22px 5vw; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
+  .footer-logo { font-weight:800; font-size:13px; letter-spacing:1px; }
+  .footer-copy { font-family:'DM Mono',monospace; font-size:11px; color:var(--muted); }
+
+  @media (max-width:480px) { .card { padding:36px 22px; } }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">
+    <div class="logo-badge">CAT</div>
+    <div>
+      <div class="logo-text">CHANGE AFRICA TODAY</div>
+      <div class="logo-sub">Forex · Oil · Crypto · Gold</div>
+    </div>
+  </a>
+  <a href="index.html" class="nav-back">← Back to Home</a>
+</nav>
+
+<div class="page">
+  <div class="bg-glow"></div>
+  <div class="bg-grid"></div>
+
+  <div class="card">
+
+    <!-- STEP PROGRESS -->
+    <div class="steps-nav">
+      <div class="step-dot active"  id="dot1"></div>
+      <div class="step-dot"         id="dot2"></div>
+      <div class="step-dot"         id="dot3"></div>
+    </div>
+
+    <!-- ── STEP 1: CHOOSE TYPE ── -->
+    <div id="step1">
+      <div class="eyebrow"><div class="dot"></div> Account Recovery</div>
+      <div class="card-title">Forgot Your<br/>Credentials?</div>
+      <p class="card-sub">No worries. Tell us what type of account you have and enter your registered email — we'll take care of the rest.</p>
+
+      <div class="type-toggle">
+        <div class="type-btn selected" id="btnPrivate" onclick="setType('private')">🔐 Private Account</div>
+        <div class="type-btn"          id="btnPro"     onclick="setType('pro')">🏆 Pro Account</div>
+      </div>
+
+      <div class="field">
+        <label>Your Registered Email Address</label>
+        <input type="email" id="emailInput" placeholder="you@example.com" autocomplete="email"/>
+      </div>
+
+      <button class="main-btn" id="step1Btn" onclick="doStep1()">
+        <div class="spinner" id="step1Spinner"></div>
+        Find My Account →
+      </button>
+      <div class="error-msg" id="step1Error"></div>
+
+      <a href="login-private.html" class="back-link" id="backToLogin">← Back to Login</a>
+    </div>
+
+    <!-- ── STEP 2: ACCOUNT FOUND ── -->
+    <div id="step2" style="display:none">
+      <div class="eyebrow"><div class="dot"></div> Account Found</div>
+      <div class="card-title">We Found<br/>Your Account</div>
+      <p class="card-sub">Here are your credentials. Click the button below — your email app will open with a pre-filled recovery request sent to our team.</p>
+
+      <div class="result-box" id="resultBox" style="display:block"></div>
+
+      <button class="main-btn" id="step2Btn" onclick="doStep2()">
+        📧 Send Recovery Request →
+      </button>
+      <p style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);text-align:center;margin-top:10px;letter-spacing:.5px;">This opens your email app pre-filled for our team</p>
+
+      <a href="#" class="back-link" onclick="goBack(); return false;">← Try a different email</a>
+    </div>
+
+    <!-- ── STEP 3: DONE ── -->
+    <div id="step3" style="display:none">
+      <div class="success-screen" style="display:block">
+        <div class="success-icon">📬</div>
+        <div class="success-title">Request Sent!</div>
+        <p class="success-sub">Your recovery request has been sent to our team at <strong>bestwincryptokenya@gmail.com</strong>. We will reply with your credentials within 24 hours.</p>
+        <div class="success-note">
+          ✅ What happens next:<br/><br/>
+          1. Our team receives your request<br/>
+          2. We verify your identity against our records<br/>
+          3. We reply to your email with your username &amp; a temporary password<br/>
+          4. You log in and update your password
+        </div>
+        <a href="login-private.html" id="returnLoginBtn" class="main-btn" style="display:inline-flex;text-decoration:none;max-width:100%;">← Return to Login</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <div class="footer-logo">CAT — CHANGE AFRICA TODAY</div>
+  <div class="footer-copy">© 2026 · Account Recovery · <a href="mailto:bestwincryptokenya@gmail.com" style="color:rgba(212,168,67,.5)">bestwincryptokenya@gmail.com</a></div>
+</footer>
+
+<script>
+  const ADMIN_EMAIL = 'bestwincryptokenya@gmail.com';
+  let accountType   = 'private';
+  let foundClient   = null;
+
+  // Pre-select type from URL ?type=pro
+  const urlType = new URLSearchParams(window.location.search).get('type');
+  if (urlType === 'pro') setType('pro');
+
+  function setType(t) {
+    accountType = t;
+    document.getElementById('btnPrivate').classList.toggle('selected', t === 'private');
+    document.getElementById('btnPro').classList.toggle('selected',     t === 'pro');
+    document.getElementById('backToLogin').href = t === 'pro' ? 'login-pro.html' : 'login-private.html';
+    document.getElementById('returnLoginBtn').href = t === 'pro' ? 'login-pro.html' : 'login-private.html';
+  }
+
+  // ── STEP 1: Find account ────────────────────────────────────────────
+  function doStep1() {
+    const email   = document.getElementById('emailInput').value.trim().toLowerCase();
+    const errorEl = document.getElementById('step1Error');
+    errorEl.style.display = 'none';
+
+    if (!email || !email.includes('@')) {
+      errorEl.textContent = '❌ Please enter a valid email address.';
+      errorEl.style.display = 'block'; return;
+    }
+
+    // Show spinner briefly for UX
+    const btn = document.getElementById('step1Btn');
+    btn.disabled = true;
+    document.getElementById('step1Spinner').style.display = 'block';
+
+    setTimeout(() => {
+      btn.disabled = false;
+      document.getElementById('step1Spinner').style.display = 'none';
+
+      // Search in localStorage
+      const key     = accountType === 'pro' ? 'cat_pro_clients' : 'cat_clients';
+      let clients   = [];
+      try { clients = JSON.parse(localStorage.getItem(key) || '[]'); } catch(e) {}
+
+      // Also include demo accounts for private
+      if (accountType === 'private') {
+        const BASE = [
+          { username:'john_doe',    email:'john@example.com',  name:'John Doe',      plan:'Growth',  invested:100,  startDate:'2026-05-22', type:'private' },
+          { username:'marie_k',     email:'marie@example.com', name:'Marie Kamau',   plan:'Elite',   invested:250,  startDate:'2026-05-25', type:'private' },
+          { username:'demo_client', email:'demo@example.com',  name:'Demo Investor', plan:'Starter', invested:30,   startDate:'2026-05-28', type:'private' }
+        ];
+        const baseNames = BASE.map(c => c.username);
+        clients = [...BASE, ...clients.filter(c => !baseNames.includes(c.username))];
+      }
+
+      const match = clients.find(c => (c.email || '').toLowerCase() === email);
+
+      if (!match) {
+        errorEl.textContent = '❌ No ' + (accountType === 'pro' ? 'professional' : 'private') + ' account found with this email address. Please double-check or try the other account type.';
+        errorEl.style.display = 'block'; return;
+      }
+
+      foundClient = match;
+      showStep2(match);
+    }, 900);
+  }
+
+  function showStep2(c) {
+    document.getElementById('step1').style.display = 'none';
+    document.getElementById('step2').style.display = 'block';
+    document.getElementById('dot1').classList.replace('active','done');
+    document.getElementById('dot2').classList.add('active');
+
+    const isPro = c.type === 'pro';
+    document.getElementById('resultBox').innerHTML = `
+      <div class="result-row"><span class="result-key">Full Name</span><span class="result-val">${c.name || '—'}</span></div>
+      <div class="result-row"><span class="result-key">Email</span><span class="result-val">${c.email || '—'}</span></div>
+      <div class="result-row"><span class="result-key">Username</span><span class="result-val" style="color:var(--gold)">${c.username}</span></div>
+      <div class="result-row"><span class="result-key">Account Type</span><span class="result-val">${isPro ? '🏆 Professional' : '🔐 Private'}</span></div>
+      <div class="result-row"><span class="result-key">Plan</span><span class="result-val">${c.plan || '—'}${isPro ? ' Pro' : ' Plan'}</span></div>
+      <div class="result-row"><span class="result-key">Registered</span><span class="result-val">${c.startDate || '—'}</span></div>
+      <div class="result-row" style="border-top:1px solid rgba(212,168,67,.2);margin-top:4px;padding-top:12px;"><span class="result-key" style="color:var(--muted)">Password</span><span class="result-val" style="color:var(--muted);font-size:11px;">Will be sent by our team</span></div>
+    `;
+  }
+
+  // ── STEP 2: Send email ──────────────────────────────────────────────
+  function doStep2() {
+    if (!foundClient) return;
+    const c    = foundClient;
+    const isPro = c.type === 'pro';
+    const today = new Date().toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+
+    const subject = encodeURIComponent('[CAT] Password Recovery Request — ' + c.name);
+    const body = encodeURIComponent(
+      'ACCOUNT RECOVERY REQUEST — CAT Platform\n' +
+      '==========================================\n\n' +
+      'A client has requested their login credentials.\n\n' +
+      'CLIENT DETAILS:\n' +
+      '  Name         : ' + c.name + '\n' +
+      '  Email        : ' + c.email + '\n' +
+      '  Username     : ' + c.username + '\n' +
+      '  Account Type : ' + (isPro ? 'Professional' : 'Private') + '\n' +
+      '  Plan         : ' + c.plan + '\n' +
+      '  Registered   : ' + c.startDate + '\n' +
+      '  Requested    : ' + today + '\n\n' +
+      'PASSWORD IN SYSTEM:\n' +
+      '  Password     : ' + (c.password || '[stored in browser — check localStorage]') + '\n\n' +
+      'ACTION REQUIRED:\n' +
+      '  Reply to the client (' + c.email + ') with their username\n' +
+      '  and a new temporary password. Ask them to change it after login.\n\n' +
+      'This is an automated notification from the CAT platform.'
+    );
+
+    window.location.href = 'mailto:' + ADMIN_EMAIL + '?subject=' + subject + '&body=' + body;
+    setTimeout(() => showStep3(), 1200);
+  }
+
+  function showStep3() {
+    document.getElementById('step2').style.display = 'none';
+    document.getElementById('step3').style.display = 'block';
+    document.getElementById('dot2').classList.replace('active','done');
+    document.getElementById('dot3').classList.add('active');
+  }
+
+  function goBack() {
+    foundClient = null;
+    document.getElementById('step2').style.display = 'none';
+    document.getElementById('step1').style.display = 'block';
+    document.getElementById('dot2').classList.remove('active');
+    document.getElementById('dot1').classList.replace('done','active');
+    document.getElementById('step1Error').style.display = 'none';
+  }
+
+  // Enter key support
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      if (document.getElementById('step1').style.display !== 'none') doStep1();
+      if (document.getElementById('step2').style.display !== 'none') doStep2();
+    }
+  });
+</script>
+</body>
+</html>
