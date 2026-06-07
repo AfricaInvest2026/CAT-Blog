@@ -247,9 +247,58 @@
     .footer-copy { font-size: .78rem; color: var(--muted); margin-bottom: 12px; }
     .footer-disc { font-size: .73rem; color: #555; max-width: 700px; margin: 0 auto; }
 
-    @media (max-width: 700px) {
+    /* MOBILE NAV */
+    .nav-hamburger { display: none; background: none; border: none; cursor: pointer; padding: 4px; }
+    .nav-hamburger span {
+      display: block; width: 22px; height: 2px; background: var(--gold);
+      margin: 5px 0; border-radius: 2px; transition: all .3s;
+    }
+    .mobile-menu {
+      display: none; position: fixed; top: 64px; left: 0; right: 0; z-index: 99;
+      background: rgba(10,10,15,0.98); backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 20px 5%; flex-direction: column; gap: 16px;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a { color: var(--text); text-decoration: none; font-size: 1rem; padding: 8px 0; border-bottom: 1px solid var(--border); }
+    .mobile-menu a:last-child { border-bottom: none; }
+    .mobile-menu .mob-btns { display: flex; flex-direction: column; gap: 10px; padding-top: 6px; }
+    .mobile-menu .mob-btns a { border-bottom: none; padding: .5rem 1rem; text-align: center; }
+
+    /* ROI SUMMARY PANEL */
+    .roi-summary {
+      background: var(--card);
+      border-top: 1px solid var(--border);
+      padding: 18px 5%;
+    }
+    .roi-summary-title {
+      text-align: center; font-size: .75rem; font-weight: 700; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 2px; margin-bottom: 14px;
+    }
+    .roi-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1rem;
+      max-width: 900px; margin: 0 auto;
+    }
+    .roi-box {
+      background: var(--dark); border: 1px solid var(--border); border-radius: 12px;
+      padding: 14px 16px; text-align: center;
+    }
+    .roi-box-label { font-size: .7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+    .roi-box-val { font-size: 1.1rem; font-weight: 800; color: var(--text); }
+    .roi-box-val.green { color: var(--green); }
+    .roi-box-val.red   { color: var(--red); }
+    .roi-box-val.gold  { color: var(--gold); }
+
+  
       .nav-links, .nav-btns { display: none; }
+      .nav-hamburger { display: block; }
       .ticker-widget { max-width: 100%; }
+      .roi-summary-grid { grid-template-columns: 1fr 1fr !important; }
+    }
+    @media (max-width: 480px) {
+      .roi-summary-grid { grid-template-columns: 1fr !important; }
     }
   </style>
 </head>
@@ -269,7 +318,23 @@
     <a href="login-private.html" class="btn-outline">🔐 Client Login</a>
     <a href="login-pro.html" class="btn-outline">🏆 Pro Portal</a>
   </div>
+  <button class="nav-hamburger" id="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#markets" onclick="closeMobile()">Markets</a>
+  <a href="#plans" onclick="closeMobile()">Private Plans</a>
+  <a href="#plans-pro" onclick="closeMobile()">Pro Plans</a>
+  <a href="#how" onclick="closeMobile()">How It Works</a>
+  <a href="#blog" onclick="closeMobile()">Blog</a>
+  <div class="mob-btns">
+    <a href="login-private.html" class="btn-outline" onclick="closeMobile()">🔐 Client Login</a>
+    <a href="login-pro.html" class="btn-outline" onclick="closeMobile()">🏆 Pro Portal</a>
+  </div>
+</div>
 
 <!-- TICKER WIDGETS BAR -->
 <div class="ticker-bar" id="markets">
@@ -314,6 +379,33 @@
 
 </div>
 
+<!-- ROI SUMMARY PANEL -->
+<div class="roi-summary">
+  <div class="roi-summary-title">📊 Combined Portfolio Summary — $20,000 Invested · Leverage 1:20</div>
+  <div class="roi-summary-grid">
+    <div class="roi-box">
+      <div class="roi-box-label">Total Invested</div>
+      <div class="roi-box-val gold">$20,000</div>
+    </div>
+    <div class="roi-box">
+      <div class="roi-box-label">BTC Current Value</div>
+      <div class="roi-box-val" id="sum-btc-val">$—</div>
+    </div>
+    <div class="roi-box">
+      <div class="roi-box-label">ADA Current Value</div>
+      <div class="roi-box-val" id="sum-ada-val">$—</div>
+    </div>
+    <div class="roi-box">
+      <div class="roi-box-label">Total Payout</div>
+      <div class="roi-box-val gold" id="sum-total">$—</div>
+    </div>
+    <div class="roi-box">
+      <div class="roi-box-label">Combined ROI</div>
+      <div class="roi-box-val green" id="sum-roi">+—%</div>
+    </div>
+  </div>
+</div>
+
 <!-- HERO -->
 <section class="hero">
   <div class="hero-badge">Investment Platform · Open Now</div>
@@ -334,6 +426,9 @@
     <div class="stat"><div class="stat-num">7</div><div class="stat-label">Days per Contract</div></div>
     <div class="stat"><div class="stat-num">24h</div><div class="stat-label">Payout Delay</div></div>
     <div class="stat"><div class="stat-num">4</div><div class="stat-label">Markets Traded</div></div>
+    <div class="stat"><div class="stat-num" id="stat-investors">1,240+</div><div class="stat-label">Active Investors</div></div>
+    <div class="stat"><div class="stat-num" id="stat-invested">$284K+</div><div class="stat-label">Total Invested</div></div>
+    <div class="stat"><div class="stat-num" id="stat-paid">$316K+</div><div class="stat-label">Total Paid Out</div></div>
   </div>
 </section>
 
@@ -614,6 +709,28 @@
       adaEl.className   = 'tw-live-price ' + (adaPrice >= ADA_ENTRY ? 'up' : 'down');
       document.getElementById('ada-status').textContent = 'Live · ' + new Date().toLocaleTimeString();
 
+      // SUMMARY PANEL
+      const totalPayout = btc.currentValue + ada.currentValue;
+      const totalInvested = INVESTED * 2;
+      const combinedROI = ((totalPayout - totalInvested) / totalInvested) * 100;
+
+      const sumBtcEl = document.getElementById('sum-btc-val');
+      const sumAdaEl = document.getElementById('sum-ada-val');
+      const sumTotalEl = document.getElementById('sum-total');
+      const sumRoiEl = document.getElementById('sum-roi');
+
+      sumBtcEl.textContent = fmtUSD(btc.currentValue);
+      sumBtcEl.className = 'roi-box-val ' + (btc.currentValue >= INVESTED ? 'green' : 'red');
+
+      sumAdaEl.textContent = fmtUSD(ada.currentValue);
+      sumAdaEl.className = 'roi-box-val ' + (ada.currentValue >= INVESTED ? 'green' : 'red');
+
+      sumTotalEl.textContent = fmtUSD(totalPayout);
+      sumTotalEl.className = 'roi-box-val ' + (totalPayout >= totalInvested ? 'green' : 'red');
+
+      sumRoiEl.textContent = fmtROI(combinedROI);
+      sumRoiEl.className = 'roi-box-val ' + (combinedROI >= 0 ? 'green' : 'red');
+
     } catch (e) {
       document.getElementById('btc-status').textContent = 'Retrying…';
       document.getElementById('ada-status').textContent = 'Retrying…';
@@ -622,6 +739,16 @@
 
   updatePrices();
   setInterval(updatePrices, 30000); // refresh every 30s
+
+  // Mobile menu toggle
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobileMenu');
+  hamburger.addEventListener('click', () => {
+    mobileMenu.classList.toggle('open');
+  });
+  function closeMobile() {
+    mobileMenu.classList.remove('open');
+  }
 </script>
 </body>
 </html>
