@@ -685,28 +685,29 @@
 
 <script>
   // ─── CONFIG ──────────────────────────────────────────────
-  const BTC_ENTRY    = 60200;
-  const ADA_ENTRY    = 0.16;
-  const EUR_ENTRY    = 1.1520;
-  const BTC_INV      = 10000;
-  const ADA_INV      = 10000;
-  const EUR_INV      = 25000;
-  const BTC_LEV      = 20;
-  const ADA_LEV      = 20;
-  const EUR_LEV      = 100;
+  const BTC_ENTRY = 60200;
+  const ADA_ENTRY = 0.16;
+  const EUR_ENTRY = 1.1520;
+  const BTC_INV   = 10000;
+  const ADA_INV   = 10000;
+  const EUR_INV   = 25000;
+  const BTC_LEV   = 20;
+  const ADA_LEV   = 20;
+  const EUR_LEV   = 100;
 
+  // APIs — both support CORS from any origin
   const CRYPTO_API = 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,cardano&vs_currencies=usd';
-  const FOREX_API  = 'https://api.frankfurter.app/latest?from=EUR&to=USD';
+  const FOREX_API  = 'https://open.er-api.com/v6/latest/EUR';
 
   function calcPnL(livePrice, entryPrice, invested, leverage) {
-    const pctMove   = (livePrice - entryPrice) / entryPrice;
+    const pctMove      = (livePrice - entryPrice) / entryPrice;
     const leveragedPnL = invested * pctMove * leverage;
     const currentValue = invested + leveragedPnL;
-    const roi = (leveragedPnL / invested) * 100;
+    const roi          = (leveragedPnL / invested) * 100;
     return { currentValue, pnl: leveragedPnL, roi };
   }
 
-  function fmtUSD(n) {
+  function fmtWL(n) {
     return (n >= 0 ? '+$' : '-$') + Math.abs(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
   function fmtVal(n) {
@@ -715,101 +716,110 @@
   function fmtROI(r) {
     return (r >= 0 ? '+' : '') + r.toFixed(2) + '%';
   }
+  function colorClass(n) { return n >= 0 ? 'green' : 'red'; }
 
-  async function updatePrices() {
+  // Store last known values for summary
+  let lastBtc = null, lastAda = null, lastEur = null;
+
+  function refreshSummary() {
+    if (!lastBtc || !lastAda || !lastEur) return;
+    const totalInvested = BTC_INV + ADA_INV + EUR_INV;
+    const totalPnL      = lastBtc.pnl + lastAda.pnl + lastEur.pnl;
+    const combinedROI   = (totalPnL / totalInvested) * 100;
+
+    const sb = document.getElementById('sum-btc-val');
+    sb.textContent = fmtWL(lastBtc.pnl);
+    sb.className   = 'roi-box-val ' + colorClass(lastBtc.pnl);
+
+    const sa = document.getElementById('sum-ada-val');
+    sa.textContent = fmtWL(lastAda.pnl);
+    sa.className   = 'roi-box-val ' + colorClass(lastAda.pnl);
+
+    const se = document.getElementById('sum-eur-val');
+    se.textContent = fmtWL(lastEur.pnl);
+    se.className   = 'roi-box-val ' + colorClass(lastEur.pnl);
+
+    const st = document.getElementById('sum-total');
+    st.textContent = fmtWL(totalPnL);
+    st.className   = 'roi-box-val ' + colorClass(totalPnL);
+
+    const sr = document.getElementById('sum-roi');
+    sr.textContent = fmtROI(combinedROI);
+    sr.className   = 'roi-box-val ' + colorClass(combinedROI);
+  }
+
+  async function updateCrypto() {
     try {
-      // Fetch crypto and forex in parallel
-      const [cryptoRes, forexRes] = await Promise.all([
-        fetch(CRYPTO_API),
-        fetch(FOREX_API)
-      ]);
-      const cryptoData = await cryptoRes.json();
-      const forexData  = await forexRes.json();
+      const res  = await fetch(CRYPTO_API);
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
+      const now  = new Date().toLocaleTimeString();
 
-      const btcPrice = cryptoData.bitcoin.usd;
-      const adaPrice = cryptoData.cardano.usd;
-      const eurPrice = forexData.rates.USD; // EUR/USD rate
-
-      const now = new Date().toLocaleTimeString();
-
-      // ── BTC ──
-      const btcEl = document.getElementById('btc-live');
-      btcEl.textContent = fmtVal(btcPrice);
-      btcEl.className   = 'tw-live-price ' + (btcPrice >= BTC_ENTRY ? 'up' : 'down');
-      const btc = calcPnL(btcPrice, BTC_ENTRY, BTC_INV, BTC_LEV);
-      document.getElementById('btc-value').textContent = fmtVal(btc.currentValue);
+      // BTC
+      const btcPrice = data.bitcoin.usd;
+      document.getElementById('btc-live').textContent = fmtVal(btcPrice);
+      document.getElementById('btc-live').className   = 'tw-live-price ' + colorClass(btcPrice - BTC_ENTRY);
+      lastBtc = calcPnL(btcPrice, BTC_ENTRY, BTC_INV, BTC_LEV);
+      document.getElementById('btc-value').textContent = fmtVal(lastBtc.currentValue);
       const btcRoi = document.getElementById('btc-roi');
-      btcRoi.textContent = fmtROI(btc.roi);
-      btcRoi.className = 'tw-val ' + (btc.roi >= 0 ? 'green' : 'red');
+      btcRoi.textContent = fmtROI(lastBtc.roi);
+      btcRoi.className   = 'tw-val ' + colorClass(lastBtc.roi);
       document.getElementById('btc-status').textContent = 'Live · ' + now;
 
-      // ── ADA ──
-      const adaEl = document.getElementById('ada-live');
-      adaEl.textContent = '$' + adaPrice.toFixed(4);
-      adaEl.className   = 'tw-live-price ' + (adaPrice >= ADA_ENTRY ? 'up' : 'down');
-      const ada = calcPnL(adaPrice, ADA_ENTRY, ADA_INV, ADA_LEV);
-      document.getElementById('ada-value').textContent = fmtVal(ada.currentValue);
+      // ADA
+      const adaPrice = data.cardano.usd;
+      document.getElementById('ada-live').textContent = '$' + adaPrice.toFixed(4);
+      document.getElementById('ada-live').className   = 'tw-live-price ' + colorClass(adaPrice - ADA_ENTRY);
+      lastAda = calcPnL(adaPrice, ADA_ENTRY, ADA_INV, ADA_LEV);
+      document.getElementById('ada-value').textContent = fmtVal(lastAda.currentValue);
       const adaRoi = document.getElementById('ada-roi');
-      adaRoi.textContent = fmtROI(ada.roi);
-      adaRoi.className = 'tw-val ' + (ada.roi >= 0 ? 'green' : 'red');
+      adaRoi.textContent = fmtROI(lastAda.roi);
+      adaRoi.className   = 'tw-val ' + colorClass(lastAda.roi);
       document.getElementById('ada-status').textContent = 'Live · ' + now;
 
-      // ── EUR/USD ──
-      const eurEl = document.getElementById('eur-live');
-      eurEl.textContent = eurPrice.toFixed(4);
-      eurEl.className   = 'tw-live-price ' + (eurPrice >= EUR_ENTRY ? 'up' : 'down');
-      const eur = calcPnL(eurPrice, EUR_ENTRY, EUR_INV, EUR_LEV);
-      document.getElementById('eur-value').textContent = fmtVal(eur.currentValue);
-      const eurRoi = document.getElementById('eur-roi');
-      eurRoi.textContent = fmtROI(eur.roi);
-      eurRoi.className = 'tw-val ' + (eur.roi >= 0 ? 'green' : 'red');
-      document.getElementById('eur-status').textContent = 'Live · ' + now;
-
-      // ── SUMMARY PANEL ──
-      const totalInvested = BTC_INV + ADA_INV + EUR_INV;                        // 45000
-      const totalValue    = btc.currentValue + ada.currentValue + eur.currentValue;
-      const totalPnL      = btc.pnl + ada.pnl + eur.pnl;
-      const combinedROI   = (totalPnL / totalInvested) * 100;
-
-      const sumBtcEl = document.getElementById('sum-btc-val');
-      sumBtcEl.textContent = fmtUSD(btc.pnl);
-      sumBtcEl.className   = 'roi-box-val ' + (btc.pnl >= 0 ? 'green' : 'red');
-
-      const sumAdaEl = document.getElementById('sum-ada-val');
-      sumAdaEl.textContent = fmtUSD(ada.pnl);
-      sumAdaEl.className   = 'roi-box-val ' + (ada.pnl >= 0 ? 'green' : 'red');
-
-      const sumEurEl = document.getElementById('sum-eur-val');
-      sumEurEl.textContent = fmtUSD(eur.pnl);
-      sumEurEl.className   = 'roi-box-val ' + (eur.pnl >= 0 ? 'green' : 'red');
-
-      const sumTotalEl = document.getElementById('sum-total');
-      sumTotalEl.textContent = fmtUSD(totalPnL);
-      sumTotalEl.className   = 'roi-box-val ' + (totalPnL >= 0 ? 'green' : 'red');
-
-      const sumRoiEl = document.getElementById('sum-roi');
-      sumRoiEl.textContent = fmtROI(combinedROI);
-      sumRoiEl.className   = 'roi-box-val ' + (combinedROI >= 0 ? 'green' : 'red');
-
+      refreshSummary();
     } catch (e) {
-      ['btc-status','ada-status','eur-status'].forEach(id => {
-        document.getElementById(id).textContent = 'Retrying…';
-      });
+      document.getElementById('btc-status').textContent = '⚠ API error — retrying';
+      document.getElementById('ada-status').textContent = '⚠ API error — retrying';
     }
   }
 
-  updatePrices();
-  setInterval(updatePrices, 30000);
+  async function updateForex() {
+    try {
+      const res  = await fetch(FOREX_API);
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
+      const eurPrice = data.rates.USD;
+      const now  = new Date().toLocaleTimeString();
+
+      document.getElementById('eur-live').textContent = eurPrice.toFixed(4);
+      document.getElementById('eur-live').className   = 'tw-live-price ' + colorClass(eurPrice - EUR_ENTRY);
+      lastEur = calcPnL(eurPrice, EUR_ENTRY, EUR_INV, EUR_LEV);
+      document.getElementById('eur-value').textContent = fmtVal(lastEur.currentValue);
+      const eurRoi = document.getElementById('eur-roi');
+      eurRoi.textContent = fmtROI(lastEur.roi);
+      eurRoi.className   = 'tw-val ' + colorClass(lastEur.roi);
+      document.getElementById('eur-status').textContent = 'Live · ' + now;
+
+      refreshSummary();
+    } catch (e) {
+      document.getElementById('eur-status').textContent = '⚠ API error — retrying';
+    }
+  }
+
+  // Initial load
+  updateCrypto();
+  updateForex();
+
+  // Refresh every 30s
+  setInterval(updateCrypto, 30000);
+  setInterval(updateForex,  60000); // forex updates less frequently
 
   // Mobile menu toggle
   const hamburger = document.getElementById('hamburger');
   const mobileMenu = document.getElementById('mobileMenu');
-  hamburger.addEventListener('click', () => {
-    mobileMenu.classList.toggle('open');
-  });
-  function closeMobile() {
-    mobileMenu.classList.remove('open');
-  }
+  hamburger.addEventListener('click', () => mobileMenu.classList.toggle('open'));
+  function closeMobile() { mobileMenu.classList.remove('open'); }
 </script>
 </body>
 </html>
