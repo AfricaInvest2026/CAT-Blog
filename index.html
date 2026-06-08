@@ -76,6 +76,7 @@
     .ticker-widget.btc::before { background: var(--btc); }
     .ticker-widget.ada::before { background: #3cc8f5; }
     .ticker-widget.eur::before { background: linear-gradient(90deg, #003399, #ffcc00); }
+    .ticker-widget.kes::before { background: linear-gradient(90deg, #006600, #BB0000, #000000); }
 
     .tw-header {
       display: flex; justify-content: space-between; align-items: center;
@@ -93,6 +94,7 @@
     .btc .tw-icon { background: var(--btc); color: #fff; }
     .ada .tw-icon { background: #3cc8f5; color: #000; }
     .eur .tw-icon { background: linear-gradient(135deg, #003399, #ffcc00); color: #fff; }
+    .kes .tw-icon { background: linear-gradient(135deg, #006600, #BB0000); color: #fff; }
 
     .tw-live-price { font-size: 1.15rem; font-weight: 800; color: var(--gold); }
     .tw-live-price.up { color: var(--green); }
@@ -402,15 +404,35 @@
     <div class="tw-status"><div class="tw-dot"></div><span id="eur-status">updating…</span></div>
   </div>
 
+  <!-- EUR/KES WIDGET -->
+  <div class="ticker-widget kes">
+    <div class="tw-header">
+      <div class="tw-symbol">
+        <div class="tw-icon">🇰🇪</div>
+        <span>Euro / Shilling <small style="color:var(--muted);font-weight:400">EUR/KES</small></span>
+      </div>
+      <div class="tw-live-price" id="kes-live">—</div>
+    </div>
+    <div class="tw-rows">
+      <div class="tw-row"><span class="tw-label">Entry Price</span><span class="tw-val">151.00</span></div>
+      <div class="tw-row"><span class="tw-label">Entry Time</span><span class="tw-val">Jun 8 · 08:30</span></div>
+      <div class="tw-row"><span class="tw-label">Invested</span><span class="tw-val">$50,000</span></div>
+      <div class="tw-row"><span class="tw-label">Current Value</span><span class="tw-val" id="kes-value">$—</span></div>
+      <div class="tw-row"><span class="tw-label">Profit / ROI</span><span class="tw-val green" id="kes-roi">+—%</span></div>
+    </div>
+    <div class="tw-leverage">🔁 Leverage 1:100</div>
+    <div class="tw-status"><div class="tw-dot"></div><span id="kes-status">updating…</span></div>
+  </div>
+
 </div>
 
 <!-- ROI SUMMARY PANEL -->
 <div class="roi-summary">
-  <div class="roi-summary-title">📊 Combined Portfolio Summary — $45,000 Invested · BTC×20 · ADA×20 · EUR/USD×100</div>
-  <div class="roi-summary-grid" style="grid-template-columns: repeat(6,1fr)">
+  <div class="roi-summary-title">📊 Combined Portfolio Summary — $95,000 Invested · BTC×20 · ADA×20 · EUR/USD×100 · EUR/KES×100</div>
+  <div class="roi-summary-grid" style="grid-template-columns: repeat(7,1fr)">
     <div class="roi-box">
       <div class="roi-box-label">Total Invested</div>
-      <div class="roi-box-val gold">$45,000</div>
+      <div class="roi-box-val gold">$95,000</div>
     </div>
     <div class="roi-box">
       <div class="roi-box-label">BTC W/L</div>
@@ -425,8 +447,12 @@
       <div class="roi-box-val" id="sum-eur-val">$—</div>
     </div>
     <div class="roi-box">
+      <div class="roi-box-label">EUR/KES W/L</div>
+      <div class="roi-box-val" id="sum-kes-val">$—</div>
+    </div>
+    <div class="roi-box">
       <div class="roi-box-label">Total W/L</div>
-      <div class="roi-box-val gold" id="sum-total">$—</div>
+      <div class="roi-box-val" id="sum-total">$—</div>
     </div>
     <div class="roi-box">
       <div class="roi-box-label">Combined ROI</div>
@@ -688,16 +714,19 @@
   const BTC_ENTRY = 60200;
   const ADA_ENTRY = 0.16;
   const EUR_ENTRY = 1.1520;
+  const KES_ENTRY = 151.00;   // EUR/KES entry at Jun 8 · 08:30
   const BTC_INV   = 10000;
   const ADA_INV   = 10000;
   const EUR_INV   = 25000;
+  const KES_INV   = 50000;
   const BTC_LEV   = 20;
   const ADA_LEV   = 20;
   const EUR_LEV   = 100;
+  const KES_LEV   = 100;
 
   // APIs — both support CORS from any origin
   const CRYPTO_API = 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,cardano&vs_currencies=usd';
-  const FOREX_API  = 'https://open.er-api.com/v6/latest/EUR';
+  const FOREX_API  = 'https://open.er-api.com/v6/latest/EUR';  // returns USD, KES, and all others in one call
 
   function calcPnL(livePrice, entryPrice, invested, leverage) {
     const pctMove      = (livePrice - entryPrice) / entryPrice;
@@ -719,12 +748,12 @@
   function colorClass(n) { return n >= 0 ? 'green' : 'red'; }
 
   // Store last known values for summary
-  let lastBtc = null, lastAda = null, lastEur = null;
+  let lastBtc = null, lastAda = null, lastEur = null, lastKes = null;
 
   function refreshSummary() {
-    if (!lastBtc || !lastAda || !lastEur) return;
-    const totalInvested = BTC_INV + ADA_INV + EUR_INV;
-    const totalPnL      = lastBtc.pnl + lastAda.pnl + lastEur.pnl;
+    if (!lastBtc || !lastAda || !lastEur || !lastKes) return;
+    const totalInvested = BTC_INV + ADA_INV + EUR_INV + KES_INV;  // $95,000
+    const totalPnL      = lastBtc.pnl + lastAda.pnl + lastEur.pnl + lastKes.pnl;
     const combinedROI   = (totalPnL / totalInvested) * 100;
 
     const sb = document.getElementById('sum-btc-val');
@@ -738,6 +767,10 @@
     const se = document.getElementById('sum-eur-val');
     se.textContent = fmtWL(lastEur.pnl);
     se.className   = 'roi-box-val ' + colorClass(lastEur.pnl);
+
+    const sk = document.getElementById('sum-kes-val');
+    sk.textContent = fmtWL(lastKes.pnl);
+    sk.className   = 'roi-box-val ' + colorClass(lastKes.pnl);
 
     const st = document.getElementById('sum-total');
     st.textContent = fmtWL(totalPnL);
@@ -789,9 +822,10 @@
       const res  = await fetch(FOREX_API);
       if (!res.ok) throw new Error('HTTP ' + res.status);
       const data = await res.json();
-      const eurPrice = data.rates.USD;
       const now  = new Date().toLocaleTimeString();
 
+      // EUR/USD
+      const eurPrice = data.rates.USD;
       document.getElementById('eur-live').textContent = eurPrice.toFixed(4);
       document.getElementById('eur-live').className   = 'tw-live-price ' + colorClass(eurPrice - EUR_ENTRY);
       lastEur = calcPnL(eurPrice, EUR_ENTRY, EUR_INV, EUR_LEV);
@@ -801,9 +835,21 @@
       eurRoi.className   = 'tw-val ' + colorClass(lastEur.roi);
       document.getElementById('eur-status').textContent = 'Live · ' + now;
 
+      // EUR/KES — same API call, just use data.rates.KES
+      const kesPrice = data.rates.KES;
+      document.getElementById('kes-live').textContent = kesPrice.toFixed(2);
+      document.getElementById('kes-live').className   = 'tw-live-price ' + colorClass(kesPrice - KES_ENTRY);
+      lastKes = calcPnL(kesPrice, KES_ENTRY, KES_INV, KES_LEV);
+      document.getElementById('kes-value').textContent = fmtVal(lastKes.currentValue);
+      const kesRoi = document.getElementById('kes-roi');
+      kesRoi.textContent = fmtROI(lastKes.roi);
+      kesRoi.className   = 'tw-val ' + colorClass(lastKes.roi);
+      document.getElementById('kes-status').textContent = 'Live · ' + now;
+
       refreshSummary();
     } catch (e) {
       document.getElementById('eur-status').textContent = '⚠ API error — retrying';
+      document.getElementById('kes-status').textContent = '⚠ API error — retrying';
     }
   }
 
@@ -811,9 +857,9 @@
   updateCrypto();
   updateForex();
 
-  // Refresh every 30s
+  // Refresh every 30s crypto, 60s forex
   setInterval(updateCrypto, 30000);
-  setInterval(updateForex,  60000); // forex updates less frequently
+  setInterval(updateForex,  60000);
 
   // Mobile menu toggle
   const hamburger = document.getElementById('hamburger');
