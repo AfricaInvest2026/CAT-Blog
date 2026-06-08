@@ -16,6 +16,7 @@
       --red: #ff1744;
       --btc: #f7931a;
       --ada: #0033ad;
+      --eur: #003399;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -74,6 +75,7 @@
     }
     .ticker-widget.btc::before { background: var(--btc); }
     .ticker-widget.ada::before { background: #3cc8f5; }
+    .ticker-widget.eur::before { background: linear-gradient(90deg, #003399, #ffcc00); }
 
     .tw-header {
       display: flex; justify-content: space-between; align-items: center;
@@ -90,6 +92,7 @@
     }
     .btc .tw-icon { background: var(--btc); color: #fff; }
     .ada .tw-icon { background: #3cc8f5; color: #000; }
+    .eur .tw-icon { background: linear-gradient(135deg, #003399, #ffcc00); color: #fff; }
 
     .tw-live-price { font-size: 1.15rem; font-weight: 800; color: var(--gold); }
     .tw-live-price.up { color: var(--green); }
@@ -291,14 +294,14 @@
     .roi-box-val.red   { color: var(--red); }
     .roi-box-val.gold  { color: var(--gold); }
 
-  
+    @media (max-width: 780px) {
       .nav-links, .nav-btns { display: none; }
       .nav-hamburger { display: block; }
       .ticker-widget { max-width: 100%; }
-      .roi-summary-grid { grid-template-columns: 1fr 1fr !important; }
+      .roi-summary-grid { grid-template-columns: repeat(3, 1fr) !important; }
     }
     @media (max-width: 480px) {
-      .roi-summary-grid { grid-template-columns: 1fr !important; }
+      .roi-summary-grid { grid-template-columns: 1fr 1fr !important; }
     }
   </style>
 </head>
@@ -350,6 +353,7 @@
     </div>
     <div class="tw-rows">
       <div class="tw-row"><span class="tw-label">Entry Price</span><span class="tw-val">$60,200</span></div>
+      <div class="tw-row"><span class="tw-label">Entry Time</span><span class="tw-val">Jun 6 · 13:30</span></div>
       <div class="tw-row"><span class="tw-label">Invested</span><span class="tw-val">$10,000</span></div>
       <div class="tw-row"><span class="tw-label">Current Value</span><span class="tw-val" id="btc-value">$—</span></div>
       <div class="tw-row"><span class="tw-label">Profit / ROI</span><span class="tw-val green" id="btc-roi">+—%</span></div>
@@ -369,6 +373,7 @@
     </div>
     <div class="tw-rows">
       <div class="tw-row"><span class="tw-label">Entry Price</span><span class="tw-val">$0.16</span></div>
+      <div class="tw-row"><span class="tw-label">Entry Time</span><span class="tw-val">Jun 7 · 08:00</span></div>
       <div class="tw-row"><span class="tw-label">Invested</span><span class="tw-val">$10,000</span></div>
       <div class="tw-row"><span class="tw-label">Current Value</span><span class="tw-val" id="ada-value">$—</span></div>
       <div class="tw-row"><span class="tw-label">Profit / ROI</span><span class="tw-val green" id="ada-roi">+—%</span></div>
@@ -377,26 +382,50 @@
     <div class="tw-status"><div class="tw-dot"></div><span id="ada-status">updating…</span></div>
   </div>
 
+  <!-- EUR/USD WIDGET -->
+  <div class="ticker-widget eur">
+    <div class="tw-header">
+      <div class="tw-symbol">
+        <div class="tw-icon">€</div>
+        <span>Euro / Dollar <small style="color:var(--muted);font-weight:400">EUR/USD</small></span>
+      </div>
+      <div class="tw-live-price" id="eur-live">—</div>
+    </div>
+    <div class="tw-rows">
+      <div class="tw-row"><span class="tw-label">Entry Price</span><span class="tw-val">1.1520</span></div>
+      <div class="tw-row"><span class="tw-label">Entry Time</span><span class="tw-val">Jun 8 · 08:30</span></div>
+      <div class="tw-row"><span class="tw-label">Invested</span><span class="tw-val">$25,000</span></div>
+      <div class="tw-row"><span class="tw-label">Current Value</span><span class="tw-val" id="eur-value">$—</span></div>
+      <div class="tw-row"><span class="tw-label">Profit / ROI</span><span class="tw-val green" id="eur-roi">+—%</span></div>
+    </div>
+    <div class="tw-leverage">🔁 Leverage 1:100</div>
+    <div class="tw-status"><div class="tw-dot"></div><span id="eur-status">updating…</span></div>
+  </div>
+
 </div>
 
 <!-- ROI SUMMARY PANEL -->
 <div class="roi-summary">
-  <div class="roi-summary-title">📊 Combined Portfolio Summary — $20,000 Invested · Leverage 1:20</div>
-  <div class="roi-summary-grid">
+  <div class="roi-summary-title">📊 Combined Portfolio Summary — $45,000 Invested · BTC×20 · ADA×20 · EUR/USD×100</div>
+  <div class="roi-summary-grid" style="grid-template-columns: repeat(6,1fr)">
     <div class="roi-box">
       <div class="roi-box-label">Total Invested</div>
-      <div class="roi-box-val gold">$20,000</div>
+      <div class="roi-box-val gold">$45,000</div>
     </div>
     <div class="roi-box">
-      <div class="roi-box-label">BTC Current Value</div>
+      <div class="roi-box-label">BTC W/L</div>
       <div class="roi-box-val" id="sum-btc-val">$—</div>
     </div>
     <div class="roi-box">
-      <div class="roi-box-label">ADA Current Value</div>
+      <div class="roi-box-label">ADA W/L</div>
       <div class="roi-box-val" id="sum-ada-val">$—</div>
     </div>
     <div class="roi-box">
-      <div class="roi-box-label">Total Payout</div>
+      <div class="roi-box-label">EUR/USD W/L</div>
+      <div class="roi-box-val" id="sum-eur-val">$—</div>
+    </div>
+    <div class="roi-box">
+      <div class="roi-box-label">Total W/L</div>
       <div class="roi-box-val gold" id="sum-total">$—</div>
     </div>
     <div class="roi-box">
@@ -656,23 +685,31 @@
 
 <script>
   // ─── CONFIG ──────────────────────────────────────────────
-  const BTC_ENTRY  = 60200;
-  const ADA_ENTRY  = 0.16;
-  const INVESTED   = 10000;
-  const LEVERAGE   = 20;
+  const BTC_ENTRY    = 60200;
+  const ADA_ENTRY    = 0.16;
+  const EUR_ENTRY    = 1.1520;
+  const BTC_INV      = 10000;
+  const ADA_INV      = 10000;
+  const EUR_INV      = 25000;
+  const BTC_LEV      = 20;
+  const ADA_LEV      = 20;
+  const EUR_LEV      = 100;
 
-  // Coingecko simple price API (free, no key needed)
-  const API = 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,cardano&vs_currencies=usd';
+  const CRYPTO_API = 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,cardano&vs_currencies=usd';
+  const FOREX_API  = 'https://api.frankfurter.app/latest?from=EUR&to=USD';
 
-  function calcWidget(livePrice, entryPrice) {
-    const priceChange = (livePrice - entryPrice) / entryPrice; // % move
-    const leveragedPnL = INVESTED * priceChange * LEVERAGE;
-    const currentValue = INVESTED + leveragedPnL;
-    const roi = (leveragedPnL / INVESTED) * 100;
-    return { currentValue, roi };
+  function calcPnL(livePrice, entryPrice, invested, leverage) {
+    const pctMove   = (livePrice - entryPrice) / entryPrice;
+    const leveragedPnL = invested * pctMove * leverage;
+    const currentValue = invested + leveragedPnL;
+    const roi = (leveragedPnL / invested) * 100;
+    return { currentValue, pnl: leveragedPnL, roi };
   }
 
   function fmtUSD(n) {
+    return (n >= 0 ? '+$' : '-$') + Math.abs(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+  function fmtVal(n) {
     return '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
   function fmtROI(r) {
@@ -681,64 +718,88 @@
 
   async function updatePrices() {
     try {
-      const res  = await fetch(API);
-      const data = await res.json();
+      // Fetch crypto and forex in parallel
+      const [cryptoRes, forexRes] = await Promise.all([
+        fetch(CRYPTO_API),
+        fetch(FOREX_API)
+      ]);
+      const cryptoData = await cryptoRes.json();
+      const forexData  = await forexRes.json();
 
-      const btcPrice = data.bitcoin.usd;
-      const adaPrice = data.cardano.usd;
+      const btcPrice = cryptoData.bitcoin.usd;
+      const adaPrice = cryptoData.cardano.usd;
+      const eurPrice = forexData.rates.USD; // EUR/USD rate
 
-      // BTC
+      const now = new Date().toLocaleTimeString();
+
+      // ── BTC ──
       const btcEl = document.getElementById('btc-live');
-      btcEl.textContent = fmtUSD(btcPrice);
-      const btc = calcWidget(btcPrice, BTC_ENTRY);
-      document.getElementById('btc-value').textContent = fmtUSD(btc.currentValue);
+      btcEl.textContent = fmtVal(btcPrice);
+      btcEl.className   = 'tw-live-price ' + (btcPrice >= BTC_ENTRY ? 'up' : 'down');
+      const btc = calcPnL(btcPrice, BTC_ENTRY, BTC_INV, BTC_LEV);
+      document.getElementById('btc-value').textContent = fmtVal(btc.currentValue);
       const btcRoi = document.getElementById('btc-roi');
       btcRoi.textContent = fmtROI(btc.roi);
       btcRoi.className = 'tw-val ' + (btc.roi >= 0 ? 'green' : 'red');
-      btcEl.className   = 'tw-live-price ' + (btcPrice >= BTC_ENTRY ? 'up' : 'down');
-      document.getElementById('btc-status').textContent = 'Live · ' + new Date().toLocaleTimeString();
+      document.getElementById('btc-status').textContent = 'Live · ' + now;
 
-      // ADA
+      // ── ADA ──
       const adaEl = document.getElementById('ada-live');
       adaEl.textContent = '$' + adaPrice.toFixed(4);
-      const ada = calcWidget(adaPrice, ADA_ENTRY);
-      document.getElementById('ada-value').textContent = fmtUSD(ada.currentValue);
+      adaEl.className   = 'tw-live-price ' + (adaPrice >= ADA_ENTRY ? 'up' : 'down');
+      const ada = calcPnL(adaPrice, ADA_ENTRY, ADA_INV, ADA_LEV);
+      document.getElementById('ada-value').textContent = fmtVal(ada.currentValue);
       const adaRoi = document.getElementById('ada-roi');
       adaRoi.textContent = fmtROI(ada.roi);
       adaRoi.className = 'tw-val ' + (ada.roi >= 0 ? 'green' : 'red');
-      adaEl.className   = 'tw-live-price ' + (adaPrice >= ADA_ENTRY ? 'up' : 'down');
-      document.getElementById('ada-status').textContent = 'Live · ' + new Date().toLocaleTimeString();
+      document.getElementById('ada-status').textContent = 'Live · ' + now;
 
-      // SUMMARY PANEL
-      const totalPayout = btc.currentValue + ada.currentValue;
-      const totalInvested = INVESTED * 2;
-      const combinedROI = ((totalPayout - totalInvested) / totalInvested) * 100;
+      // ── EUR/USD ──
+      const eurEl = document.getElementById('eur-live');
+      eurEl.textContent = eurPrice.toFixed(4);
+      eurEl.className   = 'tw-live-price ' + (eurPrice >= EUR_ENTRY ? 'up' : 'down');
+      const eur = calcPnL(eurPrice, EUR_ENTRY, EUR_INV, EUR_LEV);
+      document.getElementById('eur-value').textContent = fmtVal(eur.currentValue);
+      const eurRoi = document.getElementById('eur-roi');
+      eurRoi.textContent = fmtROI(eur.roi);
+      eurRoi.className = 'tw-val ' + (eur.roi >= 0 ? 'green' : 'red');
+      document.getElementById('eur-status').textContent = 'Live · ' + now;
+
+      // ── SUMMARY PANEL ──
+      const totalInvested = BTC_INV + ADA_INV + EUR_INV;                        // 45000
+      const totalValue    = btc.currentValue + ada.currentValue + eur.currentValue;
+      const totalPnL      = btc.pnl + ada.pnl + eur.pnl;
+      const combinedROI   = (totalPnL / totalInvested) * 100;
 
       const sumBtcEl = document.getElementById('sum-btc-val');
+      sumBtcEl.textContent = fmtUSD(btc.pnl);
+      sumBtcEl.className   = 'roi-box-val ' + (btc.pnl >= 0 ? 'green' : 'red');
+
       const sumAdaEl = document.getElementById('sum-ada-val');
+      sumAdaEl.textContent = fmtUSD(ada.pnl);
+      sumAdaEl.className   = 'roi-box-val ' + (ada.pnl >= 0 ? 'green' : 'red');
+
+      const sumEurEl = document.getElementById('sum-eur-val');
+      sumEurEl.textContent = fmtUSD(eur.pnl);
+      sumEurEl.className   = 'roi-box-val ' + (eur.pnl >= 0 ? 'green' : 'red');
+
       const sumTotalEl = document.getElementById('sum-total');
+      sumTotalEl.textContent = fmtUSD(totalPnL);
+      sumTotalEl.className   = 'roi-box-val ' + (totalPnL >= 0 ? 'green' : 'red');
+
       const sumRoiEl = document.getElementById('sum-roi');
-
-      sumBtcEl.textContent = fmtUSD(btc.currentValue);
-      sumBtcEl.className = 'roi-box-val ' + (btc.currentValue >= INVESTED ? 'green' : 'red');
-
-      sumAdaEl.textContent = fmtUSD(ada.currentValue);
-      sumAdaEl.className = 'roi-box-val ' + (ada.currentValue >= INVESTED ? 'green' : 'red');
-
-      sumTotalEl.textContent = fmtUSD(totalPayout);
-      sumTotalEl.className = 'roi-box-val ' + (totalPayout >= totalInvested ? 'green' : 'red');
-
       sumRoiEl.textContent = fmtROI(combinedROI);
-      sumRoiEl.className = 'roi-box-val ' + (combinedROI >= 0 ? 'green' : 'red');
+      sumRoiEl.className   = 'roi-box-val ' + (combinedROI >= 0 ? 'green' : 'red');
 
     } catch (e) {
-      document.getElementById('btc-status').textContent = 'Retrying…';
-      document.getElementById('ada-status').textContent = 'Retrying…';
+      ['btc-status','ada-status','eur-status'].forEach(id => {
+        document.getElementById(id).textContent = 'Retrying…';
+      });
     }
   }
 
   updatePrices();
-  setInterval(updatePrices, 30000); // refresh every 30s
+  setInterval(updatePrices, 30000);
 
   // Mobile menu toggle
   const hamburger = document.getElementById('hamburger');
