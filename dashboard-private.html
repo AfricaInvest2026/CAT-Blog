@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Dashboard — CAT</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --gold: #c9a84c; --gold-light: #f0c96b;
+      --dark: #0d0d0d; --dark2: #161616; --dark3: #1f1f1f; --card: #1a1a1a;
+      --border: rgba(201,168,76,0.18); --text: #e8e8e8; --muted: #888;
+      --green: #2ecc71; --red: #e74c3c; --blue: #3498db;
+    }
+    body { background: var(--dark); color: var(--text); font-family: 'Segoe UI', sans-serif; min-height: 100vh; display: flex; flex-direction: column; }
+    a { color: inherit; text-decoration: none; }
+
+    /* Topbar */
+    .topbar {
+      background: var(--dark2); border-bottom: 1px solid var(--border);
+      padding: 0 2rem; height: 60px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 50;
+    }
+    .logo { font-family: Georgia, serif; color: var(--gold); font-size: 1.2rem; letter-spacing: 2px; }
+    .topbar-right { display: flex; align-items: center; gap: 1.5rem; }
+    .user-badge { font-size: 0.82rem; color: var(--muted); }
+    .user-badge strong { color: var(--gold-light); }
+    .btn-logout { font-size: 0.78rem; border: 1px solid var(--border); padding: 0.35rem 0.8rem; border-radius: 6px; color: var(--muted); cursor: pointer; background: none; transition: color .2s, border-color .2s; }
+    .btn-logout:hover { color: var(--red); border-color: var(--red); }
+
+    /* Layout */
+    .layout { display: flex; flex: 1; }
+
+    /* Sidebar */
+    .sidebar {
+      width: 220px; min-height: calc(100vh - 60px);
+      background: var(--dark2); border-right: 1px solid var(--border);
+      padding: 2rem 0; flex-shrink: 0;
+    }
+    .nav-item {
+      display: flex; align-items: center; gap: 0.75rem;
+      padding: 0.75rem 1.5rem; font-size: 0.87rem; color: var(--muted);
+      cursor: pointer; transition: color .2s, background .2s; border-left: 3px solid transparent;
+    }
+    .nav-item:hover { color: var(--text); background: rgba(255,255,255,0.03); }
+    .nav-item.active { color: var(--gold); border-left-color: var(--gold); background: rgba(201,168,76,0.05); }
+    .nav-section { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 2px; color: #444; padding: 1.5rem 1.5rem 0.5rem; }
+
+    /* Main content */
+    .main { flex: 1; padding: 2.5rem; overflow-x: hidden; }
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* Page header */
+    .page-header { margin-bottom: 2rem; }
+    .page-header h1 { font-family: Georgia, serif; font-size: 1.8rem; margin-bottom: 0.25rem; }
+    .page-header h1 em { color: var(--gold); font-style: normal; }
+    .page-header p { color: var(--muted); font-size: 0.87rem; }
+
+    /* Stats row */
+    .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1.25rem; margin-bottom: 2rem; }
+    .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; }
+    .stat-card .s-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 0.5rem; }
+    .stat-card .s-value { font-family: Georgia, serif; font-size: 1.8rem; font-weight: 700; }
+    .stat-card .s-value.gold { color: var(--gold); }
+    .stat-card .s-value.green { color: var(--green); }
+    .stat-card .s-value.blue { color: var(--blue); }
+    .stat-card .s-sub { font-size: 0.75rem; color: var(--muted); margin-top: 0.3rem; }
+
+    /* Contract card */
+    .contract-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; margin-bottom: 1.5rem;
+    }
+    .contract-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+    .contract-header h3 { font-family: Georgia, serif; font-size: 1.2rem; }
+    .contract-header h3 em { color: var(--gold); font-style: normal; }
+    .status-badge { font-size: 0.7rem; letter-spacing: 1px; text-transform: uppercase; padding: 0.3rem 0.8rem; border-radius: 20px; font-weight: 700; }
+    .status-badge.active { background: rgba(46,204,113,0.15); color: var(--green); border: 1px solid rgba(46,204,113,0.3); }
+    .status-badge.pending { background: rgba(201,168,76,0.1); color: var(--gold); border: 1px solid var(--border); }
+    .status-badge.completed { background: rgba(52,152,219,0.1); color: var(--blue); border: 1px solid rgba(52,152,219,0.3); }
+
+    .contract-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; }
+    .cg-item .cg-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 0.3rem; }
+    .cg-item .cg-value { font-size: 1rem; font-weight: 600; }
+    .cg-item .cg-value.gold { color: var(--gold-light); }
+    .cg-item .cg-value.green { color: var(--green); }
+
+    /* Progress bar */
+    .progress-wrap { margin-top: 1.5rem; }
+    .progress-label { display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--muted); margin-bottom: 0.5rem; }
+    .progress-bar { height: 6px; background: var(--dark3); border-radius: 3px; overflow: hidden; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, var(--gold), var(--gold-light)); border-radius: 3px; transition: width 1s ease; }
+
+    /* Empty state */
+    .empty-state { text-align: center; padding: 4rem 2rem; color: var(--muted); }
+    .empty-state .e-icon { font-size: 3rem; margin-bottom: 1rem; }
+    .empty-state h3 { font-family: Georgia, serif; font-size: 1.4rem; margin-bottom: 0.5rem; color: var(--text); }
+    .empty-state p { font-size: 0.87rem; margin-bottom: 1.5rem; }
+    .btn-cta { display: inline-block; background: var(--gold); color: #000; padding: 0.75rem 1.8rem; border-radius: 8px; font-weight: 700; font-size: 0.9rem; transition: background .2s; }
+    .btn-cta:hover { background: var(--gold-light); }
+
+    /* Table */
+    .table-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 1.5rem; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.87rem; }
+    thead { background: var(--dark2); }
+    th { padding: 0.85rem 1.25rem; text-align: left; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); font-weight: 600; }
+    td { padding: 0.85rem 1.25rem; border-top: 1px solid rgba(255,255,255,0.04); color: var(--text); }
+    tr:hover td { background: rgba(255,255,255,0.02); }
+
+    /* Profile form */
+    .profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .field { margin-bottom: 0; }
+    .field label { display: block; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 0.5rem; }
+    .field input { width: 100%; background: var(--dark2); border: 1px solid var(--border); border-radius: 8px; padding: 0.7rem 0.9rem; color: var(--text); font-size: 0.92rem; outline: none; transition: border-color .2s; }
+    .field input:focus { border-color: var(--gold); }
+    .field input[readonly] { opacity: 0.5; cursor: not-allowed; }
+    .btn-save { background: var(--gold); color: #000; border: none; border-radius: 8px; padding: 0.75rem 2rem; font-weight: 700; font-size: 0.9rem; cursor: pointer; transition: background .2s; margin-top: 1.5rem; }
+    .btn-save:hover { background: var(--gold-light); }
+
+    /* Support */
+    .support-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; margin-bottom: 1.5rem; }
+    .support-card h3 { font-size: 1rem; margin-bottom: 0.5rem; }
+    .support-card p { color: var(--muted); font-size: 0.87rem; margin-bottom: 1.25rem; line-height: 1.6; }
+    .support-email { display: inline-block; color: var(--gold); border: 1px solid var(--border); padding: 0.6rem 1.25rem; border-radius: 8px; font-size: 0.9rem; transition: border-color .2s; }
+    .support-email:hover { border-color: var(--gold); }
+
+    /* Responsive */
+    @media (max-width: 700px) {
+      .sidebar { display: none; }
+      .main { padding: 1.5rem; }
+      .profile-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Topbar -->
+<div class="topbar">
+  <div class="logo">CAT</div>
+  <div class="topbar-right">
+    <div class="user-badge">Welcome, <strong id="displayName">Investor</strong></div>
+    <button class="btn-logout" onclick="logout()">Logout</button>
+  </div>
+</div>
+
+<div class="layout">
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <div class="nav-section">Portfolio</div>
+    <div class="nav-item active" onclick="showPage('overview')">📊 Overview</div>
+    <div class="nav-item" onclick="showPage('contracts')">📋 My Contracts</div>
+    <div class="nav-item" onclick="showPage('history')">🕐 History</div>
+    <div class="nav-section">Account</div>
+    <div class="nav-item" onclick="showPage('profile')">👤 Profile</div>
+    <div class="nav-item" onclick="showPage('support')">✉️ Support</div>
+    <div class="nav-section">Plans</div>
+    <div class="nav-item" onclick="window.location.href='index.html#plans'">🚀 New Contract</div>
+  </nav>
+
+  <!-- Main -->
+  <div class="main">
+
+    <!-- OVERVIEW -->
+    <div class="page active" id="page-overview">
+      <div class="page-header">
+        <h1>Portfolio <em>Overview</em></h1>
+        <p>Your investment summary at a glance.</p>
+      </div>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="s-label">Total Invested</div>
+          <div class="s-value gold" id="stat-invested">$0</div>
+          <div class="s-sub">Across all contracts</div>
+        </div>
+        <div class="stat-card">
+          <div class="s-label">Expected Profit</div>
+          <div class="s-value green" id="stat-profit">$0</div>
+          <div class="s-sub">At contract maturity</div>
+        </div>
+        <div class="stat-card">
+          <div class="s-label">Total Payout</div>
+          <div class="s-value gold" id="stat-payout">$0</div>
+          <div class="s-sub">Capital + profit</div>
+        </div>
+        <div class="stat-card">
+          <div class="s-label">Active Contracts</div>
+          <div class="s-value blue" id="stat-contracts">0</div>
+          <div class="s-sub">Running now</div>
+        </div>
+      </div>
+
+      <div id="overview-contracts"></div>
+
+      <div class="contract-card" style="text-align:center; padding: 2rem;">
+        <p style="color:var(--muted); font-size:0.87rem; margin-bottom:1rem;">Ready to grow your capital? Start a new 7-day contract.</p>
+        <a href="index.html#plans" class="btn-cta">+ Open New Contract</a>
+      </div>
+    </div>
+
+    <!-- CONTRACTS -->
+    <div class="page" id="page-contracts">
+      <div class="page-header">
+        <h1>My <em>Contracts</em></h1>
+        <p>All active and pending investment contracts.</p>
+      </div>
+      <div id="contracts-list"></div>
+      <div style="text-align:center; margin-top:1rem;">
+        <a href="index.html#plans" class="btn-cta">+ Open New Contract</a>
+      </div>
+    </div>
+
+    <!-- HISTORY -->
+    <div class="page" id="page-history">
+      <div class="page-header">
+        <h1>Transaction <em>History</em></h1>
+        <p>Record of all your past and current investments.</p>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Plan</th>
+              <th>Amount</th>
+              <th>Rate</th>
+              <th>Profit</th>
+              <th>Payout</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="history-table">
+            <tr><td colspan="7" style="text-align:center; color:var(--muted); padding:2rem;">No transactions yet.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- PROFILE -->
+    <div class="page" id="page-profile">
+      <div class="page-header">
+        <h1>My <em>Profile</em></h1>
+        <p>Manage your account information.</p>
+      </div>
+      <div class="contract-card">
+        <div class="profile-grid">
+          <div class="field"><label>Full Name</label><input type="text" id="p-name" /></div>
+          <div class="field"><label>Email</label><input type="text" id="p-email" /></div>
+          <div class="field"><label>Username</label><input type="text" id="p-username" readonly /></div>
+          <div class="field"><label>Plan</label><input type="text" id="p-plan" readonly /></div>
+        </div>
+        <div class="profile-grid" style="margin-top:1.5rem;">
+          <div class="field"><label>New Password</label><input type="password" id="p-newpass" placeholder="Leave blank to keep current" /></div>
+          <div class="field"><label>Confirm Password</label><input type="password" id="p-confirmpass" placeholder="Repeat new password" /></div>
+        </div>
+        <button class="btn-save" onclick="saveProfile()">Save Changes</button>
+        <div id="profile-msg" style="margin-top:0.75rem; font-size:0.82rem; color:var(--green); display:none;">✅ Profile updated.</div>
+      </div>
+    </div>
+
+    <!-- SUPPORT -->
+    <div class="page" id="page-support">
+      <div class="page-header">
+        <h1>Support &amp; <em>Contact</em></h1>
+        <p>Our team is here to help with any questions about your account or contracts.</p>
+      </div>
+      <div class="support-card">
+        <h3>📧 Email Support</h3>
+        <p>Send us a message and we'll reply within 24 hours with full assistance for your account, payment confirmations, or contract questions.</p>
+        <a href="mailto:changeafricatoday@outlook.com" class="support-email">changeafricatoday@outlook.com</a>
+      </div>
+      <div class="support-card">
+        <h3>⏱ Response Time</h3>
+        <p>We typically respond within <strong style="color:var(--gold-light)">24 hours</strong> on business days. For contract activations, please include your username and payment confirmation in your email.</p>
+      </div>
+      <div class="support-card">
+        <h3>🔐 Forgot Credentials?</h3>
+        <p>If you've been locked out of your account, use the recovery page to send a reset request to our team.</p>
+        <a href="forgot.html" class="btn-cta" style="display:inline-block; margin-top:0.5rem; font-size:0.85rem; padding:0.6rem 1.4rem;">Go to Recovery Page →</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // Auth guard
+  const user = JSON.parse(localStorage.getItem('cat_current_user') || 'null');
+  if (!user || user.type !== 'private') window.location.href = 'login-private.html';
+
+  // Display name
+  document.getElementById('displayName').textContent = user ? (user.name || user.username) : '';
+
+  // Populate profile
+  if (user) {
+    document.getElementById('p-name').value = user.name || '';
+    document.getElementById('p-email').value = user.email || '';
+    document.getElementById('p-username').value = user.username || '';
+    document.getElementById('p-plan').value = user.plan || '';
+  }
+
+  // Rates
+  const RATES = { Starter: 3, Growth: 5, Elite: 7 };
+
+  // Build stats & contracts from localStorage user data
+  function buildDashboard() {
+    if (!user) return;
+    const rate = RATES[user.plan] || 0;
+    const amt = parseFloat(user.amount) || 0;
+    const profit = +(amt * rate / 100).toFixed(2);
+    const payout = +(amt + profit).toFixed(2);
+
+    document.getElementById('stat-invested').textContent = '$' + amt.toFixed(2);
+    document.getElementById('stat-profit').textContent = '$' + profit.toFixed(2);
+    document.getElementById('stat-payout').textContent = '$' + payout.toFixed(2);
+    document.getElementById('stat-contracts').textContent = '1';
+
+    const joinDate = user.joined ? new Date(user.joined) : new Date();
+    const maturity = new Date(joinDate.getTime() + 7 * 24 * 60 * 60 * 1000);
+    const now = new Date();
+    const totalMs = 7 * 24 * 60 * 60 * 1000;
+    const elapsedMs = Math.max(0, now - joinDate);
+    const progress = Math.min(100, Math.round(elapsedMs / totalMs * 100));
+    const daysLeft = Math.max(0, Math.ceil((maturity - now) / (1000 * 60 * 60 * 24)));
+    const status = progress >= 100 ? 'completed' : (user.activated ? 'active' : 'pending');
+    const statusLabel = progress >= 100 ? 'Completed' : (user.activated ? 'Active' : 'Pending Activation');
+
+    const cardHTML = `
+      <div class="contract-card">
+        <div class="contract-header">
+          <h3>${user.plan || 'Plan'} <em>Contract</em></h3>
+          <span class="status-badge ${status}">${statusLabel}</span>
+        </div>
+        <div class="contract-grid">
+          <div class="cg-item"><div class="cg-label">Amount</div><div class="cg-value gold">$${amt.toFixed(2)}</div></div>
+          <div class="cg-item"><div class="cg-label">Weekly Rate</div><div class="cg-value">${rate}%</div></div>
+          <div class="cg-item"><div class="cg-label">Profit</div><div class="cg-value green">+$${profit.toFixed(2)}</div></div>
+          <div class="cg-item"><div class="cg-label">Total Payout</div><div class="cg-value gold">$${payout.toFixed(2)}</div></div>
+          <div class="cg-item"><div class="cg-label">Start Date</div><div class="cg-value">${joinDate.toLocaleDateString()}</div></div>
+          <div class="cg-item"><div class="cg-label">Maturity Date</div><div class="cg-value">${maturity.toLocaleDateString()}</div></div>
+          <div class="cg-item"><div class="cg-label">Days Remaining</div><div class="cg-value">${daysLeft} days</div></div>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-label"><span>Contract Progress</span><span>${progress}%</span></div>
+          <div class="progress-bar"><div class="progress-fill" style="width:${progress}%"></div></div>
+        </div>
+      </div>`;
+
+    document.getElementById('overview-contracts').innerHTML = cardHTML;
+    document.getElementById('contracts-list').innerHTML = cardHTML;
+
+    // History table
+    document.getElementById('history-table').innerHTML = `
+      <tr>
+        <td>${joinDate.toLocaleDateString()}</td>
+        <td>${user.plan || '—'}</td>
+        <td>$${amt.toFixed(2)}</td>
+        <td>${rate}% / week</td>
+        <td class="${status === 'completed' ? 'green' : ''}" style="color:${status === 'completed' ? 'var(--green)' : 'var(--muted)'}">+$${profit.toFixed(2)}</td>
+        <td>$${payout.toFixed(2)}</td>
+        <td><span class="status-badge ${status}">${statusLabel}</span></td>
+      </tr>`;
+  }
+
+  buildDashboard();
+
+  // Navigation
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('page-' + id).classList.add('active');
+    event.currentTarget.classList.add('active');
+  }
+
+  // Save profile
+  function saveProfile() {
+    const np = document.getElementById('p-newpass').value;
+    const cp = document.getElementById('p-confirmpass').value;
+    if (np && np !== cp) return alert('Passwords do not match.');
+    const users = JSON.parse(localStorage.getItem('cat_users') || '[]');
+    const idx = users.findIndex(x => x.username === user.username);
+    if (idx > -1) {
+      users[idx].name = document.getElementById('p-name').value;
+      users[idx].email = document.getElementById('p-email').value;
+      if (np) users[idx].password = np;
+      localStorage.setItem('cat_users', JSON.stringify(users));
+      localStorage.setItem('cat_current_user', JSON.stringify(users[idx]));
+    }
+    document.getElementById('profile-msg').style.display = 'block';
+    setTimeout(() => document.getElementById('profile-msg').style.display = 'none', 3000);
+  }
+
+  // Logout
+  function logout() {
+    localStorage.removeItem('cat_current_user');
+    window.location.href = 'login-private.html';
+  }
+</script>
+</body>
+</html>
