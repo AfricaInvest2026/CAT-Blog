@@ -104,29 +104,23 @@
     /* ── CLOSED POSITIONS ── */
     .closed-section { padding: 1rem; max-width: 1200px; margin: 0 auto; }
     @media (min-width: 768px) { .closed-section { padding: 1rem 2rem 2rem; } }
-    .closed-grid { display: grid; grid-template-columns: 1fr; gap: .8rem; margin-top: .4rem; }
-    @media (min-width: 600px) { .closed-grid { grid-template-columns: repeat(2, 1fr); } }
-    @media (min-width: 1024px) { .closed-grid { grid-template-columns: repeat(3, 1fr); } }
-    .closed-card {
-      background: var(--dark2); border: 1px solid var(--border); border-radius: var(--radius);
-      padding: 1.1rem; position: relative; overflow: hidden;
-    }
-    .closed-card::before { content: attr(data-icon); position: absolute; right: .7rem; top: .5rem; font-size: 1.8rem; opacity: .07; }
-    .closed-badge { display: inline-flex; align-items: center; gap: .3rem; font-size: .62rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; padding: .15rem .5rem; border-radius: 4px; margin-bottom: .6rem; background: rgba(255,255,255,.05); border: 1px solid var(--border); color: var(--text-muted); }
-    .closed-badge.win { background: rgba(46,204,113,.08); border-color: rgba(46,204,113,.25); color: var(--green); }
-    .closed-badge.loss { background: rgba(231,76,60,.08); border-color: rgba(231,76,60,.25); color: var(--red); }
-    .closed-title { font-size: .95rem; font-weight: 800; margin-bottom: .5rem; }
-    .closed-rows { display: flex; flex-direction: column; gap: .3rem; }
-    .closed-row { display: flex; justify-content: space-between; font-size: .78rem; }
-    .closed-row .lbl { color: var(--text-muted); }
-    .closed-row .val { font-weight: 600; color: var(--text); }
-    .closed-pnl { font-size: 1.1rem; font-weight: 800; margin-top: .6rem; padding-top: .6rem; border-top: 1px solid var(--border); }
-    .closed-pnl.win { color: var(--green); } .closed-pnl.loss { color: var(--red); }
     .closed-summary { background: var(--dark3); border: 1px solid var(--border); border-radius: var(--radius); padding: .9rem 1.1rem; margin-top: .8rem; display: flex; flex-wrap: wrap; gap: .8rem; justify-content: space-between; align-items: center; }
     .closed-summary-item { text-align: center; min-width: 80px; }
     .closed-summary-item .lbl { font-size: .62rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: .05em; }
     .closed-summary-item .val { font-size: 1rem; font-weight: 800; color: var(--gold); }
     .closed-summary-item .val.win { color: var(--green); } .closed-summary-item .val.loss { color: var(--red); }
+    /* Compact table */
+    .closed-table { width: 100%; border-collapse: collapse; margin-top: .9rem; font-size: .78rem; }
+    .closed-table thead tr { border-bottom: 1px solid var(--border); }
+    .closed-table th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-size: .62rem; letter-spacing: .06em; padding: .4rem .6rem; text-align: left; white-space: nowrap; }
+    .closed-table td { padding: .55rem .6rem; border-bottom: 1px solid rgba(212,168,67,.07); color: var(--text); vertical-align: middle; white-space: nowrap; }
+    .closed-table tbody tr:last-child td { border-bottom: none; }
+    .closed-table tbody tr:hover td { background: rgba(255,255,255,.03); }
+    .ct-asset { font-weight: 700; }
+    .ct-dates { color: var(--text-muted); font-size: .72rem; }
+    .ct-pnl { font-weight: 800; }
+    .ct-pnl.win { color: var(--green); } .ct-pnl.loss { color: var(--red); }
+    .ct-badge { display: inline-block; font-size: .6rem; font-weight: 700; padding: .1rem .4rem; border-radius: 4px; background: rgba(46,204,113,.1); border: 1px solid rgba(46,204,113,.25); color: var(--green); }
 
     /* ── HERO ── */
     .hero { text-align: center; padding: 3.5rem 1.2rem 3rem; background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(212,168,67,.07) 0%, transparent 70%); }
@@ -380,59 +374,49 @@
     </div>
   </div>
 
-  <div class="closed-grid" style="margin-top:1rem">
-
-    <!-- BTC closed -->
-    <div class="closed-card" data-icon="₿">
-      <div class="closed-badge win">✓ Closed · Profit</div>
-      <div class="closed-title">₿ Bitcoin — BTC/USD</div>
-      <div class="closed-rows">
-        <div class="closed-row"><span class="lbl">Entry Price</span><span class="val">$60,200</span></div>
-        <div class="closed-row"><span class="lbl">Exit Price</span><span class="val">$61,671</span></div>
-        <div class="closed-row"><span class="lbl">Entry Date</span><span class="val">Jun 6 · 13:30</span></div>
-        <div class="closed-row"><span class="lbl">Exit Date</span><span class="val">Jun 10 · 10:55</span></div>
-        <div class="closed-row"><span class="lbl">Duration</span><span class="val">4 days</span></div>
-        <div class="closed-row"><span class="lbl">Invested</span><span class="val">$10,000</span></div>
-        <div class="closed-row"><span class="lbl">Leverage</span><span class="val">1:20</span></div>
-        <div class="closed-row"><span class="lbl">Capital Returned</span><span class="val">$10,000</span></div>
-      </div>
-      <div class="closed-pnl win">+$4,887 &nbsp;/&nbsp; ROI +48.87%</div>
-    </div>
-
-    <!-- ADA closed -->
-    <div class="closed-card" data-icon="₳">
-      <div class="closed-badge win">✓ Closed · Profit</div>
-      <div class="closed-title">₳ Cardano — ADA/USD</div>
-      <div class="closed-rows">
-        <div class="closed-row"><span class="lbl">Entry Price</span><span class="val">$0.1600</span></div>
-        <div class="closed-row"><span class="lbl">Exit Price</span><span class="val">$0.1757</span></div>
-        <div class="closed-row"><span class="lbl">Entry Date</span><span class="val">Jun 7 · 08:00</span></div>
-        <div class="closed-row"><span class="lbl">Exit Date</span><span class="val">Jun 10 · 10:55</span></div>
-        <div class="closed-row"><span class="lbl">Duration</span><span class="val">3 days</span></div>
-        <div class="closed-row"><span class="lbl">Invested</span><span class="val">$10,000</span></div>
-        <div class="closed-row"><span class="lbl">Leverage</span><span class="val">1:20</span></div>
-        <div class="closed-row"><span class="lbl">Capital Returned</span><span class="val">$10,000</span></div>
-      </div>
-      <div class="closed-pnl win">+$1,963 &nbsp;/&nbsp; ROI +19.63%</div>
-    </div>
-
-    <!-- EUR/USD closed -->
-    <div class="closed-card" data-icon="€">
-      <div class="closed-badge win">✓ Closed · Profit</div>
-      <div class="closed-title">€ Euro / Dollar — EUR/USD</div>
-      <div class="closed-rows">
-        <div class="closed-row"><span class="lbl">Entry Price</span><span class="val">1.1520</span></div>
-        <div class="closed-row"><span class="lbl">Exit Price</span><span class="val">1.1552</span></div>
-        <div class="closed-row"><span class="lbl">Entry Date</span><span class="val">Jun 8 · 08:30</span></div>
-        <div class="closed-row"><span class="lbl">Exit Date</span><span class="val">Jun 10 · 10:55</span></div>
-        <div class="closed-row"><span class="lbl">Duration</span><span class="val">2 days</span></div>
-        <div class="closed-row"><span class="lbl">Invested</span><span class="val">$25,000</span></div>
-        <div class="closed-row"><span class="lbl">Leverage</span><span class="val">1:100</span></div>
-        <div class="closed-row"><span class="lbl">Capital Returned</span><span class="val">$25,000</span></div>
-      </div>
-      <div class="closed-pnl win">+$6,944 &nbsp;/&nbsp; ROI +27.78%</div>
-    </div>
-
+  <div style="overflow-x:auto">
+    <table class="closed-table">
+      <thead>
+        <tr>
+          <th>Asset</th>
+          <th>Entry → Exit</th>
+          <th>Dates</th>
+          <th>Invested</th>
+          <th>Lev.</th>
+          <th>P&amp;L / ROI</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="ct-asset">₿ BTC/USD</td>
+          <td>$60,200 → $61,671</td>
+          <td class="ct-dates">Jun 6 → Jun 10 · 4d</td>
+          <td>$10,000</td>
+          <td>1:20</td>
+          <td class="ct-pnl win">+$4,887 · +48.87%</td>
+          <td><span class="ct-badge">✓ WIN</span></td>
+        </tr>
+        <tr>
+          <td class="ct-asset">₳ ADA/USD</td>
+          <td>$0.1600 → $0.1757</td>
+          <td class="ct-dates">Jun 7 → Jun 10 · 3d</td>
+          <td>$10,000</td>
+          <td>1:20</td>
+          <td class="ct-pnl win">+$1,963 · +19.63%</td>
+          <td><span class="ct-badge">✓ WIN</span></td>
+        </tr>
+        <tr>
+          <td class="ct-asset">€ EUR/USD</td>
+          <td>1.1520 → 1.1552</td>
+          <td class="ct-dates">Jun 8 → Jun 10 · 2d</td>
+          <td>$25,000</td>
+          <td>1:100</td>
+          <td class="ct-pnl win">+$6,944 · +27.78%</td>
+          <td><span class="ct-badge">✓ WIN</span></td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>
 
