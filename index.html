@@ -249,12 +249,12 @@
   <div class="ticker-inner">
     <span class="ticker-item">EUR/KES <span id="t-eurkes">…</span></span>
     <span class="ticker-item">EUR/USD <span id="t-eurusd">…</span></span>
-    <span class="ticker-item">BTC/USD <span id="t-btc">● CLOSED</span></span>
-    <span class="ticker-item">ADA/USD <span id="t-ada">● CLOSED</span></span>
+    <span class="ticker-item">BTC/USD <span id="t-btc">…</span></span>
+    <span class="ticker-item">ADA/USD <span id="t-ada">…</span></span>
     <span class="ticker-item">EUR/KES <span id="t-eurkes2">…</span></span>
     <span class="ticker-item">EUR/USD <span id="t-eurusd2">…</span></span>
-    <span class="ticker-item">BTC/USD <span>● CLOSED</span></span>
-    <span class="ticker-item">ADA/USD <span>● CLOSED</span></span>
+    <span class="ticker-item">BTC/USD <span id="t-btc2">…</span></span>
+    <span class="ticker-item">ADA/USD <span id="t-ada2">…</span></span>
   </div>
 </div>
 
@@ -635,6 +635,27 @@
 
   fetchForex();
   setInterval(fetchForex, 30000);
+
+  /* ── Fetch BTC & ADA live prices ── */
+  async function fetchCrypto() {
+    try {
+      const r = await fetch('https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC,ADA&tsyms=USD');
+      const d = await r.json();
+      if (d.BTC && d.BTC.USD) {
+        const btc = '$' + d.BTC.USD.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+        setEl('t-btc',  btc);
+        setEl('t-btc2', btc);
+      }
+      if (d.ADA && d.ADA.USD) {
+        const ada = '$' + d.ADA.USD.toFixed(4);
+        setEl('t-ada',  ada);
+        setEl('t-ada2', ada);
+      }
+    } catch(e) { console.warn('[CAT] Crypto ticker failed:', e.message); }
+  }
+
+  fetchCrypto();
+  setInterval(fetchCrypto, 30000);
 })();
 </script>
 
