@@ -599,26 +599,35 @@
     setCls('sum-roi', pnlCls(grandTotal));
   }
 
-  /* ── Fetch EUR/KES & EUR/USD — 3-API fallback ── */
+  /* ── Fetch EUR/KES & EUR/USD — live intraday, 3-API fallback, refreshes every 60s ── */
   async function fetchForex() {
     const apis = [
+      // API 1: Yahoo Finance — live intraday tick prices
       async () => {
-        const r = await fetch('https://open.er-api.com/v6/latest/EUR');
+        const [rKes, rUsd] = await Promise.all([
+          fetch('https://query1.finance.yahoo.com/v8/finance/chart/EURKES=X?interval=1m&range=1d', { cache: 'no-store' }),
+          fetch('https://query1.finance.yahoo.com/v8/finance/chart/EURUSD=X?interval=1m&range=1d', { cache: 'no-store' })
+        ]);
+        const [dKes, dUsd] = await Promise.all([rKes.json(), rUsd.json()]);
+        const kes = dKes.chart.result[0].meta.regularMarketPrice;
+        const usd = dUsd.chart.result[0].meta.regularMarketPrice;
+        if (!kes || !usd) throw new Error('no data');
+        return { kes, usd };
+      },
+      // API 2: open.er-api.com — daily fallback
+      async () => {
+        const r = await fetch('https://open.er-api.com/v6/latest/EUR', { cache: 'no-store' });
         const d = await r.json();
         if (d.result !== 'success' || !d.rates.KES) throw new Error('no KES');
         return { kes: d.rates.KES, usd: d.rates.USD };
       },
+      // API 3: fawazahmed0 — daily fallback
       async () => {
-        const r = await fetch('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/eur.json');
+        const today = new Date().toISOString().slice(0, 10);
+        const r = await fetch('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@' + today + '/v1/currencies/eur.json', { cache: 'no-store' });
         const d = await r.json();
         if (!d.eur || !d.eur.kes) throw new Error('no KES');
         return { kes: d.eur.kes, usd: d.eur.usd };
-      },
-      async () => {
-        const r = await fetch('https://api.exchangerate.host/latest?base=EUR&symbols=USD,KES');
-        const d = await r.json();
-        if (!d.rates || !d.rates.KES) throw new Error('no KES');
-        return { kes: d.rates.KES, usd: d.rates.USD };
       }
     ];
     for (let i = 0; i < apis.length; i++) {
@@ -634,24 +643,39 @@
   }
 
   fetchForex();
-  setInterval(fetchForex, 30000);
+  setInterval(fetchForex, 60000); // refresh every 60 seconds
 
-  /* ── Fetch BTC & ADA live prices ── */
+  /* ── Fetch BTC & ADA live prices — 2-API fallback ── */
   async function fetchCrypto() {
-    try {
-      const r = await fetch('https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC,ADA&tsyms=USD');
-      const d = await r.json();
-      if (d.BTC && d.BTC.USD) {
-        const btc = '$' + d.BTC.USD.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-        setEl('t-btc',  btc);
-        setEl('t-btc2', btc);
+    const apis = [
+      async () => {
+        const r = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,cardano&vs_currencies=usd');
+        const d = await r.json();
+        if (!d.bitcoin || !d.cardano) throw new Error('missing data');
+        return { btc: d.bitcoin.usd, ada: d.cardano.usd };
+      },
+      async () => {
+        const r = await fetch('https://api.binance.com/api/v3/ticker/price?symbols=%5B%22BTCUSDT%22,%22ADAUSDT%22%5D');
+        const d = await r.json();
+        const btcObj = d.find(x => x.symbol === 'BTCUSDT');
+        const adaObj = d.find(x => x.symbol === 'ADAUSDT');
+        if (!btcObj || !adaObj) throw new Error('missing data');
+        return { btc: parseFloat(btcObj.price), ada: parseFloat(adaObj.price) };
       }
-      if (d.ADA && d.ADA.USD) {
-        const ada = '$' + d.ADA.USD.toFixed(4);
-        setEl('t-ada',  ada);
-        setEl('t-ada2', ada);
-      }
-    } catch(e) { console.warn('[CAT] Crypto ticker failed:', e.message); }
+    ];
+    for (let i = 0; i < apis.length; i++) {
+      try {
+        const { btc, ada } = await apis[i]();
+        const btcStr = '$' + btc.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+        const adaStr = '$' + ada.toFixed(4);
+        setEl('t-btc',  btcStr);
+        setEl('t-btc2', btcStr);
+        setEl('t-ada',  adaStr);
+        setEl('t-ada2', adaStr);
+        return;
+      } catch(e) { console.warn('[CAT] Crypto API ' + (i+1) + ' failed:', e.message); }
+    }
+    console.warn('[CAT] All crypto APIs failed');
   }
 
   fetchCrypto();
