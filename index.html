@@ -249,10 +249,12 @@
   <div class="ticker-inner">
     <span class="ticker-item">EUR/KES <span id="t-eurkes">…</span></span>
     <span class="ticker-item">EUR/USD <span id="t-eurusd">…</span></span>
+    <span class="ticker-item">XAU/USD <span id="t-xau">…</span></span>
     <span class="ticker-item">BTC/USD <span id="t-btc">…</span></span>
     <span class="ticker-item">ADA/USD <span id="t-ada">…</span></span>
     <span class="ticker-item">EUR/KES <span id="t-eurkes2">…</span></span>
     <span class="ticker-item">EUR/USD <span id="t-eurusd2">…</span></span>
+    <span class="ticker-item">XAU/USD <span id="t-xau2">…</span></span>
     <span class="ticker-item">BTC/USD <span id="t-btc2">…</span></span>
     <span class="ticker-item">ADA/USD <span id="t-ada2">…</span></span>
   </div>
@@ -712,6 +714,8 @@
       try {
         const price = await apis[i]();
         setEl('xau-price', '$' + price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+        setEl('t-xau',  '$' + price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+        setEl('t-xau2', '$' + price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
         const pct = (price - XAU_ENTRY) / XAU_ENTRY;
         const pnl = pct * XAU_LEV * XAU_INVEST;
         const roi = pct * XAU_LEV * 100;
