@@ -267,15 +267,19 @@
 <div class="summary-grid">
   <div class="summary-card">
     <div class="label">Total Invested</div>
-    <div class="value">$175,000</div>
+    <div class="value">$225,000</div>
   </div>
   <div class="summary-card">
     <div class="label">Closed P&L</div>
-    <div class="value pos" id="sum-closed">+$22.92K</div>
+    <div class="value pos" id="sum-closed">+$39.94K</div>
   </div>
   <div class="summary-card">
     <div class="label">EUR/KES Live</div>
     <div class="value" id="sum-eurkes">$—</div>
+  </div>
+  <div class="summary-card">
+    <div class="label">XAU/USD Live</div>
+    <div class="value" id="sum-xau">$—</div>
   </div>
   <div class="summary-card">
     <div class="label">Total W/L</div>
@@ -287,7 +291,7 @@
   </div>
   <div class="summary-card">
     <div class="label">Positions</div>
-    <div class="value">3 Closed · 1 Live</div>
+    <div class="value">4 Closed · 2 Live</div>
   </div>
 </div>
 
@@ -718,6 +722,8 @@
         setEl('xau-pnl', fmtUSD(pnl) + ' / ROI ' + fmtPct(roi));
         setCls('xau-pnl', pnlCls(pnl));
         setEl('xau-status', 'live · ' + new Date().toLocaleTimeString());
+        setEl('sum-xau', fmtUSD(pnl));
+        setCls('sum-xau', pnlCls(pnl));
         // update grand total
         const kesEl = document.getElementById('eurkes-pnl');
         const kesPnl = kesEl ? parseFloat(kesEl.dataset.raw || 0) : 0;
