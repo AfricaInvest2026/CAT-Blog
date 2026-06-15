@@ -260,7 +260,7 @@
 
 <!-- ── PORTFOLIO BANNER ── -->
 <div class="portfolio-banner">
-  📊 Portfolio — <b>$175,000 Total Invested</b> · <span style="color:var(--green)">BTC ✓ CLOSED</span> · <span style="color:var(--green)">ADA ✓ CLOSED</span> · <span style="color:var(--green)">EUR/USD ✓ CLOSED</span> · <b style="color:var(--gold)">EUR/KES 🟢 LIVE</b>
+  📊 Portfolio — <b>$225,000 Total Invested</b> · <span style="color:var(--green)">BTC ✓ CLOSED</span> · <span style="color:var(--green)">ADA ✓ CLOSED</span> · <span style="color:var(--green)">EUR/USD ✓ CLOSED</span> · <b style="color:var(--gold)">EUR/KES 🟢 LIVE</b> · <b style="color:var(--gold)">XAU/USD 🟢 LIVE</b>
 </div>
 
 <!-- ── SUMMARY CARDS ── -->
@@ -329,6 +329,33 @@
       <div class="card-pnl neutral" id="eurkes-pnl">+—%</div>
       <div class="leverage-badge">🔁 Leverage 1:100</div>
       <div class="update-label"><span class="pulse"></span><span id="eurkes-status">updating…</span></div>
+    </div>
+
+    <div class="asset-card" data-icon="🥇">
+      <div class="card-header">
+        <div class="card-icon">🥇</div>
+        <div>
+          <div class="card-title">Gold / Dollar — XAU/USD · Live</div>
+          <div class="card-price" id="xau-price">loading…</div>
+        </div>
+      </div>
+
+      <div class="tranche-label">Position 1</div>
+      <div class="card-rows">
+        <div class="card-row"><span class="lbl">Entry Price</span><span class="val">$4,317.28</span></div>
+        <div class="card-row"><span class="lbl">Entry Date</span><span class="val">Jun 15 · now</span></div>
+        <div class="card-row"><span class="lbl">Invested</span><span class="val">$50,000</span></div>
+        <div class="card-row"><span class="lbl">P&L</span><span class="val" id="xau-pnl1">$—</span></div>
+      </div>
+
+      <div class="tranche-divider"></div>
+      <div class="card-rows">
+        <div class="card-row"><span class="lbl">Total Invested</span><span class="val">$50,000</span></div>
+        <div class="card-row"><span class="lbl">Current Value</span><span class="val" id="xau-value">$—</span></div>
+      </div>
+      <div class="card-pnl neutral" id="xau-pnl">+—%</div>
+      <div class="leverage-badge">🔁 Leverage 1:100</div>
+      <div class="update-label"><span class="pulse"></span><span id="xau-status">updating…</span></div>
     </div>
 
   </div>
@@ -644,6 +671,60 @@
 
   fetchForex();
   setInterval(fetchForex, 60000); // refresh every 60 seconds
+
+  /* ── XAU/USD position config ── */
+  const XAU_ENTRY   = 4317.28;
+  const XAU_INVEST  = 50000;
+  const XAU_LEV     = 100;
+
+  /* ── Fetch live XAU/USD price and update widget ── */
+  async function fetchXau() {
+    const apis = [
+      async () => {
+        const r = await fetch('https://query1.finance.yahoo.com/v8/finance/chart/GC=F?interval=1m&range=1d', { cache: 'no-store' });
+        const d = await r.json();
+        const price = d.chart.result[0].meta.regularMarketPrice;
+        if (!price) throw new Error('no price');
+        return price;
+      },
+      async () => {
+        const r = await fetch('https://api.metals.live/v1/spot/gold', { cache: 'no-store' });
+        const d = await r.json();
+        if (!d[0] || !d[0].price) throw new Error('no price');
+        return d[0].price;
+      }
+    ];
+    for (let i = 0; i < apis.length; i++) {
+      try {
+        const price = await apis[i]();
+        setEl('xau-price', '$' + price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+        const pct = (price - XAU_ENTRY) / XAU_ENTRY;
+        const pnl = pct * XAU_LEV * XAU_INVEST;
+        const roi = pct * XAU_LEV * 100;
+        const val = XAU_INVEST + pnl;
+        const el1 = document.getElementById('xau-pnl1');
+        if (el1) { el1.textContent = fmtUSD(pnl) + ' / ' + fmtPct(roi); el1.style.color = pnl > 0 ? 'var(--green)' : pnl < 0 ? 'var(--red)' : 'var(--text-muted)'; }
+        setEl('xau-value', '$' + val.toFixed(2));
+        setEl('xau-pnl', fmtUSD(pnl) + ' / ROI ' + fmtPct(roi));
+        setCls('xau-pnl', pnlCls(pnl));
+        setEl('xau-status', 'live · ' + new Date().toLocaleTimeString());
+        // update grand total
+        const kesEl = document.getElementById('eurkes-pnl');
+        const kesPnl = kesEl ? parseFloat(kesEl.dataset.raw || 0) : 0;
+        const grandTotal = CLOSED_PNL + kesPnl + pnl;
+        const grandRoi   = (grandTotal / (TOTAL_INVESTED + XAU_INVEST)) * 100;
+        setEl('sum-total', fmtUSD(grandTotal));
+        setCls('sum-total', pnlCls(grandTotal));
+        setEl('sum-roi', fmtPct(grandRoi));
+        setCls('sum-roi', pnlCls(grandTotal));
+        return;
+      } catch(e) { console.warn('[CAT] XAU API ' + (i+1) + ' failed:', e.message); }
+    }
+    setEl('xau-status', 'error – retry soon');
+  }
+
+  fetchXau();
+  setInterval(fetchXau, 60000);
 
   /* ── Fetch BTC & ADA live prices — 2-API fallback ── */
   async function fetchCrypto() {
