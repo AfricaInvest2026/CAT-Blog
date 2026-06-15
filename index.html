@@ -321,17 +321,9 @@
         <div class="card-row"><span class="lbl">P&L</span><span class="val" id="eurkes-pnl2">$—</span></div>
       </div>
 
-      <div class="tranche-label">Position 3</div>
-      <div class="card-rows">
-        <div class="card-row"><span class="lbl">Entry Price</span><span class="val">148.95</span></div>
-        <div class="card-row"><span class="lbl">Entry Date</span><span class="val">Jun 10 · 09:26</span></div>
-        <div class="card-row"><span class="lbl">Invested</span><span class="val">$50,000</span></div>
-        <div class="card-row"><span class="lbl">P&L</span><span class="val" id="eurkes-pnl3">$—</span></div>
-      </div>
-
       <div class="tranche-divider"></div>
       <div class="card-rows">
-        <div class="card-row"><span class="lbl">Total Invested</span><span class="val">$130,000</span></div>
+        <div class="card-row"><span class="lbl">Total Invested</span><span class="val">$80,000</span></div>
         <div class="card-row"><span class="lbl">Combined Value</span><span class="val" id="eurkes-value">$—</span></div>
       </div>
       <div class="card-pnl neutral" id="eurkes-pnl">+—%</div>
@@ -350,27 +342,27 @@
   <div class="closed-summary">
     <div class="closed-summary-item">
       <div class="lbl">Positions Closed</div>
-      <div class="val">3</div>
+      <div class="val">4</div>
     </div>
     <div class="closed-summary-item">
       <div class="lbl">Total Invested</div>
-      <div class="val">$45,000</div>
+      <div class="val">$95,000</div>
     </div>
     <div class="closed-summary-item">
       <div class="lbl">Total Returned</div>
-      <div class="val win">$67,920</div>
+      <div class="val win">$134,944</div>
     </div>
     <div class="closed-summary-item">
       <div class="lbl">Net Profit</div>
-      <div class="val win">+$22,920</div>
+      <div class="val win">+$39,944</div>
     </div>
     <div class="closed-summary-item">
       <div class="lbl">Avg ROI</div>
-      <div class="val win">+50.93%</div>
+      <div class="val win">+51.26%</div>
     </div>
     <div class="closed-summary-item">
       <div class="lbl">Win Rate</div>
-      <div class="val win">3 / 3</div>
+      <div class="val win">4 / 4</div>
     </div>
   </div>
 
@@ -413,6 +405,15 @@
           <td>$25,000</td>
           <td>1:100</td>
           <td class="ct-pnl win">+$6,944 · +27.78%</td>
+          <td><span class="ct-badge">✓ WIN</span></td>
+        </tr>
+        <tr>
+          <td class="ct-asset">🇰🇪 EUR/KES</td>
+          <td>148.95 → 149.755</td>
+          <td class="ct-dates">Jun 10 → Jun 15 · 5d</td>
+          <td>$50,000</td>
+          <td>1:100</td>
+          <td class="ct-pnl win">+$27,024 · +54.05%</td>
           <td><span class="ct-badge">✓ WIN</span></td>
         </tr>
       </tbody>
@@ -539,15 +540,14 @@
   // BTC: entry $60,200 → exit $61,671, invest $10,000, leverage 20
   // ADA: entry $0.16  → exit $0.1757, invest $10,000, leverage 20
   // EUR/USD: entry 1.1520 → exit 1.1552, invest $25,000, leverage 100
-  const CLOSED_PNL = 4887 + 1963 + 6944; // $13,794 — from screenshot values
+  const CLOSED_PNL = 4887 + 1963 + 6944 + 27024; // $40,818 — BTC + ADA + EUR/USD + EUR/KES P3
 
   /* ── EUR/KES entry config ── */
   const KES_TRANCHES = [
     { price: 149.95,   invest: 50000, leverage: 100 },
-    { price: 149.5244, invest: 30000, leverage: 100 },
-    { price: 148.95,   invest: 50000, leverage: 100 }
+    { price: 149.5244, invest: 30000, leverage: 100 }
   ];
-  const TOTAL_INVESTED = 175000;
+  const TOTAL_INVESTED = 125000;
 
   /* ── Helpers ── */
   function fmt(n, dec) { return n.toLocaleString('en-US', { minimumFractionDigits: dec, maximumFractionDigits: dec }); }
