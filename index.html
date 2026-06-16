@@ -882,34 +882,36 @@
   setEl('xau-entry-display',  '$' + XAU_TRANCHES[0].entry.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
   setEl('xau-entry2-display', '$' + XAU_TRANCHES[1].entry.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
 
-  /* ── Fetch live XAU/USD price and update widget ── */
+  /* ── Fetch live XAU/USD + XAG/USD together ── */
   async function fetchXau() {
     const apis = [
-      // Yahoo Finance spot gold
       async () => {
-        const r = await fetch('https://query1.finance.yahoo.com/v8/finance/chart/XAUUSD=X?interval=1m&range=1d', { cache: 'no-store' });
-        const d = await r.json();
-        const price = d?.chart?.result?.[0]?.meta?.regularMarketPrice;
-        if (!price) throw new Error('no price');
-        return price;
+        const [rXau, rXag] = await Promise.all([
+          fetch('https://query1.finance.yahoo.com/v8/finance/chart/XAUUSD=X?interval=1m&range=1d', { cache: 'no-store' }),
+          fetch('https://query1.finance.yahoo.com/v8/finance/chart/XAGUSD=X?interval=1m&range=1d', { cache: 'no-store' })
+        ]);
+        const [dXau, dXag] = await Promise.all([rXau.json(), rXag.json()]);
+        const xau = dXau?.chart?.result?.[0]?.meta?.regularMarketPrice;
+        const xag = dXag?.chart?.result?.[0]?.meta?.regularMarketPrice;
+        if (!xau || !xag) throw new Error('no price');
+        return { xau, xag };
       },
       async () => {
-        const r = await fetch('https://query2.finance.yahoo.com/v8/finance/chart/GC%3DF?interval=1m&range=1d', { cache: 'no-store' });
-        const d = await r.json();
-        const price = d?.chart?.result?.[0]?.meta?.regularMarketPrice;
-        if (!price) throw new Error('no price');
-        return price;
-      },
-      async () => {
-        const r = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=PAXGUSDT', { cache: 'no-store' });
-        const d = await r.json();
-        if (!d.price) throw new Error('no price');
-        return parseFloat(d.price);
+        const [rXau, rXag] = await Promise.all([
+          fetch('https://query2.finance.yahoo.com/v8/finance/chart/XAUUSD=X?interval=1m&range=1d', { cache: 'no-store' }),
+          fetch('https://query2.finance.yahoo.com/v8/finance/chart/XAGUSD=X?interval=1m&range=1d', { cache: 'no-store' })
+        ]);
+        const [dXau, dXag] = await Promise.all([rXau.json(), rXag.json()]);
+        const xau = dXau?.chart?.result?.[0]?.meta?.regularMarketPrice;
+        const xag = dXag?.chart?.result?.[0]?.meta?.regularMarketPrice;
+        if (!xau || !xag) throw new Error('no price');
+        return { xau, xag };
       }
     ];
     for (let i = 0; i < apis.length; i++) {
       try {
-        const price = await apis[i]();
+        const { xau: price, xag: xagPrice } = await apis[i]();
+        // ── XAU display ──
         setEl('xau-price', '$' + price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
         setEl('t-xau',  '$' + price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
         setEl('t-xau2', '$' + price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
@@ -931,6 +933,26 @@
         setEl('sum-xau', fmtUSD(totalPnl));
         setCls('sum-xau', pnlCls(totalPnl));
         window._xauPnl = totalPnl;
+
+        // ── XAG display ──
+        const fmt2 = p => '$' + p.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        setEl('xag-price', fmt2(xagPrice));
+        setEl('t-xag',  fmt2(xagPrice));
+        setEl('t-xag2', fmt2(xagPrice));
+        const xagPct = (xagPrice - XAG_ENTRY) / XAG_ENTRY;
+        const xagPnl = xagPct * XAG_LEV * XAG_INVEST;
+        const xagRoi = xagPct * XAG_LEV * 100;
+        const xagVal = XAG_INVEST + xagPnl;
+        const xagEl1 = document.getElementById('xag-pnl1');
+        if (xagEl1) { xagEl1.textContent = fmtUSD(xagPnl) + ' / ' + fmtPct(xagRoi); xagEl1.style.color = xagPnl > 0 ? 'var(--green)' : xagPnl < 0 ? 'var(--red)' : 'var(--text-muted)'; }
+        setEl('xag-value', fmt2(xagVal));
+        setEl('xag-pnl',   fmtUSD(xagPnl) + ' / ROI ' + fmtPct(xagRoi));
+        setCls('xag-pnl',  pnlCls(xagPnl));
+        setEl('xag-status', 'live · ' + new Date().toLocaleTimeString());
+        setEl('sum-xag', fmtUSD(xagPnl));
+        setCls('sum-xag', pnlCls(xagPnl));
+        window._xagPnl = xagPnl;
+
         updateGrandTotal();
         return;
       } catch(e) { console.warn('[CAT] XAU API ' + (i+1) + ' failed:', e.message); }
@@ -955,65 +977,8 @@
     setCls('sum-roi', pnlCls(grandTotal));
   }
 
-  /* ── Fetch live XAG/USD price ── */
-  async function fetchXag() {
-    const apis = [
-      // metals.live — free, CORS-open, returns troy oz price
-      async () => {
-        const r = await fetch('https://metals.live/api/v1/latest?metals=silver', { cache: 'no-store' });
-        const d = await r.json();
-        const price = d?.silver ?? d?.[0]?.silver;
-        if (!price) throw new Error('no price');
-        return price;
-      },
-      // Yahoo Finance query1 spot silver
-      async () => {
-        const r = await fetch('https://query1.finance.yahoo.com/v8/finance/chart/XAGUSD=X?interval=1m&range=1d', { cache: 'no-store' });
-        const d = await r.json();
-        const price = d?.chart?.result?.[0]?.meta?.regularMarketPrice;
-        if (!price) throw new Error('no price');
-        return price;
-      },
-      // Yahoo Finance query2 silver futures SI=F
-      async () => {
-        const r = await fetch('https://query2.finance.yahoo.com/v8/finance/chart/SI%3DF?interval=1m&range=1d', { cache: 'no-store' });
-        const d = await r.json();
-        const price = d?.chart?.result?.[0]?.meta?.regularMarketPrice;
-        if (!price) throw new Error('no price');
-        return price;
-      }
-    ];
-    for (let i = 0; i < apis.length; i++) {
-      try {
-        const price = await apis[i]();
-        const fmt2 = p => '$' + p.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        setEl('xag-price',  fmt2(price));
-        setEl('t-xag',  fmt2(price));
-        setEl('t-xag2', fmt2(price));
-        const pct = (price - XAG_ENTRY) / XAG_ENTRY;
-        const pnl = pct * XAG_LEV * XAG_INVEST;
-        const roi = pct * XAG_LEV * 100;
-        const val = XAG_INVEST + pnl;
-        const el1 = document.getElementById('xag-pnl1');
-        if (el1) { el1.textContent = fmtUSD(pnl) + ' / ' + fmtPct(roi); el1.style.color = pnl > 0 ? 'var(--green)' : pnl < 0 ? 'var(--red)' : 'var(--text-muted)'; }
-        setEl('xag-value', fmt2(val));
-        setEl('xag-pnl',   fmtUSD(pnl) + ' / ROI ' + fmtPct(roi));
-        setCls('xag-pnl',  pnlCls(pnl));
-        setEl('xag-status', 'live · ' + new Date().toLocaleTimeString());
-        setEl('sum-xag', fmtUSD(pnl));
-        setCls('sum-xag', pnlCls(pnl));
-        window._xagPnl = pnl;
-        updateGrandTotal();
-        return;
-      } catch(e) { console.warn('[CAT] XAG API ' + (i+1) + ' failed:', e.message); }
-    }
-    setEl('xag-status', 'error – retry soon');
-  }
-
   fetchXau();
   setInterval(fetchXau, 60000);
-  fetchXag();
-  setInterval(fetchXag, 60000);
 
   /* ── Fetch BTC & ADA live prices — 2-API fallback ── */
   async function fetchCrypto() {
