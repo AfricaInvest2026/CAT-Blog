@@ -889,19 +889,17 @@
       async () => {
         const r = await fetch('https://query1.finance.yahoo.com/v8/finance/chart/XAUUSD=X?interval=1m&range=1d', { cache: 'no-store' });
         const d = await r.json();
-        const price = d.chart.result[0].meta.regularMarketPrice;
+        const price = d?.chart?.result?.[0]?.meta?.regularMarketPrice;
         if (!price) throw new Error('no price');
         return price;
       },
-      // Yahoo Finance gold futures fallback
       async () => {
         const r = await fetch('https://query2.finance.yahoo.com/v8/finance/chart/GC%3DF?interval=1m&range=1d', { cache: 'no-store' });
         const d = await r.json();
-        const price = d.chart.result[0].meta.regularMarketPrice;
+        const price = d?.chart?.result?.[0]?.meta?.regularMarketPrice;
         if (!price) throw new Error('no price');
         return price;
       },
-      // Binance PAXG/USDT as proxy for gold spot price
       async () => {
         const r = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=PAXGUSDT', { cache: 'no-store' });
         const d = await r.json();
@@ -960,27 +958,26 @@
   /* ── Fetch live XAG/USD price ── */
   async function fetchXag() {
     const apis = [
-      // Yahoo Finance silver spot
+      // CoinGecko — lists silver as a commodity, no key, no CORS issue
+      async () => {
+        const r = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=silver&vs_currencies=usd', { cache: 'no-store' });
+        const d = await r.json();
+        if (!d.silver || !d.silver.usd) throw new Error('no silver');
+        return d.silver.usd;
+      },
+      // Yahoo Finance via query1 — XAGUSD=X
       async () => {
         const r = await fetch('https://query1.finance.yahoo.com/v8/finance/chart/XAGUSD=X?interval=1m&range=1d', { cache: 'no-store' });
         const d = await r.json();
-        const price = d.chart.result[0].meta.regularMarketPrice;
+        const price = d?.chart?.result?.[0]?.meta?.regularMarketPrice;
         if (!price) throw new Error('no price');
         return price;
       },
-      // Yahoo Finance silver futures (SI=F)
+      // Yahoo Finance via query2 — SI=F silver futures
       async () => {
-        const r = await fetch('https://query1.finance.yahoo.com/v8/finance/chart/SI%3DF?interval=1m&range=1d', { cache: 'no-store' });
+        const r = await fetch('https://query2.finance.yahoo.com/v8/finance/chart/SI%3DF?interval=1m&range=1d', { cache: 'no-store' });
         const d = await r.json();
-        const price = d.chart.result[0].meta.regularMarketPrice;
-        if (!price) throw new Error('no price');
-        return price;
-      },
-      // query2 fallback
-      async () => {
-        const r = await fetch('https://query2.finance.yahoo.com/v8/finance/chart/XAGUSD%3DX?interval=1m&range=1d', { cache: 'no-store' });
-        const d = await r.json();
-        const price = d.chart.result[0].meta.regularMarketPrice;
+        const price = d?.chart?.result?.[0]?.meta?.regularMarketPrice;
         if (!price) throw new Error('no price');
         return price;
       }
