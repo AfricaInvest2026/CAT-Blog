@@ -409,6 +409,9 @@
       </div>
       <div class="card-pnl neutral" id="xag-pnl">+—%</div>
       <div class="leverage-badge">🔁 Leverage 1:100</div>
+      <div class="update-label"><span class="pulse"></span><span id="xag-status">updating…</span></div>
+    </div>
+
   </div>
 </div>
 
@@ -527,7 +530,7 @@
       in under <em>10 days.</em>
     </h1>
     <p class="proof-sub">
-      These are not projections. Not simulations. This is our actual trading account — publicly visible, updated live, every trade documented with entry price, exit price, and exact profit.
+      Every trade documented with entry price, exit price, and exact profit.
     </p>
 
     <!-- Live ROI strip -->
@@ -957,6 +960,7 @@
   /* ── Fetch live XAG/USD price ── */
   async function fetchXag() {
     const apis = [
+      // Yahoo Finance silver spot
       async () => {
         const r = await fetch('https://query1.finance.yahoo.com/v8/finance/chart/XAGUSD=X?interval=1m&range=1d', { cache: 'no-store' });
         const d = await r.json();
@@ -964,18 +968,21 @@
         if (!price) throw new Error('no price');
         return price;
       },
+      // Yahoo Finance silver futures (SI=F)
       async () => {
-        const r = await fetch('https://query2.finance.yahoo.com/v8/finance/chart/SI%3DF?interval=1m&range=1d', { cache: 'no-store' });
+        const r = await fetch('https://query1.finance.yahoo.com/v8/finance/chart/SI%3DF?interval=1m&range=1d', { cache: 'no-store' });
         const d = await r.json();
         const price = d.chart.result[0].meta.regularMarketPrice;
         if (!price) throw new Error('no price');
         return price;
       },
+      // query2 fallback
       async () => {
-        const r = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=XAGUSDT', { cache: 'no-store' });
+        const r = await fetch('https://query2.finance.yahoo.com/v8/finance/chart/XAGUSD%3DX?interval=1m&range=1d', { cache: 'no-store' });
         const d = await r.json();
-        if (!d.price) throw new Error('no price');
-        return parseFloat(d.price);
+        const price = d.chart.result[0].meta.regularMarketPrice;
+        if (!price) throw new Error('no price');
+        return price;
       }
     ];
     for (let i = 0; i < apis.length; i++) {
