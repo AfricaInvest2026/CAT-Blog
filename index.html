@@ -958,14 +958,15 @@
   /* ── Fetch live XAG/USD price ── */
   async function fetchXag() {
     const apis = [
-      // CoinGecko — lists silver as a commodity, no key, no CORS issue
+      // metals.live — free, CORS-open, returns troy oz price
       async () => {
-        const r = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=silver&vs_currencies=usd', { cache: 'no-store' });
+        const r = await fetch('https://metals.live/api/v1/latest?metals=silver', { cache: 'no-store' });
         const d = await r.json();
-        if (!d.silver || !d.silver.usd) throw new Error('no silver');
-        return d.silver.usd;
+        const price = d?.silver ?? d?.[0]?.silver;
+        if (!price) throw new Error('no price');
+        return price;
       },
-      // Yahoo Finance via query1 — XAGUSD=X
+      // Yahoo Finance query1 spot silver
       async () => {
         const r = await fetch('https://query1.finance.yahoo.com/v8/finance/chart/XAGUSD=X?interval=1m&range=1d', { cache: 'no-store' });
         const d = await r.json();
@@ -973,7 +974,7 @@
         if (!price) throw new Error('no price');
         return price;
       },
-      // Yahoo Finance via query2 — SI=F silver futures
+      // Yahoo Finance query2 silver futures SI=F
       async () => {
         const r = await fetch('https://query2.finance.yahoo.com/v8/finance/chart/SI%3DF?interval=1m&range=1d', { cache: 'no-store' });
         const d = await r.json();
