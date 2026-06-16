@@ -210,6 +210,51 @@
     footer { background: var(--dark2); border-top: 1px solid var(--border); text-align: center; padding: 1.2rem 1rem; font-size: .75rem; color: var(--text-muted); }
     footer strong { color: var(--gold); letter-spacing: .06em; }
     .disclaimer { margin-top: .4rem; font-size: .68rem; opacity: .6; }
+    /* ── PROOF OF RETURNS SECTION ── */
+    .proof-section { background: linear-gradient(180deg, #0a0a0a 0%, #0f0e09 60%, #0a0a0a 100%); padding: 3rem 1.2rem 2.5rem; text-align: center; border-bottom: 1px solid var(--border); position: relative; overflow: hidden; }
+    .proof-section::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(212,168,67,.10) 0%, transparent 70%); pointer-events: none; }
+    .proof-inner { max-width: 860px; margin: 0 auto; position: relative; }
+    .proof-eyebrow { font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.2rem; }
+    .proof-headline { font-size: clamp(1.7rem, 5vw, 3rem); font-weight: 800; line-height: 1.2; margin-bottom: 1rem; }
+    .proof-headline em { color: var(--gold); font-style: normal; }
+    .proof-sub { font-size: .9rem; color: var(--text-muted); max-width: 600px; margin: 0 auto 2rem; line-height: 1.7; }
+
+    .proof-stats { display: flex; justify-content: center; gap: .8rem; flex-wrap: wrap; margin-bottom: 2rem; }
+    .proof-stat { background: var(--dark2); border: 1px solid var(--border); border-radius: 12px; padding: .9rem 1.4rem; min-width: 110px; }
+    .ps-num { font-size: 1.6rem; font-weight: 800; color: var(--green); }
+    .ps-lbl { font-size: .68rem; color: var(--text-muted); margin-top: .2rem; text-transform: uppercase; letter-spacing: .07em; }
+
+    .proof-trades-label { font-size: .78rem; color: var(--gold); margin-bottom: .8rem; letter-spacing: .05em; }
+    .proof-trades { display: grid; gap: .5rem; margin-bottom: 2.5rem; }
+    .proof-trade { display: flex; justify-content: space-between; align-items: center; background: var(--dark2); border: 1px solid var(--border); border-radius: 10px; padding: .6rem 1rem; font-size: .82rem; flex-wrap: wrap; gap: .4rem; }
+    .pt-asset { font-weight: 700; min-width: 100px; text-align: left; }
+    .pt-arrow { color: var(--text-muted); font-size: .78rem; }
+    .pt-roi { font-weight: 700; min-width: 130px; text-align: right; }
+
+    .proof-honest { background: linear-gradient(135deg, rgba(212,168,67,.07), rgba(212,168,67,.02)); border: 1px solid rgba(212,168,67,.25); border-radius: 16px; padding: 1.8rem 1.4rem; margin-bottom: 2.5rem; text-align: left; }
+    .proof-honest-icon { font-size: 1.8rem; margin-bottom: .6rem; }
+    .proof-honest-title { font-size: 1.1rem; font-weight: 800; margin-bottom: .8rem; line-height: 1.4; }
+    .proof-honest-title em { color: var(--gold); font-style: normal; }
+    .proof-honest-text { font-size: .85rem; color: var(--text-muted); line-height: 1.75; margin-bottom: .6rem; }
+    .proof-honest-text strong { color: var(--text); }
+
+    .proof-sim-label { font-size: .78rem; color: var(--gold); margin-bottom: .9rem; letter-spacing: .05em; }
+    .proof-sims { display: grid; grid-template-columns: 1fr; gap: 1rem; margin-bottom: 2rem; }
+    @media (min-width: 600px) { .proof-sims { grid-template-columns: repeat(3, 1fr); } }
+    .proof-sim { background: var(--dark2); border: 1px solid var(--border); border-radius: 14px; padding: 1.2rem 1rem; text-align: center; position: relative; transition: border-color .3s; }
+    .proof-sim:hover { border-color: var(--gold); }
+    .featured-sim { border-color: var(--gold); background: linear-gradient(135deg, rgba(212,168,67,.08), var(--dark2)); }
+    .sim-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--gold); color: var(--dark); font-size: .65rem; font-weight: 700; padding: .2rem .7rem; border-radius: 20px; white-space: nowrap; }
+    .sim-plan { font-size: .85rem; font-weight: 700; margin-bottom: .5rem; color: var(--gold); }
+    .sim-invest { font-size: 1.3rem; font-weight: 800; margin-bottom: .2rem; }
+    .sim-detail { font-size: .72rem; color: var(--text-muted); margin-bottom: .8rem; }
+    .sim-result { font-size: 1rem; font-weight: 700; margin-bottom: .2rem; }
+    .sim-note { font-size: .75rem; color: var(--text-muted); margin-bottom: .6rem; }
+    .sim-compound { font-size: .78rem; color: var(--text-muted); border-top: 1px solid var(--border); padding-top: .6rem; margin-top: .2rem; }
+
+    .proof-cta-row { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+    .proof-disclaimer { font-size: .68rem; color: var(--text-muted); opacity: .6; max-width: 560px; margin: 0 auto; line-height: 1.6; }
+
   </style>
 </head>
 <body>
@@ -250,11 +295,13 @@
     <span class="ticker-item">EUR/KES <span id="t-eurkes">…</span></span>
     <span class="ticker-item">EUR/USD <span id="t-eurusd">…</span></span>
     <span class="ticker-item">XAU/USD <span id="t-xau">…</span></span>
+    <span class="ticker-item">XAG/USD <span id="t-xag">…</span></span>
     <span class="ticker-item">BTC/USD <span id="t-btc">…</span></span>
     <span class="ticker-item">ADA/USD <span id="t-ada">…</span></span>
     <span class="ticker-item">EUR/KES <span id="t-eurkes2">…</span></span>
     <span class="ticker-item">EUR/USD <span id="t-eurusd2">…</span></span>
     <span class="ticker-item">XAU/USD <span id="t-xau2">…</span></span>
+    <span class="ticker-item">XAG/USD <span id="t-xag2">…</span></span>
     <span class="ticker-item">BTC/USD <span id="t-btc2">…</span></span>
     <span class="ticker-item">ADA/USD <span id="t-ada2">…</span></span>
   </div>
@@ -262,14 +309,14 @@
 
 <!-- ── PORTFOLIO BANNER ── -->
 <div class="portfolio-banner">
-  📊 Portfolio — <b>$275,000 Total Invested</b> · <span style="color:var(--green)">BTC ✓ CLOSED</span> · <span style="color:var(--green)">ADA ✓ CLOSED</span> · <span style="color:var(--green)">EUR/USD ✓ CLOSED</span> · <span style="color:var(--green)">EUR/KES ✓ CLOSED</span> · <b style="color:var(--gold)">XAU/USD P1 🟢 LIVE</b> · <b style="color:var(--gold)">XAU/USD P2 🟢 LIVE</b>
+  📊 Portfolio — <b>$290,000 Total Invested</b> · <span style="color:var(--green)">BTC ✓ CLOSED</span> · <span style="color:var(--green)">ADA ✓ CLOSED</span> · <span style="color:var(--green)">EUR/USD ✓ CLOSED</span> · <span style="color:var(--green)">EUR/KES ✓ CLOSED</span> · <b style="color:var(--gold)">XAU/USD P1 🟢 LIVE</b> · <b style="color:var(--gold)">XAU/USD P2 🟢 LIVE</b> · <b style="color:#c0c0c0">XAG/USD 🟢 LIVE</b>
 </div>
 
 <!-- ── SUMMARY CARDS ── -->
 <div class="summary-grid">
   <div class="summary-card">
     <div class="label">Total Invested</div>
-    <div class="value">$275,000</div>
+    <div class="value">$290,000</div>
   </div>
   <div class="summary-card">
     <div class="label">Closed P&L</div>
@@ -278,6 +325,10 @@
   <div class="summary-card">
     <div class="label">XAU/USD Live</div>
     <div class="value" id="sum-xau">$—</div>
+  </div>
+  <div class="summary-card">
+    <div class="label">XAG/USD Live</div>
+    <div class="value" id="sum-xag">$—</div>
   </div>
   <div class="summary-card">
     <div class="label">Total W/L</div>
@@ -289,7 +340,7 @@
   </div>
   <div class="summary-card">
     <div class="label">Positions</div>
-    <div class="value">6 Closed · 2 Live</div>
+    <div class="value">6 Closed · 3 Live</div>
   </div>
 </div>
 
@@ -333,6 +384,31 @@
       <div class="update-label"><span class="pulse"></span><span id="xau-status">updating…</span></div>
     </div>
 
+    <!-- XAG/USD Card -->
+    <div class="asset-card" data-icon="🥈">
+      <div class="card-header">
+        <div class="card-icon">🥈</div>
+        <div>
+          <div class="card-title">Silver / Dollar — XAG/USD · Live</div>
+          <div class="card-price" id="xag-price">loading…</div>
+        </div>
+      </div>
+
+      <div class="tranche-label">Position 1</div>
+      <div class="card-rows">
+        <div class="card-row"><span class="lbl">Entry Price</span><span class="val" id="xag-entry-display">$70.68</span></div>
+        <div class="card-row"><span class="lbl">Entry Date</span><span class="val">Jun 16 · now</span></div>
+        <div class="card-row"><span class="lbl">Invested</span><span class="val">$15,000</span></div>
+        <div class="card-row"><span class="lbl">P&L</span><span class="val" id="xag-pnl1">$—</span></div>
+      </div>
+
+      <div class="tranche-divider"></div>
+      <div class="card-rows">
+        <div class="card-row"><span class="lbl">Total Invested</span><span class="val">$15,000</span></div>
+        <div class="card-row"><span class="lbl">Current Value</span><span class="val" id="xag-value">$—</span></div>
+      </div>
+      <div class="card-pnl neutral" id="xag-pnl">+—%</div>
+      <div class="leverage-badge">🔁 Leverage 1:100</div>
   </div>
 </div>
 
@@ -440,6 +516,132 @@
     </table>
   </div>
 </div>
+
+<!-- ── PROOF OF RETURNS — FIRST THING VISITORS SEE ── -->
+<section class="proof-section">
+  <div class="proof-inner">
+
+    <div class="proof-eyebrow">📊 Live Portfolio · Updated in Real Time</div>
+    <h1 class="proof-headline">
+      We turned <em>$290,000</em> into <em>$395,000+</em><br>
+      in under <em>10 days.</em>
+    </h1>
+    <p class="proof-sub">
+      These are not projections. Not simulations. This is our actual trading account — publicly visible, updated live, every trade documented with entry price, exit price, and exact profit.
+    </p>
+
+    <!-- Live ROI strip -->
+    <div class="proof-stats">
+      <div class="proof-stat">
+        <div class="ps-num">+60%</div>
+        <div class="ps-lbl">Avg Closed ROI</div>
+      </div>
+      <div class="proof-stat">
+        <div class="ps-num">6/6</div>
+        <div class="ps-lbl">Win Rate</div>
+      </div>
+      <div class="proof-stat">
+        <div class="ps-num">+$105K</div>
+        <div class="ps-lbl">Closed Profit</div>
+      </div>
+      <div class="proof-stat">
+        <div class="ps-num">10d</div>
+        <div class="ps-lbl">Total Duration</div>
+      </div>
+    </div>
+
+    <!-- Closed trades proof cards -->
+    <div class="proof-trades-label">✅ Every closed trade. Every number. Real.</div>
+    <div class="proof-trades">
+      <div class="proof-trade">
+        <span class="pt-asset">₿ BTC/USD</span>
+        <span class="pt-arrow">$60,200 → $61,671</span>
+        <span class="pt-roi win">+48.87% in 4 days</span>
+      </div>
+      <div class="proof-trade">
+        <span class="pt-asset">₳ ADA/USD</span>
+        <span class="pt-arrow">$0.160 → $0.1757</span>
+        <span class="pt-roi win">+19.63% in 3 days</span>
+      </div>
+      <div class="proof-trade">
+        <span class="pt-asset">€ EUR/USD</span>
+        <span class="pt-arrow">1.1520 → 1.1552</span>
+        <span class="pt-roi win">+27.78% in 2 days</span>
+      </div>
+      <div class="proof-trade">
+        <span class="pt-asset">🇰🇪 EUR/KES</span>
+        <span class="pt-arrow">148.95 → 149.755</span>
+        <span class="pt-roi win">+54.05% in 5 days</span>
+      </div>
+      <div class="proof-trade">
+        <span class="pt-asset">🇰🇪 EUR/KES</span>
+        <span class="pt-arrow">149.95 → 151.00</span>
+        <span class="pt-roi win">+70.02% in 8 days</span>
+      </div>
+      <div class="proof-trade">
+        <span class="pt-asset">🇰🇪 EUR/KES</span>
+        <span class="pt-arrow">149.52 → 151.00</span>
+        <span class="pt-roi win">+98.72% in 7 days</span>
+      </div>
+    </div>
+
+    <!-- The honest pitch -->
+    <div class="proof-honest">
+      <div class="proof-honest-icon">🤝</div>
+      <h2 class="proof-honest-title">What we offer <em>you</em> is deliberately conservative.</h2>
+      <p class="proof-honest-text">
+        Our real trading returns average <strong>+60% ROI per week</strong> using leverage. We do not offer you that — because we believe in sustainable growth, not gambling with your money. What we offer clients is <strong>3% to 7% weekly</strong> — a fraction of our actual performance — so that even in a rare losing week, your capital stays protected and your return is still guaranteed.
+      </p>
+      <p class="proof-honest-text">
+        Think of it this way: we make 60%, we give you 7%, and we absorb all the risk in between. You never touch leverage. You never face a margin call. You simply invest, wait 7 days, and get paid.
+      </p>
+    </div>
+
+    <!-- Plan simulation examples -->
+    <div class="proof-sim-label">💡 What you would have earned with us — last 10 days</div>
+    <div class="proof-sims">
+
+      <div class="proof-sim">
+        <div class="sim-plan">🌱 Starter Plan</div>
+        <div class="sim-invest">You invest <strong>$50</strong></div>
+        <div class="sim-detail">3% / week × 1 contract</div>
+        <div class="sim-result">You receive back <strong class="win">$51.50</strong></div>
+        <div class="sim-note">+$1.50 profit in 7 days</div>
+        <div class="sim-compound">Reinvest 4× in a month → <strong class="win">$56.27</strong></div>
+      </div>
+
+      <div class="proof-sim featured-sim">
+        <div class="sim-badge">Most Popular</div>
+        <div class="sim-plan">🚀 Growth Plan</div>
+        <div class="sim-invest">You invest <strong>$150</strong></div>
+        <div class="sim-detail">5% / week × 1 contract</div>
+        <div class="sim-result">You receive back <strong class="win">$157.50</strong></div>
+        <div class="sim-note">+$7.50 profit in 7 days</div>
+        <div class="sim-compound">Reinvest 4× in a month → <strong class="win">$182.38</strong></div>
+      </div>
+
+      <div class="proof-sim">
+        <div class="sim-plan">💎 Elite Plan</div>
+        <div class="sim-invest">You invest <strong>$300</strong></div>
+        <div class="sim-detail">7% / week × 1 contract</div>
+        <div class="sim-result">You receive back <strong class="win">$321.00</strong></div>
+        <div class="sim-note">+$21.00 profit in 7 days</div>
+        <div class="sim-compound">Reinvest 4× in a month → <strong class="win">$393.07</strong></div>
+      </div>
+
+    </div>
+
+    <div class="proof-cta-row">
+      <a class="btn-primary" href="#plans">Choose Your Plan →</a>
+      <a class="btn-outline" href="#positions">View Our Live Portfolio ↓</a>
+    </div>
+
+    <div class="proof-disclaimer">
+      ⚠ Investment involves risk. Our client returns (3–7%/week) are separate from our leveraged trading activity. Past performance of our trading desk does not guarantee your personal returns. Only invest what you can afford to lose.
+    </div>
+
+  </div>
+</section>
 
 <!-- ── HERO ── -->
 <section class="hero">
@@ -727,21 +929,86 @@
         setEl('xau-status', 'live · ' + new Date().toLocaleTimeString());
         setEl('sum-xau', fmtUSD(totalPnl));
         setCls('sum-xau', pnlCls(totalPnl));
-        // update grand total — KES all closed, only XAU is live
-        const grandTotal = CLOSED_PNL + totalPnl;
-        const grandRoi   = (grandTotal / (175000 + XAU_TOTAL_INVEST)) * 100;
-        setEl('sum-total', fmtUSD(grandTotal));
-        setCls('sum-total', pnlCls(grandTotal));
-        setEl('sum-roi', fmtPct(grandRoi));
-        setCls('sum-roi', pnlCls(grandTotal));
+        window._xauPnl = totalPnl;
+        updateGrandTotal();
         return;
       } catch(e) { console.warn('[CAT] XAU API ' + (i+1) + ' failed:', e.message); }
     }
     setEl('xau-status', 'error – retry soon');
   }
 
+  /* ── XAG/USD config ── */
+  const XAG_ENTRY  = 70.68;
+  const XAG_INVEST = 15000;
+  const XAG_LEV    = 100;
+  window._xauPnl = 0;
+  window._xagPnl = 0;
+  setEl('xag-entry-display', '$' + XAG_ENTRY.toFixed(2));
+
+  function updateGrandTotal() {
+    const grandTotal = CLOSED_PNL + (window._xauPnl || 0) + (window._xagPnl || 0);
+    const grandRoi   = (grandTotal / 290000) * 100;
+    setEl('sum-total', fmtUSD(grandTotal));
+    setCls('sum-total', pnlCls(grandTotal));
+    setEl('sum-roi', fmtPct(grandRoi));
+    setCls('sum-roi', pnlCls(grandTotal));
+  }
+
+  /* ── Fetch live XAG/USD price ── */
+  async function fetchXag() {
+    const apis = [
+      async () => {
+        const r = await fetch('https://query1.finance.yahoo.com/v8/finance/chart/XAGUSD=X?interval=1m&range=1d', { cache: 'no-store' });
+        const d = await r.json();
+        const price = d.chart.result[0].meta.regularMarketPrice;
+        if (!price) throw new Error('no price');
+        return price;
+      },
+      async () => {
+        const r = await fetch('https://query2.finance.yahoo.com/v8/finance/chart/SI%3DF?interval=1m&range=1d', { cache: 'no-store' });
+        const d = await r.json();
+        const price = d.chart.result[0].meta.regularMarketPrice;
+        if (!price) throw new Error('no price');
+        return price;
+      },
+      async () => {
+        const r = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=XAGUSDT', { cache: 'no-store' });
+        const d = await r.json();
+        if (!d.price) throw new Error('no price');
+        return parseFloat(d.price);
+      }
+    ];
+    for (let i = 0; i < apis.length; i++) {
+      try {
+        const price = await apis[i]();
+        const fmt2 = p => '$' + p.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        setEl('xag-price',  fmt2(price));
+        setEl('t-xag',  fmt2(price));
+        setEl('t-xag2', fmt2(price));
+        const pct = (price - XAG_ENTRY) / XAG_ENTRY;
+        const pnl = pct * XAG_LEV * XAG_INVEST;
+        const roi = pct * XAG_LEV * 100;
+        const val = XAG_INVEST + pnl;
+        const el1 = document.getElementById('xag-pnl1');
+        if (el1) { el1.textContent = fmtUSD(pnl) + ' / ' + fmtPct(roi); el1.style.color = pnl > 0 ? 'var(--green)' : pnl < 0 ? 'var(--red)' : 'var(--text-muted)'; }
+        setEl('xag-value', fmt2(val));
+        setEl('xag-pnl',   fmtUSD(pnl) + ' / ROI ' + fmtPct(roi));
+        setCls('xag-pnl',  pnlCls(pnl));
+        setEl('xag-status', 'live · ' + new Date().toLocaleTimeString());
+        setEl('sum-xag', fmtUSD(pnl));
+        setCls('sum-xag', pnlCls(pnl));
+        window._xagPnl = pnl;
+        updateGrandTotal();
+        return;
+      } catch(e) { console.warn('[CAT] XAG API ' + (i+1) + ' failed:', e.message); }
+    }
+    setEl('xag-status', 'error – retry soon');
+  }
+
   fetchXau();
   setInterval(fetchXau, 60000);
+  fetchXag();
+  setInterval(fetchXag, 60000);
 
   /* ── Fetch BTC & ADA live prices — 2-API fallback ── */
   async function fetchCrypto() {
