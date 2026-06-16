@@ -262,22 +262,18 @@
 
 <!-- ── PORTFOLIO BANNER ── -->
 <div class="portfolio-banner">
-  📊 Portfolio — <b>$225,000 Total Invested</b> · <span style="color:var(--green)">BTC ✓ CLOSED</span> · <span style="color:var(--green)">ADA ✓ CLOSED</span> · <span style="color:var(--green)">EUR/USD ✓ CLOSED</span> · <b style="color:var(--gold)">EUR/KES 🟢 LIVE</b> · <b style="color:var(--gold)">XAU/USD 🟢 LIVE</b>
+  📊 Portfolio — <b>$275,000 Total Invested</b> · <span style="color:var(--green)">BTC ✓ CLOSED</span> · <span style="color:var(--green)">ADA ✓ CLOSED</span> · <span style="color:var(--green)">EUR/USD ✓ CLOSED</span> · <span style="color:var(--green)">EUR/KES ✓ CLOSED</span> · <b style="color:var(--gold)">XAU/USD P1 🟢 LIVE</b> · <b style="color:var(--gold)">XAU/USD P2 🟢 LIVE</b>
 </div>
 
 <!-- ── SUMMARY CARDS ── -->
 <div class="summary-grid">
   <div class="summary-card">
     <div class="label">Total Invested</div>
-    <div class="value">$225,000</div>
+    <div class="value">$275,000</div>
   </div>
   <div class="summary-card">
     <div class="label">Closed P&L</div>
-    <div class="value pos" id="sum-closed">+$39.94K</div>
-  </div>
-  <div class="summary-card">
-    <div class="label">EUR/KES Live</div>
-    <div class="value" id="sum-eurkes">$—</div>
+    <div class="value pos">+$105,447</div>
   </div>
   <div class="summary-card">
     <div class="label">XAU/USD Live</div>
@@ -293,49 +289,14 @@
   </div>
   <div class="summary-card">
     <div class="label">Positions</div>
-    <div class="value">4 Closed · 2 Live</div>
+    <div class="value">6 Closed · 2 Live</div>
   </div>
 </div>
 
-<!-- ── LIVE POSITION: EUR/KES ── -->
+<!-- ── LIVE POSITION: XAU/USD ── -->
 <div class="assets-section" id="positions">
   <div class="section-heading">🟢 Active Position</div>
   <div class="active-grid">
-
-    <div class="asset-card" data-icon="🇰🇪">
-      <div class="card-header">
-        <div class="card-icon">🇰🇪</div>
-        <div>
-          <div class="card-title">Euro / Shilling — EUR/KES · Live</div>
-          <div class="card-price" id="eurkes-price">loading…</div>
-        </div>
-      </div>
-
-      <div class="tranche-label">Position 1</div>
-      <div class="card-rows">
-        <div class="card-row"><span class="lbl">Entry Price</span><span class="val">149.95</span></div>
-        <div class="card-row"><span class="lbl">Entry Date</span><span class="val">Jun 8 · 08:30</span></div>
-        <div class="card-row"><span class="lbl">Invested</span><span class="val">$50,000</span></div>
-        <div class="card-row"><span class="lbl">P&L</span><span class="val" id="eurkes-pnl1">$—</span></div>
-      </div>
-
-      <div class="tranche-label">Position 2</div>
-      <div class="card-rows">
-        <div class="card-row"><span class="lbl">Entry Price</span><span class="val">149.5244</span></div>
-        <div class="card-row"><span class="lbl">Entry Date</span><span class="val">Jun 9 · 08:30</span></div>
-        <div class="card-row"><span class="lbl">Invested</span><span class="val">$30,000</span></div>
-        <div class="card-row"><span class="lbl">P&L</span><span class="val" id="eurkes-pnl2">$—</span></div>
-      </div>
-
-      <div class="tranche-divider"></div>
-      <div class="card-rows">
-        <div class="card-row"><span class="lbl">Total Invested</span><span class="val">$80,000</span></div>
-        <div class="card-row"><span class="lbl">Combined Value</span><span class="val" id="eurkes-value">$—</span></div>
-      </div>
-      <div class="card-pnl neutral" id="eurkes-pnl">+—%</div>
-      <div class="leverage-badge">🔁 Leverage 1:100</div>
-      <div class="update-label"><span class="pulse"></span><span id="eurkes-status">updating…</span></div>
-    </div>
 
     <div class="asset-card" data-icon="🥇">
       <div class="card-header">
@@ -348,16 +309,24 @@
 
       <div class="tranche-label">Position 1</div>
       <div class="card-rows">
-        <div class="card-row"><span class="lbl">Entry Price</span><span class="val">$4,317.28</span></div>
-        <div class="card-row"><span class="lbl">Entry Date</span><span class="val">Jun 15 · now</span></div>
+        <div class="card-row"><span class="lbl">Entry Price</span><span class="val" id="xau-entry-display">$4,340.02</span></div>
+        <div class="card-row"><span class="lbl">Entry Date</span><span class="val">Jun 16 · 09:30</span></div>
         <div class="card-row"><span class="lbl">Invested</span><span class="val">$50,000</span></div>
         <div class="card-row"><span class="lbl">P&L</span><span class="val" id="xau-pnl1">$—</span></div>
       </div>
 
+      <div class="tranche-label">Position 2</div>
+      <div class="card-rows">
+        <div class="card-row"><span class="lbl">Entry Price</span><span class="val" id="xau-entry2-display">$4,314.53</span></div>
+        <div class="card-row"><span class="lbl">Entry Date</span><span class="val">Jun 16 · now</span></div>
+        <div class="card-row"><span class="lbl">Invested</span><span class="val">$50,000</span></div>
+        <div class="card-row"><span class="lbl">P&L</span><span class="val" id="xau-pnl2">$—</span></div>
+      </div>
+
       <div class="tranche-divider"></div>
       <div class="card-rows">
-        <div class="card-row"><span class="lbl">Total Invested</span><span class="val">$50,000</span></div>
-        <div class="card-row"><span class="lbl">Current Value</span><span class="val" id="xau-value">$—</span></div>
+        <div class="card-row"><span class="lbl">Total Invested</span><span class="val">$100,000</span></div>
+        <div class="card-row"><span class="lbl">Combined Value</span><span class="val" id="xau-value">$—</span></div>
       </div>
       <div class="card-pnl neutral" id="xau-pnl">+—%</div>
       <div class="leverage-badge">🔁 Leverage 1:100</div>
@@ -375,27 +344,27 @@
   <div class="closed-summary">
     <div class="closed-summary-item">
       <div class="lbl">Positions Closed</div>
-      <div class="val">4</div>
+      <div class="val">6</div>
     </div>
     <div class="closed-summary-item">
       <div class="lbl">Total Invested</div>
-      <div class="val">$95,000</div>
+      <div class="val">$175,000</div>
     </div>
     <div class="closed-summary-item">
       <div class="lbl">Total Returned</div>
-      <div class="val win">$134,944</div>
+      <div class="val win">$280,447</div>
     </div>
     <div class="closed-summary-item">
       <div class="lbl">Net Profit</div>
-      <div class="val win">+$39,944</div>
+      <div class="val win">+$105,447</div>
     </div>
     <div class="closed-summary-item">
       <div class="lbl">Avg ROI</div>
-      <div class="val win">+51.26%</div>
+      <div class="val win">+60.26%</div>
     </div>
     <div class="closed-summary-item">
       <div class="lbl">Win Rate</div>
-      <div class="val win">4 / 4</div>
+      <div class="val win">6 / 6</div>
     </div>
   </div>
 
@@ -447,6 +416,24 @@
           <td>$50,000</td>
           <td>1:100</td>
           <td class="ct-pnl win">+$27,024 · +54.05%</td>
+          <td><span class="ct-badge">✓ WIN</span></td>
+        </tr>
+        <tr>
+          <td class="ct-asset">🇰🇪 EUR/KES</td>
+          <td>149.95 → 151.00</td>
+          <td class="ct-dates">Jun 8 → Jun 16 · 8d</td>
+          <td>$50,000</td>
+          <td>1:100</td>
+          <td class="ct-pnl win">+$35,012 · +70.02%</td>
+          <td><span class="ct-badge">✓ WIN</span></td>
+        </tr>
+        <tr>
+          <td class="ct-asset">🇰🇪 EUR/KES</td>
+          <td>149.5244 → 151.00</td>
+          <td class="ct-dates">Jun 9 → Jun 16 · 7d</td>
+          <td>$30,000</td>
+          <td>1:100</td>
+          <td class="ct-pnl win">+$29,617 · +98.72%</td>
           <td><span class="ct-badge">✓ WIN</span></td>
         </tr>
       </tbody>
@@ -573,14 +560,16 @@
   // BTC: entry $60,200 → exit $61,671, invest $10,000, leverage 20
   // ADA: entry $0.16  → exit $0.1757, invest $10,000, leverage 20
   // EUR/USD: entry 1.1520 → exit 1.1552, invest $25,000, leverage 100
-  const CLOSED_PNL = 4887 + 1963 + 6944 + 27024; // $40,818 — BTC + ADA + EUR/USD + EUR/KES P3
+  // EUR/KES P3: entry 148.95 → exit 149.755, invest $50,000, leverage 100
+  // EUR/KES P1: entry 149.95 → exit 151.00, invest $50,000, leverage 100
+  // EUR/KES P2: entry 149.5244 → exit 151.00, invest $30,000, leverage 100
+  const CLOSED_PNL = 4887 + 1963 + 6944 + 27024 + 35012 + 29617; // $105,447
 
-  /* ── EUR/KES entry config ── */
-  const KES_TRANCHES = [
-    { price: 149.95,   invest: 50000, leverage: 100 },
-    { price: 149.5244, invest: 30000, leverage: 100 }
-  ];
-  const TOTAL_INVESTED = 125000;
+  /* ── XAU/USD entry config (only active position) ── */
+  const XAU_ENTRY   = 4340.02;
+  const XAU_INVEST  = 50000;
+  const XAU_LEV     = 100;
+  const TOTAL_INVESTED = 50000; // only XAU active
 
   /* ── Helpers ── */
   function fmt(n, dec) { return n.toLocaleString('en-US', { minimumFractionDigits: dec, maximumFractionDigits: dec }); }
@@ -679,9 +668,14 @@
   setInterval(fetchForex, 60000); // refresh every 60 seconds
 
   /* ── XAU/USD position config ── */
-  const XAU_ENTRY   = 4317.28;
-  const XAU_INVEST  = 50000;
-  const XAU_LEV     = 100;
+  const XAU_TRANCHES = [
+    { entry: 4340.02, invest: 50000, leverage: 100 },
+    { entry: 4314.53, invest: 50000, leverage: 100 }
+  ];
+  const XAU_TOTAL_INVEST = 100000;
+  // Set entry prices from JS so HTML always matches
+  setEl('xau-entry-display',  '$' + XAU_TRANCHES[0].entry.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+  setEl('xau-entry2-display', '$' + XAU_TRANCHES[1].entry.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
 
   /* ── Fetch live XAU/USD price and update widget ── */
   async function fetchXau() {
@@ -716,23 +710,26 @@
         setEl('xau-price', '$' + price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
         setEl('t-xau',  '$' + price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
         setEl('t-xau2', '$' + price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
-        const pct = (price - XAU_ENTRY) / XAU_ENTRY;
-        const pnl = pct * XAU_LEV * XAU_INVEST;
-        const roi = pct * XAU_LEV * 100;
-        const val = XAU_INVEST + pnl;
-        const el1 = document.getElementById('xau-pnl1');
-        if (el1) { el1.textContent = fmtUSD(pnl) + ' / ' + fmtPct(roi); el1.style.color = pnl > 0 ? 'var(--green)' : pnl < 0 ? 'var(--red)' : 'var(--text-muted)'; }
-        setEl('xau-value', '$' + val.toFixed(2));
-        setEl('xau-pnl', fmtUSD(pnl) + ' / ROI ' + fmtPct(roi));
-        setCls('xau-pnl', pnlCls(pnl));
+        let totalPnl = 0;
+        XAU_TRANCHES.forEach((t, i) => {
+          const pct = (price - t.entry) / t.entry;
+          const pnl = pct * t.leverage * t.invest;
+          const roi = pct * t.leverage * 100;
+          totalPnl += pnl;
+          const el = document.getElementById('xau-pnl' + (i + 1));
+          if (el) { el.textContent = fmtUSD(pnl) + ' / ' + fmtPct(roi); el.style.color = pnl > 0 ? 'var(--green)' : pnl < 0 ? 'var(--red)' : 'var(--text-muted)'; }
+        });
+        const totalVal = XAU_TOTAL_INVEST + totalPnl;
+        const totalRoi = (totalPnl / XAU_TOTAL_INVEST) * 100;
+        setEl('xau-value', '$' + totalVal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+        setEl('xau-pnl', fmtUSD(totalPnl) + ' / ROI ' + fmtPct(totalRoi));
+        setCls('xau-pnl', pnlCls(totalPnl));
         setEl('xau-status', 'live · ' + new Date().toLocaleTimeString());
-        setEl('sum-xau', fmtUSD(pnl));
-        setCls('sum-xau', pnlCls(pnl));
-        // update grand total
-        const kesEl = document.getElementById('eurkes-pnl');
-        const kesPnl = kesEl ? parseFloat(kesEl.dataset.raw || 0) : 0;
-        const grandTotal = CLOSED_PNL + kesPnl + pnl;
-        const grandRoi   = (grandTotal / (TOTAL_INVESTED + XAU_INVEST)) * 100;
+        setEl('sum-xau', fmtUSD(totalPnl));
+        setCls('sum-xau', pnlCls(totalPnl));
+        // update grand total — KES all closed, only XAU is live
+        const grandTotal = CLOSED_PNL + totalPnl;
+        const grandRoi   = (grandTotal / (175000 + XAU_TOTAL_INVEST)) * 100;
         setEl('sum-total', fmtUSD(grandTotal));
         setCls('sum-total', pnlCls(grandTotal));
         setEl('sum-roi', fmtPct(grandRoi));
