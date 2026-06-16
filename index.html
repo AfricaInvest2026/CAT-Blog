@@ -670,14 +670,19 @@
   async function updateMetals() {
     const now = new Date().toLocaleTimeString();
     try {
-      // Use open.er-api.com which provides XAU (gold) and XAG (silver) rates vs USD
-      const res  = await fetch('https://open.er-api.com/v6/latest/USD');
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      const data = await res.json();
+      // gold-api.com: free, no key, CORS-enabled, no rate limit
+      const [xauRes, xagRes] = await Promise.all([
+        fetch('https://api.gold-api.com/price/XAU'),
+        fetch('https://api.gold-api.com/price/XAG')
+      ]);
 
-      // XAU rate is oz per USD → invert to get USD per oz
-      const xauPrice = 1 / data.rates.XAU;
-      const xagPrice = 1 / data.rates.XAG;
+      if (!xauRes.ok || !xagRes.ok) throw new Error('API error');
+
+      const xauData = await xauRes.json();
+      const xagData = await xagRes.json();
+
+      const xauPrice = xauData.price;   // USD per troy oz
+      const xagPrice = xagData.price;   // USD per troy oz
 
       // ── XAU/USD position 1 ──
       const xau1 = calcPnL(xauPrice, XAU_ENTRY1, XAU_INV1, XAU_LEV);
