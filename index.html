@@ -402,12 +402,12 @@
     <div class="tw-status"><div class="tw-dot"></div><span id="xau2-status">loading…</span></div>
   </div>
 
-  <!-- XAG/USD WIDGET -->
+  <!-- XAG/USD POSITION 1 WIDGET -->
   <div class="ticker-widget xag">
     <div class="tw-header">
       <div class="tw-symbol">
         <div class="tw-icon">🥈</div>
-        <span>Silver / Dollar — XAG/USD</span>
+        <span>Silver / Dollar — XAG/USD <small style="color:var(--muted);font-weight:400">Position 1</small></span>
       </div>
       <div class="tw-live-price" id="xag-live">$—</div>
     </div>
@@ -419,6 +419,25 @@
     </div>
     <div class="tw-leverage">🔁 Leverage 1:100</div>
     <div class="tw-status"><div class="tw-dot"></div><span id="xag-status">loading…</span></div>
+  </div>
+
+  <!-- XAG/USD POSITION 2 WIDGET (new) -->
+  <div class="ticker-widget xag">
+    <div class="tw-header">
+      <div class="tw-symbol">
+        <div class="tw-icon">🥈</div>
+        <span>Silver / Dollar — XAG/USD <small style="color:var(--muted);font-weight:400">Position 2</small></span>
+      </div>
+      <div class="tw-live-price" id="xag-live3">$—</div>
+    </div>
+    <div class="tw-rows">
+      <div class="tw-row"><span class="tw-label">Entry Price</span><span class="tw-val">$65.10</span></div>
+      <div class="tw-row"><span class="tw-label">Entry Date</span><span class="tw-val">Jun 19 · now</span></div>
+      <div class="tw-row"><span class="tw-label">Invested</span><span class="tw-val">$125,000</span></div>
+      <div class="tw-row"><span class="tw-label">P&amp;L</span><span class="tw-val" id="xag3-pnl">$—</span></div>
+    </div>
+    <div class="tw-leverage">🔁 Leverage 1:100</div>
+    <div class="tw-status"><div class="tw-dot"></div><span id="xag3-status">loading…</span></div>
   </div>
 
   <!-- XAU/USD POSITION 4 WIDGET -->
@@ -638,10 +657,12 @@
   // XAG/USD — Silver
   const XAG_ENTRY  = 70.68;
   const XAG_INV    = 15000;
+  const XAG_ENTRY3 = 65.10;     // Position 2 (new) entry
+  const XAG_INV3   = 125000;
   const XAG_LEV    = 100;
 
   const CLOSED_PNL = 394690;    // Sum of all closed positions
-  const TOTAL_INV  = 690000;
+  const TOTAL_INV  = 815000;
 
   function calcPnL(livePrice, entryPrice, invested, leverage) {
     const pctMove      = (livePrice - entryPrice) / entryPrice;
@@ -667,7 +688,7 @@
     if (lastXauPnl === null || lastXagPnl === null) return;
 
     const xauTotalPnl = lastXauPnl.p1.pnl + lastXauPnl.p2.pnl + lastXauPnl.p4.pnl;
-    const xagTotalPnl = lastXagPnl.p1.pnl;
+    const xagTotalPnl = lastXagPnl.p1.pnl + lastXagPnl.p3.pnl;
     const livePnl     = xauTotalPnl + xagTotalPnl;
     const totalPnl    = CLOSED_PNL + livePnl;
     const combinedROI = (totalPnl / TOTAL_INV) * 100;
@@ -744,11 +765,20 @@
       xagEl.className   = 'tw-val ' + colorClass(xag.pnl);
       document.getElementById('xag-status').textContent = 'Updated · ' + now;
 
-      lastXagPnl = { p1: xag };
+      // ── XAG/USD position 2 (new) ──
+      const xag3 = calcPnL(xagPrice, XAG_ENTRY3, XAG_INV3, XAG_LEV);
+      document.getElementById('xag-live3').textContent = fmtPrice(xagPrice, 2);
+      document.getElementById('xag-live3').className   = 'tw-live-price ' + colorClass(xagPrice - XAG_ENTRY3);
+      const xag3El = document.getElementById('xag3-pnl');
+      xag3El.textContent = fmtWL(xag3.pnl) + ' · ' + fmtROI(xag3.roi);
+      xag3El.className   = 'tw-val ' + colorClass(xag3.pnl);
+      document.getElementById('xag3-status').textContent = 'Updated · ' + now;
+
+      lastXagPnl = { p1: xag, p3: xag3 };
 
       refreshSummary();
     } catch (e) {
-      ['xau-status','xau2-status','xau4-status','xag-status'].forEach(id => {
+      ['xau-status','xau2-status','xau4-status','xag-status','xag3-status'].forEach(id => {
         document.getElementById(id).textContent = '⚠ API error — retrying';
       });
     }
