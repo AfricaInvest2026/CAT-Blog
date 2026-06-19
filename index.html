@@ -289,6 +289,21 @@
     .roi-box-val.red   { color: var(--red); }
     .roi-box-val.gold  { color: var(--gold); }
 
+    .closed-history {
+      max-width: 1200px; margin: 0 auto 1.5rem; padding: .7rem 1.2rem;
+      background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+    }
+    .closed-history-title { font-size: .72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: .5rem; }
+    .closed-row {
+      display: flex; flex-wrap: wrap; align-items: center; gap: .6rem 1rem;
+      font-size: .82rem; padding: .35rem 0;
+    }
+    .closed-pair { font-weight: 700; }
+    .closed-detail, .closed-date { color: var(--muted); }
+    .closed-pnl { font-weight: 800; margin-left: auto; }
+    .closed-pnl.green { color: var(--green); }
+    .closed-pnl.red { color: var(--red); }
+
     @media (max-width: 780px) {
       .nav-links, .nav-btns { display: none; }
       .nav-hamburger { display: block; }
@@ -332,7 +347,7 @@
 
 <!-- ROI SUMMARY PANEL -->
 <div class="roi-summary">
-  <div class="roi-summary-title">📊 Simulated Portfolio — BTC · ADA · EUR/USD · EUR/KES · XAU/USD P1 · XAU/USD P2 · XAU/USD P4 · XAU/USD P5 · XAG/USD P1 · XAG/USD P2 · XAG/USD P3</div>
+  <div class="roi-summary-title">📊 Simulated Portfolio — BTC · ADA · EUR/USD · EUR/KES · XAU/USD P1 · XAU/USD P2 · XAU/USD P4 · XAU/USD P5 · XAG/USD P1 · XAG/USD P2</div>
   <div class="roi-summary-grid" style="grid-template-columns: repeat(6,1fr)">
     <div class="roi-box">
       <div class="roi-box-label">Total Invested</div>
@@ -340,7 +355,7 @@
     </div>
     <div class="roi-box">
       <div class="roi-box-label">Closed P&amp;L</div>
-      <div class="roi-box-val green">+$394,690</div>
+      <div class="roi-box-val green">+$650,226.63</div>
     </div>
     <div class="roi-box">
       <div class="roi-box-label">XAU/USD P&L</div>
@@ -478,26 +493,18 @@
     <div class="tw-status"><div class="tw-dot"></div><span id="xau5-status">loading…</span></div>
   </div>
 
-  <!-- XAG/USD POSITION 3 WIDGET (new) -->
-  <div class="ticker-widget xag">
-    <div class="tw-header">
-      <div class="tw-symbol">
-        <div class="tw-icon">🥈</div>
-        <span>Silver / Dollar — XAG/USD <small style="color:var(--muted);font-weight:400">Position 3</small></span>
-      </div>
-      <div class="tw-live-price" id="xag-live5">$—</div>
-    </div>
-    <div class="tw-rows">
-      <div class="tw-row"><span class="tw-label">Entry Price</span><span class="tw-val">$64.57</span></div>
-      <div class="tw-row"><span class="tw-label">Entry Date</span><span class="tw-val">Jun 19 · now</span></div>
-      <div class="tw-row"><span class="tw-label">Invested</span><span class="tw-val">$500,000</span></div>
-      <div class="tw-row"><span class="tw-label">P&amp;L</span><span class="tw-val" id="xag5-pnl">$—</span></div>
-    </div>
-    <div class="tw-leverage">🔁 Leverage 1:100</div>
-    <div class="tw-status"><div class="tw-dot"></div><span id="xag5-status">loading…</span></div>
+
+</div>
+
+<!-- CLOSED POSITIONS HISTORY (small) -->
+<div class="closed-history">
+  <div class="closed-history-title">📜 Closed Positions</div>
+  <div class="closed-row">
+    <span class="closed-pair">🥈 XAG/USD P3</span>
+    <span class="closed-detail">Entry $64.57 → Close $64.90</span>
+    <span class="closed-date">Jun 19</span>
+    <span class="closed-pnl green">+$255,536.63 · +51.11%</span>
   </div>
-
-
 </div>
 
 <!-- HERO -->
@@ -699,11 +706,9 @@
   const XAG_INV    = 15000;
   const XAG_ENTRY3 = 65.10;     // Position 2 entry
   const XAG_INV3   = 125000;
-  const XAG_ENTRY5 = 64.57;     // Position 3 entry (new)
-  const XAG_INV5   = 500000;
   const XAG_LEV    = 100;
 
-  const CLOSED_PNL = 394690;    // Sum of all closed positions
+  const CLOSED_PNL = 650226.63; // Sum of all closed positions (incl. XAG P3 closed @ $64.90)
   const TOTAL_INV  = 1490000;
 
   function calcPnL(livePrice, entryPrice, invested, leverage) {
@@ -730,7 +735,7 @@
     if (lastXauPnl === null || lastXagPnl === null) return;
 
     const xauTotalPnl = lastXauPnl.p1.pnl + lastXauPnl.p2.pnl + lastXauPnl.p4.pnl + lastXauPnl.p5.pnl;
-    const xagTotalPnl = lastXagPnl.p1.pnl + lastXagPnl.p3.pnl + lastXagPnl.p5.pnl;
+    const xagTotalPnl = lastXagPnl.p1.pnl + lastXagPnl.p3.pnl;
     const livePnl     = xauTotalPnl + xagTotalPnl;
     const totalPnl    = CLOSED_PNL + livePnl;
     const combinedROI = (totalPnl / TOTAL_INV) * 100;
@@ -825,20 +830,11 @@
       xag3El.className   = 'tw-val ' + colorClass(xag3.pnl);
       document.getElementById('xag3-status').textContent = 'Updated · ' + now;
 
-      // ── XAG/USD position 3 (new) ──
-      const xag5 = calcPnL(xagPrice, XAG_ENTRY5, XAG_INV5, XAG_LEV);
-      document.getElementById('xag-live5').textContent = fmtPrice(xagPrice, 2);
-      document.getElementById('xag-live5').className   = 'tw-live-price ' + colorClass(xagPrice - XAG_ENTRY5);
-      const xag5El = document.getElementById('xag5-pnl');
-      xag5El.textContent = fmtWL(xag5.pnl) + ' · ' + fmtROI(xag5.roi);
-      xag5El.className   = 'tw-val ' + colorClass(xag5.pnl);
-      document.getElementById('xag5-status').textContent = 'Updated · ' + now;
-
-      lastXagPnl = { p1: xag, p3: xag3, p5: xag5 };
+      lastXagPnl = { p1: xag, p3: xag3 };
 
       refreshSummary();
     } catch (e) {
-      ['xau-status','xau2-status','xau4-status','xau5-status','xag-status','xag3-status','xag5-status'].forEach(id => {
+      ['xau-status','xau2-status','xau4-status','xau5-status','xag-status','xag3-status'].forEach(id => {
         document.getElementById(id).textContent = '⚠ API error — retrying';
       });
     }
