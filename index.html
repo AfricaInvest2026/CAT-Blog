@@ -288,6 +288,68 @@
     .roi-box-val.green { color: var(--green); }
     .roi-box-val.red   { color: var(--red); }
     .roi-box-val.gold  { color: var(--gold); }
+    .roi-note {
+      max-width: 900px; margin: 14px auto 0; text-align: center;
+      font-size: .76rem; color: var(--muted); line-height: 1.5;
+    }
+    .roi-note a { color: var(--gold); text-decoration: none; }
+    .roi-note a:hover { text-decoration: underline; }
+
+    /* CLIENT-REPORTED ROI SECTION */
+    .client-roi-intro { max-width: 700px; }
+    .client-roi-disclaimer {
+      background: var(--card); border: 1px solid var(--border); border-left: 3px solid var(--gold);
+      border-radius: 10px; padding: 16px 20px; font-size: .83rem; color: var(--muted);
+      line-height: 1.6; margin-bottom: 40px; max-width: 900px;
+    }
+    .client-roi-disclaimer strong { color: var(--text); }
+    .croi-layout { display: grid; grid-template-columns: 360px 1fr; gap: 30px; align-items: start; }
+    @media (max-width: 900px) { .croi-layout { grid-template-columns: 1fr; } }
+
+    .croi-form {
+      background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+      padding: 22px; position: sticky; top: 90px;
+    }
+    .croi-form h3 { font-size: 1rem; margin-bottom: 4px; }
+    .croi-form .form-sub { font-size: .78rem; color: var(--muted); margin-bottom: 16px; }
+    .croi-field { margin-bottom: 14px; }
+    .croi-field label { display: block; font-size: .75rem; color: var(--muted); margin-bottom: 5px; text-transform: uppercase; letter-spacing: .5px; }
+    .croi-field input, .croi-field select, .croi-field textarea {
+      width: 100%; background: var(--dark); border: 1px solid var(--border); border-radius: 8px;
+      padding: 9px 11px; color: var(--text); font-size: .88rem; font-family: inherit;
+    }
+    .croi-field input:focus, .croi-field select:focus, .croi-field textarea:focus { outline: none; border-color: var(--gold); }
+    .croi-field textarea { resize: vertical; min-height: 60px; }
+    .croi-hint { font-size: .7rem; color: var(--muted); margin-top: 4px; }
+    .croi-submit {
+      width: 100%; padding: .7rem; background: var(--gold); color: #000; border: none;
+      border-radius: 8px; font-weight: 700; cursor: pointer; font-size: .9rem; margin-top: 6px;
+    }
+    .croi-submit:hover { opacity: .9; }
+    .croi-success {
+      margin-top: 12px; font-size: .8rem; color: var(--green); display: none;
+    }
+
+    .croi-list { display: flex; flex-direction: column; gap: 12px; }
+    .croi-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+      padding: 16px 18px;
+    }
+    .croi-card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; flex-wrap: wrap; }
+    .croi-name { font-weight: 700; font-size: .9rem; }
+    .croi-meta { font-size: .72rem; color: var(--muted); margin-top: 2px; }
+    .croi-roi { font-size: 1.2rem; font-weight: 900; }
+    .croi-roi.green { color: var(--green); }
+    .croi-roi.red { color: var(--red); }
+    .croi-badge {
+      font-size: .65rem; font-weight: 700; text-transform: uppercase; letter-spacing: .5px;
+      padding: 2px 8px; border-radius: 20px; display: inline-block; margin-top: 6px;
+    }
+    .croi-badge.pending { background: rgba(245,166,35,0.12); color: var(--gold); }
+    .croi-badge.verified { background: rgba(0,230,118,0.12); color: var(--green); }
+    .croi-comment { font-size: .82rem; color: var(--muted); margin-top: 8px; line-height: 1.5; }
+    .croi-empty { font-size: .85rem; color: var(--muted); padding: 20px; text-align: center; border: 1px dashed var(--border); border-radius: 12px; }
+
 
     .closed-history {
       max-width: 1200px; margin: 0 auto 1.5rem; padding: .7rem 1.2rem;
@@ -347,15 +409,15 @@
 
 <!-- ROI SUMMARY PANEL -->
 <div class="roi-summary">
-  <div class="roi-summary-title">📊 Simulated Portfolio — BTC · ADA · EUR/USD · EUR/KES · XAU/USD P1 · XAU/USD P2 · XAU/USD P4 · XAG/USD P1 · XAG/USD P2</div>
-  <div class="roi-summary-grid" style="grid-template-columns: repeat(6,1fr)">
+  <div class="roi-summary-title">📊 Simulated Portfolio — BTC · ADA · EUR/USD · EUR/KES · XAU/USD P1 · XAU/USD P2 · XAG/USD P1</div>
+  <div class="roi-summary-grid" style="grid-template-columns: repeat(5,1fr)">
     <div class="roi-box">
       <div class="roi-box-label">Total Invested</div>
       <div class="roi-box-val gold">$990,000</div>
     </div>
     <div class="roi-box">
       <div class="roi-box-label">Closed P&amp;L</div>
-      <div class="roi-box-val green">+$1,036,327.02</div>
+      <div class="roi-box-val green">+$1,412,598.31</div>
     </div>
     <div class="roi-box">
       <div class="roi-box-label">XAU/USD P&L</div>
@@ -369,10 +431,10 @@
       <div class="roi-box-label">Total W/L</div>
       <div class="roi-box-val" id="sum-total">$—</div>
     </div>
-    <div class="roi-box">
-      <div class="roi-box-label">Combined ROI</div>
-      <div class="roi-box-val green" id="sum-roi">—%</div>
-    </div>
+  </div>
+  <div class="roi-note">
+    ℹ️ "Combined ROI" is no longer shown as a single company figure here. Real ROI varies per client, per plan, and per entry/exit timing.
+    See <a href="#client-roi">Client-Reported Returns</a> below — figures submitted and verified by our own clients, not by us.
   </div>
 </div>
 
@@ -436,44 +498,6 @@
     <div class="tw-status"><div class="tw-dot"></div><span id="xag-status">loading…</span></div>
   </div>
 
-  <!-- XAG/USD POSITION 2 WIDGET (new) -->
-  <div class="ticker-widget xag">
-    <div class="tw-header">
-      <div class="tw-symbol">
-        <div class="tw-icon">🥈</div>
-        <span>Silver / Dollar — XAG/USD <small style="color:var(--muted);font-weight:400">Position 2</small></span>
-      </div>
-      <div class="tw-live-price" id="xag-live3">$—</div>
-    </div>
-    <div class="tw-rows">
-      <div class="tw-row"><span class="tw-label">Entry Price</span><span class="tw-val">$65.10</span></div>
-      <div class="tw-row"><span class="tw-label">Entry Date</span><span class="tw-val">Jun 19 · now</span></div>
-      <div class="tw-row"><span class="tw-label">Invested</span><span class="tw-val">$125,000</span></div>
-      <div class="tw-row"><span class="tw-label">P&amp;L</span><span class="tw-val" id="xag3-pnl">$—</span></div>
-    </div>
-    <div class="tw-leverage">🔁 Leverage 1:100</div>
-    <div class="tw-status"><div class="tw-dot"></div><span id="xag3-status">loading…</span></div>
-  </div>
-
-  <!-- XAU/USD POSITION 4 WIDGET -->
-  <div class="ticker-widget xau">
-    <div class="tw-header">
-      <div class="tw-symbol">
-        <div class="tw-icon">🥇</div>
-        <span>Gold / Dollar — XAU/USD <small style="color:var(--muted);font-weight:400">Position 4</small></span>
-      </div>
-      <div class="tw-live-price" id="xau-live4">$—</div>
-    </div>
-    <div class="tw-rows">
-      <div class="tw-row"><span class="tw-label">Entry Price</span><span class="tw-val">$4,165.30</span></div>
-      <div class="tw-row"><span class="tw-label">Entry Date</span><span class="tw-val">Jun 19 · now</span></div>
-      <div class="tw-row"><span class="tw-label">Invested</span><span class="tw-val">$250,000</span></div>
-      <div class="tw-row"><span class="tw-label">P&amp;L</span><span class="tw-val" id="xau4-pnl">$—</span></div>
-    </div>
-    <div class="tw-leverage">🔁 Leverage 1:100</div>
-    <div class="tw-status"><div class="tw-dot"></div><span id="xau4-status">loading…</span></div>
-  </div>
-
 
 
 </div>
@@ -481,6 +505,18 @@
 <!-- CLOSED POSITIONS HISTORY (small) -->
 <div class="closed-history">
   <div class="closed-history-title">📜 Closed Positions</div>
+  <div class="closed-row">
+    <span class="closed-pair">🥇 XAU/USD P4</span>
+    <span class="closed-detail">Entry $4,165.30 → Close $4,196.00</span>
+    <span class="closed-date">Jun 22</span>
+    <span class="closed-pnl green">+$184,259.00 · +73.70%</span>
+  </div>
+  <div class="closed-row">
+    <span class="closed-pair">🥈 XAG/USD P3</span>
+    <span class="closed-detail">Entry $65.10 → Close $66.10</span>
+    <span class="closed-date">Jun 22</span>
+    <span class="closed-pnl green">+$192,012.29 · +153.61%</span>
+  </div>
   <div class="closed-row">
     <span class="closed-pair">🥇 XAU/USD P5</span>
     <span class="closed-detail">Entry $4,144.00 → Close $4,176.00</span>
@@ -635,6 +671,82 @@
   </div>
 </section>
 
+<!-- CLIENT-REPORTED ROI -->
+<section id="client-roi">
+  <div class="section-label">Transparency</div>
+  <h2 class="section-title">Client-Reported <em>Returns</em></h2>
+  <p class="section-sub client-roi-intro">The dashboard above shows our live trading positions, not a guaranteed return. The numbers below are submitted directly by our own clients, in their own words, about their own results — we don't write them and we don't pick which ones to show.</p>
+
+  <div class="client-roi-disclaimer">
+    ⚠️ <strong>Important:</strong> Every figure in this section is <strong>self-reported by the client</strong> who submitted it, not calculated or guaranteed by CAT. We ask clients to keep a copy of their statement/payout proof so our support team can confirm a submission on request, but we do not independently audit every entry before it appears here. Treat these as client testimonials, not as official performance data. Past results — reported or simulated — never guarantee future returns.
+  </div>
+
+  <div class="croi-layout">
+    <form class="croi-form" id="croiForm">
+      <h3>Share Your Result</h3>
+      <div class="form-sub">Takes 1 minute. Your identity stays private — see how below.</div>
+
+      <div class="croi-field">
+        <label for="croiName">Display Name</label>
+        <input type="text" id="croiName" placeholder="e.g. James M." required maxlength="40">
+        <div class="croi-hint">We'll show only your first name + last initial (e.g. "James M."). Never your full name.</div>
+      </div>
+
+      <div class="croi-field">
+        <label for="croiPlan">Plan / Market</label>
+        <select id="croiPlan" required>
+          <option value="">Select…</option>
+          <option>Starter (3% weekly)</option>
+          <option>Growth (5% weekly)</option>
+          <option>Elite (7% weekly)</option>
+          <option>Gold / XAU</option>
+          <option>Silver / XAG</option>
+          <option>Crypto (BTC/ADA)</option>
+          <option>Forex (EUR/USD, EUR/KES)</option>
+        </select>
+      </div>
+
+      <div class="croi-field">
+        <label for="croiRoi">Your ROI Achieved (%)</label>
+        <input type="number" id="croiRoi" step="0.01" placeholder="e.g. 6.5" required>
+      </div>
+
+      <div class="croi-field">
+        <label for="croiRange">Investment Range</label>
+        <select id="croiRange" required>
+          <option value="">Select…</option>
+          <option>Under $1,000</option>
+          <option>$1,000 – $10,000</option>
+          <option>$10,000 – $50,000</option>
+          <option>$50,000 – $250,000</option>
+          <option>Over $250,000</option>
+        </select>
+        <div class="croi-hint">We show a range, never your exact amount.</div>
+      </div>
+
+      <div class="croi-field">
+        <label for="croiComment">Comment (optional)</label>
+        <textarea id="croiComment" maxlength="220" placeholder="Anything you'd like other investors to know"></textarea>
+      </div>
+
+      <div class="croi-field">
+        <label for="croiProof">Proof Reference (optional)</label>
+        <input type="text" id="croiProof" placeholder="e.g. contract/payout ref number" maxlength="60">
+        <div class="croi-hint">Never paste account numbers or screenshots here. If you'd like your entry marked "Verified," email this reference + your statement privately to <a href="mailto:changeafricatoday@outlook.com" style="color:var(--gold)">our support team</a> — we cross-check it against our internal records before updating the badge.</div>
+      </div>
+
+      <button type="submit" class="croi-submit">Submit My Result</button>
+      <div class="croi-success" id="croiSuccess">✅ Thank you — your result has been added below.</div>
+    </form>
+
+    <div>
+      <div class="croi-list" id="croiList">
+        <!-- populated by JS -->
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- BLOG -->
 <section id="blog">
   <div class="section-label">Latest Articles</div>
@@ -681,20 +793,16 @@
   // XAU/USD — Gold
   const XAU_ENTRY1 = 4340.02;   // Position 1 entry
   const XAU_ENTRY2 = 4314.53;   // Position 2 entry
-  const XAU_ENTRY4 = 4165.30;   // Position 4 entry
   const XAU_INV1   = 50000;
   const XAU_INV2   = 50000;
-  const XAU_INV4   = 250000;
   const XAU_LEV    = 100;
 
   // XAG/USD — Silver
   const XAG_ENTRY  = 70.68;
   const XAG_INV    = 15000;
-  const XAG_ENTRY3 = 65.10;     // Position 2 entry
-  const XAG_INV3   = 125000;
   const XAG_LEV    = 100;
 
-  const CLOSED_PNL = 1036327.02; // Sum of all closed positions (incl. XAU P5 closed @ $4,176.00, XAG P3 closed @ $64.90)
+  const CLOSED_PNL = 1412598.31; // Sum of all closed positions (incl. XAU P4 closed @ $4,196.00, XAG P3 closed @ $66.10, XAU P5 closed @ $4,176.00, XAG P3-prior closed @ $64.90)
   const TOTAL_INV  = 990000;
 
   function calcPnL(livePrice, entryPrice, invested, leverage) {
@@ -720,8 +828,8 @@
   function refreshSummary() {
     if (lastXauPnl === null || lastXagPnl === null) return;
 
-    const xauTotalPnl = lastXauPnl.p1.pnl + lastXauPnl.p2.pnl + lastXauPnl.p4.pnl;
-    const xagTotalPnl = lastXagPnl.p1.pnl + lastXagPnl.p3.pnl;
+    const xauTotalPnl = lastXauPnl.p1.pnl + lastXauPnl.p2.pnl;
+    const xagTotalPnl = lastXagPnl.p1.pnl;
     const livePnl     = xauTotalPnl + xagTotalPnl;
     const totalPnl    = CLOSED_PNL + livePnl;
     const combinedROI = (totalPnl / TOTAL_INV) * 100;
@@ -778,16 +886,7 @@
       p2El.className   = 'tw-val ' + colorClass(xau2.pnl);
       document.getElementById('xau2-status').textContent = 'Updated · ' + now;
 
-      // ── XAU/USD position 4 ──
-      const xau4 = calcPnL(xauPrice, XAU_ENTRY4, XAU_INV4, XAU_LEV);
-      document.getElementById('xau-live4').textContent = fmtPrice(xauPrice, 2);
-      document.getElementById('xau-live4').className   = 'tw-live-price ' + colorClass(xauPrice - XAU_ENTRY4);
-      const p4El = document.getElementById('xau4-pnl');
-      p4El.textContent = fmtWL(xau4.pnl) + ' · ' + fmtROI(xau4.roi);
-      p4El.className   = 'tw-val ' + colorClass(xau4.pnl);
-      document.getElementById('xau4-status').textContent = 'Updated · ' + now;
-
-      lastXauPnl = { p1: xau1, p2: xau2, p4: xau4 };
+      lastXauPnl = { p1: xau1, p2: xau2 };
 
       // ── XAG/USD ──
       const xag = calcPnL(xagPrice, XAG_ENTRY, XAG_INV, XAG_LEV);
@@ -798,20 +897,11 @@
       xagEl.className   = 'tw-val ' + colorClass(xag.pnl);
       document.getElementById('xag-status').textContent = 'Updated · ' + now;
 
-      // ── XAG/USD position 2 (new) ──
-      const xag3 = calcPnL(xagPrice, XAG_ENTRY3, XAG_INV3, XAG_LEV);
-      document.getElementById('xag-live3').textContent = fmtPrice(xagPrice, 2);
-      document.getElementById('xag-live3').className   = 'tw-live-price ' + colorClass(xagPrice - XAG_ENTRY3);
-      const xag3El = document.getElementById('xag3-pnl');
-      xag3El.textContent = fmtWL(xag3.pnl) + ' · ' + fmtROI(xag3.roi);
-      xag3El.className   = 'tw-val ' + colorClass(xag3.pnl);
-      document.getElementById('xag3-status').textContent = 'Updated · ' + now;
-
-      lastXagPnl = { p1: xag, p3: xag3 };
+      lastXagPnl = { p1: xag };
 
       refreshSummary();
     } catch (e) {
-      ['xau-status','xau2-status','xau4-status','xag-status','xag3-status'].forEach(id => {
+      ['xau-status','xau2-status','xag-status'].forEach(id => {
         document.getElementById(id).textContent = '⚠ API error — retrying';
       });
     }
@@ -820,6 +910,79 @@
   // Initial load + refresh every 60s
   updateMetals();
   setInterval(updateMetals, 60000);
+
+  // ─── CLIENT-REPORTED ROI ──────────────────────────────────
+  const CROI_KEY = 'cat_client_roi_v1';
+
+  function croiLoad() {
+    try { return JSON.parse(localStorage.getItem(CROI_KEY)) || []; }
+    catch (e) { return []; }
+  }
+  function croiSave(list) {
+    localStorage.setItem(CROI_KEY, JSON.stringify(list));
+  }
+  function croiMaskName(raw) {
+    const parts = raw.trim().split(/\s+/).filter(Boolean);
+    if (parts.length === 0) return 'Anonymous';
+    const first = parts[0];
+    const lastInitial = parts.length > 1 ? parts[parts.length - 1][0].toUpperCase() + '.' : '';
+    return (first.length > 16 ? first.slice(0, 16) : first) + (lastInitial ? ' ' + lastInitial : '');
+  }
+  function croiEscape(s) {
+    return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+  function croiRender() {
+    const list = croiLoad().slice().sort((a, b) => b.ts - a.ts);
+    const el = document.getElementById('croiList');
+    if (list.length === 0) {
+      el.innerHTML = '<div class="croi-empty">No client results submitted yet on this device. Be the first to share yours →</div>';
+      return;
+    }
+    el.innerHTML = list.map(item => {
+      const roiNum = parseFloat(item.roi);
+      const cls = roiNum >= 0 ? 'green' : 'red';
+      const date = new Date(item.ts).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      const badge = item.proof ? '<span class="croi-badge pending">Pending Verification</span>' : '<span class="croi-badge pending">Self-Reported</span>';
+      return `
+        <div class="croi-card">
+          <div class="croi-card-top">
+            <div>
+              <div class="croi-name">${croiEscape(item.name)} <span style="color:var(--muted);font-weight:400;font-size:.78rem">· ${croiEscape(item.plan)}</span></div>
+              <div class="croi-meta">${croiEscape(item.range)} · Reported ${date}</div>
+            </div>
+            <div class="croi-roi ${cls}">${roiNum >= 0 ? '+' : ''}${roiNum.toFixed(2)}%</div>
+          </div>
+          ${badge}
+          ${item.comment ? '<div class="croi-comment">“' + croiEscape(item.comment) + '”</div>' : ''}
+        </div>`;
+    }).join('');
+  }
+
+  const croiForm = document.getElementById('croiForm');
+  croiForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    const name = croiMaskName(document.getElementById('croiName').value);
+    const plan = document.getElementById('croiPlan').value;
+    const roi = parseFloat(document.getElementById('croiRoi').value);
+    const range = document.getElementById('croiRange').value;
+    const comment = document.getElementById('croiComment').value.trim().slice(0, 220);
+    const proof = document.getElementById('croiProof').value.trim().slice(0, 60);
+
+    if (!plan || isNaN(roi) || !range) return;
+
+    const list = croiLoad();
+    list.push({ name, plan, roi, range, comment, proof, ts: Date.now() });
+    croiSave(list);
+    croiRender();
+
+    croiForm.reset();
+    const success = document.getElementById('croiSuccess');
+    success.style.display = 'block';
+    setTimeout(() => { success.style.display = 'none'; }, 4000);
+  });
+
+  croiRender();
+
 
   // Mobile menu toggle
   const hamburger = document.getElementById('hamburger');
