@@ -861,11 +861,11 @@
   let lastXauPnl = null, lastXagPnl = null, lastBtcPnl = null;
 
   function refreshSummary() {
-    if (lastXauPnl === null || lastXagPnl === null || lastBtcPnl === null) return;
+    if (lastXauPnl === null && lastXagPnl === null && lastBtcPnl === null) return;
 
-    const xauTotalPnl = lastXauPnl.p1.pnl + lastXauPnl.p2.pnl;
-    const xagTotalPnl = lastXagPnl.p1.pnl;
-    const btcTotalPnl = lastBtcPnl.p1.pnl;
+    const xauTotalPnl = lastXauPnl ? (lastXauPnl.p1.pnl + lastXauPnl.p2.pnl) : 0;
+    const xagTotalPnl = lastXagPnl ? lastXagPnl.p1.pnl : 0;
+    const btcTotalPnl = lastBtcPnl ? lastBtcPnl.p1.pnl : 0;
     const livePnl     = xauTotalPnl + xagTotalPnl + btcTotalPnl;
     const totalPnl    = CLOSED_PNL + livePnl;
     const combinedROI = (totalPnl / TOTAL_INV) * 100;
@@ -893,6 +893,8 @@
 
   async function updateMetals() {
     const now = new Date().toLocaleTimeString();
+
+    // ── XAU/USD + XAG/USD (independent of BTC, so one failing doesn't blank the other) ──
     try {
       // gold-api.com: free, no key, CORS-enabled, no rate limit
       const [xauRes, xagRes] = await Promise.all([
@@ -900,7 +902,7 @@
         fetch('https://api.gold-api.com/price/XAG')
       ]);
 
-      if (!xauRes.ok || !xagRes.ok) throw new Error('API error');
+      if (!xauRes.ok || !xagRes.ok) throw new Error('Metals API error');
 
       const xauData = await xauRes.json();
       const xagData = await xagRes.json();
@@ -938,12 +940,29 @@
       document.getElementById('xag-status').textContent = 'Updated · ' + now;
 
       lastXagPnl = { p1: xag };
+    } catch (e) {
+      ['xau-status','xau2-status','xag-status'].forEach(id => {
+        document.getElementById(id).textContent = '⚠ Price feed unavailable — retrying';
+      });
+    }
 
-      // ── BTC/USD (sell) ──
-      const btcRes = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
-      if (!btcRes.ok) throw new Error('BTC API error');
-      const btcData = await btcRes.json();
-      const btcPrice = btcData.bitcoin.usd;
+    // ── BTC/USD (sell) — Binance primary, CoinGecko fallback ──
+    try {
+      let btcPrice = null;
+
+      try {
+        const binRes = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT');
+        if (!binRes.ok) throw new Error('Binance unavailable');
+        const binData = await binRes.json();
+        btcPrice = parseFloat(binData.price);
+      } catch (binErr) {
+        const cgRes = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
+        if (!cgRes.ok) throw new Error('CoinGecko unavailable');
+        const cgData = await cgRes.json();
+        btcPrice = cgData.bitcoin.usd;
+      }
+
+      if (!btcPrice || isNaN(btcPrice)) throw new Error('No valid BTC price');
 
       const btc = calcPnL(btcPrice, BTC_ENTRY, BTC_INV, BTC_LEV, BTC_SIDE);
       document.getElementById('btc-live').textContent = fmtPrice(btcPrice, 2);
@@ -955,13 +974,11 @@
       document.getElementById('btc-status').textContent = 'Updated · ' + now;
 
       lastBtcPnl = { p1: btc };
-
-      refreshSummary();
     } catch (e) {
-      ['xau-status','xau2-status','xag-status','btc-status'].forEach(id => {
-        document.getElementById(id).textContent = '⚠ API error — retrying';
-      });
+      document.getElementById('btc-status').textContent = '⚠ Price feed unavailable — retrying';
     }
+
+    refreshSummary();
   }
 
   // Initial load + refresh every 60s
