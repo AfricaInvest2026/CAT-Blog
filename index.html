@@ -72,6 +72,7 @@
     }
     .ticker-widget.xau::before { background: linear-gradient(90deg, #f5a623, #ffe066); }
     .ticker-widget.xag::before { background: linear-gradient(90deg, #aaa, #e8e8e8); }
+    .ticker-widget.btc::before { background: linear-gradient(90deg, #f7931a, #ffb74d); }
 
     .xau .tw-icon { background: linear-gradient(135deg, #f5a623, #ffe066); color: #000; }
     .xag .tw-icon { background: linear-gradient(135deg, #aaa, #e8e8e8); color: #000; }
@@ -412,11 +413,11 @@
 
 <!-- ROI SUMMARY PANEL -->
 <div class="roi-summary">
-  <div class="roi-summary-title">📊 Simulated Portfolio — BTC · ADA · EUR/USD · EUR/KES · XAU/USD P1 · XAU/USD P2 · XAG/USD P1</div>
-  <div class="roi-summary-grid" style="grid-template-columns: repeat(5,1fr)">
+  <div class="roi-summary-title">📊 Simulated Portfolio — BTC/USD (Sell) · ADA · EUR/USD · EUR/KES · XAU/USD P1 · XAU/USD P2 · XAG/USD P1</div>
+  <div class="roi-summary-grid" style="grid-template-columns: repeat(6,1fr)">
     <div class="roi-box">
       <div class="roi-box-label">Total Invested</div>
-      <div class="roi-box-val gold">$990,000</div>
+      <div class="roi-box-val gold">$1,490,000</div>
     </div>
     <div class="roi-box">
       <div class="roi-box-label">Closed P&amp;L</div>
@@ -431,6 +432,10 @@
       <div class="roi-box-val" id="sum-xag-val">$—</div>
     </div>
     <div class="roi-box">
+      <div class="roi-box-label">BTC/USD P&L</div>
+      <div class="roi-box-val" id="sum-btc-val">$—</div>
+    </div>
+    <div class="roi-box">
       <div class="roi-box-label">Total W/L</div>
       <div class="roi-box-val" id="sum-total">$—</div>
     </div>
@@ -443,6 +448,25 @@
 
 <!-- TICKER WIDGETS BAR -->
 <div class="ticker-bar" id="markets">
+
+  <!-- BTC/USD SELL POSITION WIDGET -->
+  <div class="ticker-widget btc">
+    <div class="tw-header">
+      <div class="tw-symbol">
+        <div class="tw-icon">₿</div>
+        <span>Bitcoin / Dollar — BTC/USD <small style="color:var(--muted);font-weight:400">Sell</small></span>
+      </div>
+      <div class="tw-live-price" id="btc-live">$—</div>
+    </div>
+    <div class="tw-rows">
+      <div class="tw-row"><span class="tw-label">Entry Price</span><span class="tw-val">$64,136.97</span></div>
+      <div class="tw-row"><span class="tw-label">Entry Date</span><span class="tw-val">Jun 22 · now</span></div>
+      <div class="tw-row"><span class="tw-label">Invested</span><span class="tw-val">$500,000</span></div>
+      <div class="tw-row"><span class="tw-label">P&amp;L</span><span class="tw-val" id="btc-pnl">$—</span></div>
+    </div>
+    <div class="tw-leverage">📉 Sell (Short) · Leverage 1:200</div>
+    <div class="tw-status"><div class="tw-dot"></div><span id="btc-status">loading…</span></div>
+  </div>
 
   <!-- XAU/USD POSITION 1 WIDGET -->
   <div class="ticker-widget xau">
@@ -806,11 +830,18 @@
   const XAG_INV    = 15000;
   const XAG_LEV    = 100;
 
-  const CLOSED_PNL = 1412598.31; // Sum of all closed positions (incl. XAU P4 closed @ $4,196.00, XAG P3 closed @ $66.10, XAU P5 closed @ $4,176.00, XAG P3-prior closed @ $64.90)
-  const TOTAL_INV  = 990000;
+  // BTC/USD — Bitcoin
+  const BTC_ENTRY  = 64136.97;  // Sell (short) entry
+  const BTC_INV    = 500000;
+  const BTC_LEV    = 200;
+  const BTC_SIDE   = 'sell';
 
-  function calcPnL(livePrice, entryPrice, invested, leverage) {
-    const pctMove      = (livePrice - entryPrice) / entryPrice;
+  const CLOSED_PNL = 1412598.31; // Sum of all closed positions (incl. XAU P4 closed @ $4,196.00, XAG P3 closed @ $66.10, XAU P5 closed @ $4,176.00, XAG P3-prior closed @ $64.90)
+  const TOTAL_INV  = 1490000;
+
+  function calcPnL(livePrice, entryPrice, invested, leverage, side) {
+    const dir          = side === 'sell' ? -1 : 1;
+    const pctMove       = dir * (livePrice - entryPrice) / entryPrice;
     const leveragedPnL = invested * pctMove * leverage;
     const roi          = (leveragedPnL / invested) * 100;
     return { pnl: leveragedPnL, roi };
@@ -827,14 +858,15 @@
   }
   function colorClass(n) { return n >= 0 ? 'green' : 'red'; }
 
-  let lastXauPnl = null, lastXagPnl = null;
+  let lastXauPnl = null, lastXagPnl = null, lastBtcPnl = null;
 
   function refreshSummary() {
-    if (lastXauPnl === null || lastXagPnl === null) return;
+    if (lastXauPnl === null || lastXagPnl === null || lastBtcPnl === null) return;
 
     const xauTotalPnl = lastXauPnl.p1.pnl + lastXauPnl.p2.pnl;
     const xagTotalPnl = lastXagPnl.p1.pnl;
-    const livePnl     = xauTotalPnl + xagTotalPnl;
+    const btcTotalPnl = lastBtcPnl.p1.pnl;
+    const livePnl     = xauTotalPnl + xagTotalPnl + btcTotalPnl;
     const totalPnl    = CLOSED_PNL + livePnl;
     const combinedROI = (totalPnl / TOTAL_INV) * 100;
 
@@ -845,6 +877,10 @@
     const sxag = document.getElementById('sum-xag-val');
     sxag.textContent = fmtWL(xagTotalPnl);
     sxag.className   = 'roi-box-val ' + colorClass(xagTotalPnl);
+
+    const sbtc = document.getElementById('sum-btc-val');
+    sbtc.textContent = fmtWL(btcTotalPnl);
+    sbtc.className   = 'roi-box-val ' + colorClass(btcTotalPnl);
 
     const st = document.getElementById('sum-total');
     st.textContent = fmtWL(totalPnl);
@@ -873,7 +909,7 @@
       const xagPrice = xagData.price;   // USD per troy oz
 
       // ── XAU/USD position 1 ──
-      const xau1 = calcPnL(xauPrice, XAU_ENTRY1, XAU_INV1, XAU_LEV);
+      const xau1 = calcPnL(xauPrice, XAU_ENTRY1, XAU_INV1, XAU_LEV, 'buy');
       document.getElementById('xau-live').textContent  = fmtPrice(xauPrice, 2);
       document.getElementById('xau-live').className    = 'tw-live-price ' + colorClass(xauPrice - XAU_ENTRY1);
       const p1El = document.getElementById('xau1-pnl');
@@ -882,7 +918,7 @@
       document.getElementById('xau-status').textContent = 'Updated · ' + now;
 
       // ── XAU/USD position 2 ──
-      const xau2 = calcPnL(xauPrice, XAU_ENTRY2, XAU_INV2, XAU_LEV);
+      const xau2 = calcPnL(xauPrice, XAU_ENTRY2, XAU_INV2, XAU_LEV, 'buy');
       document.getElementById('xau-live2').textContent = fmtPrice(xauPrice, 2);
       document.getElementById('xau-live2').className   = 'tw-live-price ' + colorClass(xauPrice - XAU_ENTRY2);
       const p2El = document.getElementById('xau2-pnl');
@@ -893,7 +929,7 @@
       lastXauPnl = { p1: xau1, p2: xau2 };
 
       // ── XAG/USD ──
-      const xag = calcPnL(xagPrice, XAG_ENTRY, XAG_INV, XAG_LEV);
+      const xag = calcPnL(xagPrice, XAG_ENTRY, XAG_INV, XAG_LEV, 'buy');
       document.getElementById('xag-live').textContent = fmtPrice(xagPrice, 2);
       document.getElementById('xag-live').className   = 'tw-live-price ' + colorClass(xagPrice - XAG_ENTRY);
       const xagEl = document.getElementById('xag-pnl');
@@ -903,9 +939,26 @@
 
       lastXagPnl = { p1: xag };
 
+      // ── BTC/USD (sell) ──
+      const btcRes = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
+      if (!btcRes.ok) throw new Error('BTC API error');
+      const btcData = await btcRes.json();
+      const btcPrice = btcData.bitcoin.usd;
+
+      const btc = calcPnL(btcPrice, BTC_ENTRY, BTC_INV, BTC_LEV, BTC_SIDE);
+      document.getElementById('btc-live').textContent = fmtPrice(btcPrice, 2);
+      // For a SELL position, green means price fell below entry (profit), red means price rose above entry.
+      document.getElementById('btc-live').className   = 'tw-live-price ' + colorClass(BTC_ENTRY - btcPrice);
+      const btcEl = document.getElementById('btc-pnl');
+      btcEl.textContent = fmtWL(btc.pnl) + ' · ' + fmtROI(btc.roi);
+      btcEl.className   = 'tw-val ' + colorClass(btc.pnl);
+      document.getElementById('btc-status').textContent = 'Updated · ' + now;
+
+      lastBtcPnl = { p1: btc };
+
       refreshSummary();
     } catch (e) {
-      ['xau-status','xau2-status','xag-status'].forEach(id => {
+      ['xau-status','xau2-status','xag-status','btc-status'].forEach(id => {
         document.getElementById(id).textContent = '⚠ API error — retrying';
       });
     }
