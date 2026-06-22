@@ -1,0 +1,54 @@
+rules_version = '2';
+
+// Firestore Security Rules for the CAT website's "Client-Reported Returns" feature,
+// with an admin approval workflow.
+//
+// How to apply:
+// Firebase Console → Firestore Database → Rules tab → paste this in → Publish.
+//
+// How the workflow works:
+// - Anyone (no login) can submit a new entry. It is forced to start as status: "pending".
+// - The PUBLIC website (index.html) only ever reads entries where status == "approved".
+// - Only a signed-in admin (you, via admin.html) can read pending/rejected entries, and
+//   only an admin can change an entry's status (approve/reject) or delete it.
+// - Nobody — not even an admin — can edit the actual content (name/roi/comment/etc.) of
+//   an existing entry, only its status. This keeps the original submission intact.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /clientRoi/{entryId} {
+
+      // Public can read ONLY approved entries.
+      // Signed-in admin can read everything (pending/approved/rejected).
+      allow read: if resource.data.status == 'approved' || request.auth != null;
+
+      // Anyone can create a new submission, but it must be well-formed and
+      // must start as "pending" — nobody can self-approve.
+      allow create: if
+        request.resource.data.keys().hasAll(['name', 'plan', 'roi', 'range', 'ts', 'status']) &&
+        request.resource.data.status == 'pending' &&
+        request.resource.data.name is string &&
+        request.resource.data.name.size() <= 40 &&
+        request.resource.data.plan is string &&
+        request.resource.data.plan.size() <= 40 &&
+        request.resource.data.roi is number &&
+        request.resource.data.roi > -100 &&
+        request.resource.data.roi < 1000 &&
+        request.resource.data.range is string &&
+        request.resource.data.range.size() <= 40 &&
+        (!('comment' in request.resource.data) || (request.resource.data.comment is string && request.resource.data.comment.size() <= 220)) &&
+        (!('proof' in request.resource.data) || (request.resource.data.proof is string && request.resource.data.proof.size() <= 60)) &&
+        request.resource.data.ts is number;
+
+      // Only a signed-in admin can update an entry, and only its status field —
+      // the original submitted content cannot be changed by anyone.
+      allow update: if request.auth != null &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status']) &&
+        (request.resource.data.status == 'approved' || request.resource.data.status == 'rejected' || request.resource.data.status == 'pending');
+
+      // Only a signed-in admin can delete an entry.
+      allow delete: if request.auth != null;
+    }
+  }
+}

@@ -190,6 +190,9 @@
     .plan-range { font-size: .9rem; color: var(--muted); margin-bottom: 14px; }
     .plan-rate { font-size: 2rem; font-weight: 900; color: var(--gold); margin-bottom: 20px; }
     .plan-rate span { font-size: 1rem; color: var(--muted); font-weight: 400; }
+    .plan-rate-pending { font-size: 1rem; color: var(--muted); font-weight: 600; font-style: italic; display: block; }
+    .plan-rate .dyn-roi { color: var(--green); }
+    .plans-disclaimer { max-width: 760px; font-size: .78rem; color: var(--muted); margin-top: 24px; line-height: 1.6; }
     .plan-features { list-style: none; margin-bottom: 24px; display: flex; flex-direction: column; gap: 8px; }
     .plan-features li { font-size: .85rem; color: var(--muted); display: flex; align-items: flex-start; gap: 8px; }
     .plan-features li::before { content: '✓'; color: var(--gold); flex-shrink: 0; }
@@ -547,7 +550,7 @@
     <a href="#how" class="btn-ghost">How It Works</a>
   </div>
   <div class="stats-row">
-    <div class="stat"><div class="stat-num">7%</div><div class="stat-label">Max Weekly Return</div></div>
+    <div class="stat"><div class="stat-num" id="stat-avg-roi">—</div><div class="stat-label">Avg. ROI Reported by Clients</div></div>
     <div class="stat"><div class="stat-num">7</div><div class="stat-label">Days per Contract</div></div>
     <div class="stat"><div class="stat-num">24h</div><div class="stat-label">Payout Delay</div></div>
     <div class="stat"><div class="stat-num">4</div><div class="stat-label">Markets Traded</div></div>
@@ -598,7 +601,7 @@
       <div class="plan-icon">🌱</div>
       <div class="plan-name">Starter</div>
       <div class="plan-range">$10 — $50</div>
-      <div class="plan-rate">3% <span>weekly</span></div>
+      <div class="plan-rate" id="rate-starter"><span class="plan-rate-pending">Based on client results</span></div>
       <ul class="plan-features">
         <li>7-day contract duration</li>
         <li>Payout within 24h of maturity</li>
@@ -614,7 +617,7 @@
       <div class="plan-icon">🚀</div>
       <div class="plan-name">Growth</div>
       <div class="plan-range">$51 — $150</div>
-      <div class="plan-rate">5% <span>weekly</span></div>
+      <div class="plan-rate" id="rate-growth"><span class="plan-rate-pending">Based on client results</span></div>
       <ul class="plan-features">
         <li>7-day contract duration</li>
         <li>Payout within 24h of maturity</li>
@@ -629,7 +632,7 @@
       <div class="plan-icon">💎</div>
       <div class="plan-name">Elite</div>
       <div class="plan-range">$151 — $300</div>
-      <div class="plan-rate">7% <span>weekly</span></div>
+      <div class="plan-rate" id="rate-elite"><span class="plan-rate-pending">Based on client results</span></div>
       <ul class="plan-features">
         <li>7-day contract duration</li>
         <li>Payout within 24h of maturity</li>
@@ -640,6 +643,7 @@
       <a href="register-private.html?plan=Elite" class="btn-plan">Start Now →</a>
     </div>
   </div>
+  <p class="plans-disclaimer">⚠️ We don't publish a fixed or maximum weekly return — past results, simulated or client-reported, never guarantee future ones. The figures shown above each plan are averages computed automatically from results that clients have <a href="#client-roi" style="color:var(--gold)">submitted themselves</a>, not numbers we set or promise.</p>
 </section>
 
 <!-- HOW IT WORKS -->
@@ -678,7 +682,7 @@
   <p class="section-sub client-roi-intro">The dashboard above shows our live trading positions, not a guaranteed return. The numbers below are submitted directly by our own clients, in their own words, about their own results — we don't write them and we don't pick which ones to show.</p>
 
   <div class="client-roi-disclaimer">
-    ⚠️ <strong>Important:</strong> Every figure in this section is <strong>self-reported by the client</strong> who submitted it, not calculated or guaranteed by CAT. We ask clients to keep a copy of their statement/payout proof so our support team can confirm a submission on request, but we do not independently audit every entry before it appears here. Treat these as client testimonials, not as official performance data. Past results — reported or simulated — never guarantee future returns.
+    ⚠️ <strong>Important:</strong> Every figure in this section is <strong>self-reported by the client</strong> who submitted it, not calculated or guaranteed by CAT. New submissions go through a basic review (spam/duplicate check) before appearing publicly — that review is not an audit of the figure itself, and we do not independently verify every entry. Treat these as client testimonials, not as official performance data. Past results — reported or simulated — never guarantee future returns.
   </div>
 
   <div class="croi-layout">
@@ -696,9 +700,9 @@
         <label for="croiPlan">Plan / Market</label>
         <select id="croiPlan" required>
           <option value="">Select…</option>
-          <option>Starter (3% weekly)</option>
-          <option>Growth (5% weekly)</option>
-          <option>Elite (7% weekly)</option>
+          <option>Starter</option>
+          <option>Growth</option>
+          <option>Elite</option>
           <option>Gold / XAU</option>
           <option>Silver / XAG</option>
           <option>Crypto (BTC/ADA)</option>
@@ -736,7 +740,7 @@
       </div>
 
       <button type="submit" class="croi-submit">Submit My Result</button>
-      <div class="croi-success" id="croiSuccess">✅ Thank you — your result has been added below.</div>
+      <div class="croi-success" id="croiSuccess">✅ Thank you — your result has been submitted and will appear here once reviewed by our team.</div>
     </form>
 
     <div>
@@ -787,6 +791,10 @@
   <div class="footer-copy">© 2026 · All rights reserved</div>
   <div class="footer-disc">⚠ All investments carry risk. Past performance does not guarantee future results. Only invest capital you can afford to lose.</div>
 </footer>
+
+<!-- Firebase (shared storage for client-reported ROI submissions) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
 <script>
   // ─── CONFIG ──────────────────────────────────────────────
@@ -911,16 +919,31 @@
   updateMetals();
   setInterval(updateMetals, 60000);
 
-  // ─── CLIENT-REPORTED ROI ──────────────────────────────────
-  const CROI_KEY = 'cat_client_roi_v1';
+  // ─── CLIENT-REPORTED ROI (shared via Firebase Firestore) ──
+  // Fill in your own Firebase project config below — see README.md for
+  // step-by-step setup instructions. Until this is configured, the form
+  // is disabled and a clear notice is shown instead of failing silently.
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT_ID.appspot.com",
+    messagingSenderId: "YOUR_SENDER_ID",
+    appId: "YOUR_APP_ID"
+  };
 
-  function croiLoad() {
-    try { return JSON.parse(localStorage.getItem(CROI_KEY)) || []; }
-    catch (e) { return []; }
+  let croiDb = null;
+  let croiFirebaseReady = false;
+  try {
+    if (firebaseConfig.apiKey && firebaseConfig.apiKey.indexOf('YOUR_') !== 0) {
+      firebase.initializeApp(firebaseConfig);
+      croiDb = firebase.firestore();
+      croiFirebaseReady = true;
+    }
+  } catch (e) {
+    console.error('Firebase init failed:', e);
   }
-  function croiSave(list) {
-    localStorage.setItem(CROI_KEY, JSON.stringify(list));
-  }
+
   function croiMaskName(raw) {
     const parts = raw.trim().split(/\s+/).filter(Boolean);
     if (parts.length === 0) return 'Anonymous';
@@ -931,57 +954,123 @@
   function croiEscape(s) {
     return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   }
-  function croiRender() {
-    const list = croiLoad().slice().sort((a, b) => b.ts - a.ts);
+
+  function croiRenderList(items) {
     const el = document.getElementById('croiList');
-    if (list.length === 0) {
-      el.innerHTML = '<div class="croi-empty">No client results submitted yet on this device. Be the first to share yours →</div>';
-      return;
-    }
-    el.innerHTML = list.map(item => {
-      const roiNum = parseFloat(item.roi);
-      const cls = roiNum >= 0 ? 'green' : 'red';
-      const date = new Date(item.ts).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-      const badge = item.proof ? '<span class="croi-badge pending">Pending Verification</span>' : '<span class="croi-badge pending">Self-Reported</span>';
-      return `
-        <div class="croi-card">
-          <div class="croi-card-top">
-            <div>
-              <div class="croi-name">${croiEscape(item.name)} <span style="color:var(--muted);font-weight:400;font-size:.78rem">· ${croiEscape(item.plan)}</span></div>
-              <div class="croi-meta">${croiEscape(item.range)} · Reported ${date}</div>
+    if (!el) return;
+    if (items.length === 0) {
+      el.innerHTML = '<div class="croi-empty">No client results submitted yet. Be the first to share yours →</div>';
+    } else {
+      el.innerHTML = items.map(item => {
+        const roiNum = parseFloat(item.roi);
+        const cls = roiNum >= 0 ? 'green' : 'red';
+        const date = item.ts ? new Date(item.ts).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
+        const badge = item.proof ? '<span class="croi-badge pending">Pending Verification</span>' : '<span class="croi-badge pending">Self-Reported</span>';
+        return `
+          <div class="croi-card">
+            <div class="croi-card-top">
+              <div>
+                <div class="croi-name">${croiEscape(item.name)} <span style="color:var(--muted);font-weight:400;font-size:.78rem">· ${croiEscape(item.plan)}</span></div>
+                <div class="croi-meta">${croiEscape(item.range)} · Reported ${date}</div>
+              </div>
+              <div class="croi-roi ${cls}">${roiNum >= 0 ? '+' : ''}${roiNum.toFixed(2)}%</div>
             </div>
-            <div class="croi-roi ${cls}">${roiNum >= 0 ? '+' : ''}${roiNum.toFixed(2)}%</div>
-          </div>
-          ${badge}
-          ${item.comment ? '<div class="croi-comment">“' + croiEscape(item.comment) + '”</div>' : ''}
-        </div>`;
-    }).join('');
+            ${badge}
+            ${item.comment ? '<div class="croi-comment">“' + croiEscape(item.comment) + '”</div>' : ''}
+          </div>`;
+      }).join('');
+    }
+    croiUpdatePlanRates(items);
   }
 
-  const croiForm = document.getElementById('croiForm');
-  croiForm.addEventListener('submit', function (e) {
-    e.preventDefault();
-    const name = croiMaskName(document.getElementById('croiName').value);
-    const plan = document.getElementById('croiPlan').value;
-    const roi = parseFloat(document.getElementById('croiRoi').value);
-    const range = document.getElementById('croiRange').value;
-    const comment = document.getElementById('croiComment').value.trim().slice(0, 220);
-    const proof = document.getElementById('croiProof').value.trim().slice(0, 60);
+  // Computes per-plan average ROI strictly from client-submitted entries.
+  // No fixed or maximum percentage is ever hardcoded here.
+  function croiUpdatePlanRates(list) {
+    const plans = { Starter: [], Growth: [], Elite: [] };
+    list.forEach(item => {
+      const p = (item.plan || '').trim();
+      if (plans[p]) plans[p].push(parseFloat(item.roi));
+    });
 
-    if (!plan || isNaN(roi) || !range) return;
+    let allValues = [];
+    Object.keys(plans).forEach(planName => {
+      const values = plans[planName];
+      const target = document.getElementById('rate-' + planName.toLowerCase());
+      if (!target) return;
+      if (values.length === 0) {
+        target.innerHTML = '<span class="plan-rate-pending">Based on client results</span>';
+      } else {
+        const avg = values.reduce((a, b) => a + b, 0) / values.length;
+        target.innerHTML = (avg >= 0 ? '+' : '') + avg.toFixed(2) + '% <span>avg · ' + values.length + ' client' + (values.length > 1 ? 's' : '') + '</span>';
+        allValues = allValues.concat(values);
+      }
+    });
 
-    const list = croiLoad();
-    list.push({ name, plan, roi, range, comment, proof, ts: Date.now() });
-    croiSave(list);
-    croiRender();
+    const statEl = document.getElementById('stat-avg-roi');
+    if (statEl) {
+      if (allValues.length === 0) {
+        statEl.textContent = '—';
+      } else {
+        const overallAvg = allValues.reduce((a, b) => a + b, 0) / allValues.length;
+        statEl.textContent = (overallAvg >= 0 ? '+' : '') + overallAvg.toFixed(1) + '%';
+      }
+    }
+  }
 
-    croiForm.reset();
-    const success = document.getElementById('croiSuccess');
-    success.style.display = 'block';
-    setTimeout(() => { success.style.display = 'none'; }, 4000);
-  });
+  const croiForm    = document.getElementById('croiForm');
+  const croiSuccess = document.getElementById('croiSuccess');
 
-  croiRender();
+  if (!croiFirebaseReady) {
+    const el = document.getElementById('croiList');
+    if (el) el.innerHTML = '<div class="croi-empty">⚠️ Shared storage isn\'t configured yet. See README.md to connect Firebase — once set up, every visitor will see the same client-submitted results.</div>';
+    if (croiForm) {
+      croiForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        alert('Shared storage isn\'t configured yet. See README.md to set up Firebase.');
+      });
+    }
+  } else {
+    croiDb.collection('clientRoi').where('status', '==', 'approved').orderBy('ts', 'desc').limit(200)
+      .onSnapshot(function (snapshot) {
+        const items = snapshot.docs.map(doc => doc.data());
+        croiRenderList(items);
+      }, function (err) {
+        console.error('Firestore read error:', err);
+        const el = document.getElementById('croiList');
+        if (el) el.innerHTML = '<div class="croi-empty">Could not load client results right now. Please refresh.</div>';
+      });
+
+    croiForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const name = croiMaskName(document.getElementById('croiName').value);
+      const plan = document.getElementById('croiPlan').value;
+      const roi = parseFloat(document.getElementById('croiRoi').value);
+      const range = document.getElementById('croiRange').value;
+      const comment = document.getElementById('croiComment').value.trim().slice(0, 220);
+      const proof = document.getElementById('croiProof').value.trim().slice(0, 60);
+
+      if (!plan || isNaN(roi) || !range) return;
+
+      const submitBtn = croiForm.querySelector('.croi-submit');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Submitting…';
+
+      croiDb.collection('clientRoi').add({ name, plan, roi, range, comment, proof, ts: Date.now(), status: 'pending' })
+        .then(function () {
+          croiForm.reset();
+          croiSuccess.style.display = 'block';
+          setTimeout(function () { croiSuccess.style.display = 'none'; }, 4000);
+        })
+        .catch(function (err) {
+          console.error('Firestore write error:', err);
+          alert('Something went wrong submitting your result. Please try again.');
+        })
+        .finally(function () {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Submit My Result';
+        });
+    });
+  }
 
 
   // Mobile menu toggle
