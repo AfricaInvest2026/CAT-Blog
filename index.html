@@ -73,10 +73,12 @@
     .ticker-widget.xau::before { background: linear-gradient(90deg, #f5a623, #ffe066); }
     .ticker-widget.xag::before { background: linear-gradient(90deg, #aaa, #e8e8e8); }
     .ticker-widget.btc::before { background: linear-gradient(90deg, #f7931a, #ffb74d); }
+    .ticker-widget.eth::before { background: linear-gradient(90deg, #627eea, #a8b8f8); }
 
     .xau .tw-icon { background: linear-gradient(135deg, #f5a623, #ffe066); color: #000; }
     .xag .tw-icon { background: linear-gradient(135deg, #aaa, #e8e8e8); color: #000; }
     .btc .tw-icon { background: linear-gradient(135deg, #f7931a, #ffb74d); color: #000; }
+    .eth .tw-icon { background: linear-gradient(135deg, #627eea, #a8b8f8); color: #000; }
 
     .tw-header {
       display: flex; justify-content: space-between; align-items: center;
@@ -414,11 +416,11 @@
 
 <!-- ROI SUMMARY PANEL -->
 <div class="roi-summary">
-  <div class="roi-summary-title">📊 Simulated Portfolio — BTC/USD (Buy) · XAG/USD P1 (Buy)</div>
-  <div class="roi-summary-grid" style="grid-template-columns: repeat(5,1fr)">
+  <div class="roi-summary-title">📊 Simulated Portfolio — BTC/USD (Buy) · ETH/USD (Buy) · XAG/USD P1 (Buy)</div>
+  <div class="roi-summary-grid" style="grid-template-columns: repeat(6,1fr)">
     <div class="roi-box">
       <div class="roi-box-label">Total Invested (Open)</div>
-      <div class="roi-box-val gold">$5,000,000</div>
+      <div class="roi-box-val gold">$10,000,000</div>
     </div>
     <div class="roi-box">
       <div class="roi-box-label">Closed P&amp;L</div>
@@ -427,6 +429,10 @@
     <div class="roi-box">
       <div class="roi-box-label">BTC/USD P&L</div>
       <div class="roi-box-val" id="sum-btc-val">$—</div>
+    </div>
+    <div class="roi-box">
+      <div class="roi-box-label">ETH/USD P&L</div>
+      <div class="roi-box-val" id="sum-eth-val">$—</div>
     </div>
     <div class="roi-box">
       <div class="roi-box-label">XAG/USD P&L</div>
@@ -463,6 +469,25 @@
     </div>
     <div class="tw-leverage">🔁 Leverage 1:100</div>
     <div class="tw-status"><div class="tw-dot"></div><span id="btc-status">loading…</span></div>
+  </div>
+
+  <!-- ETH/USD POSITION 1 WIDGET -->
+  <div class="ticker-widget eth">
+    <div class="tw-header">
+      <div class="tw-symbol">
+        <div class="tw-icon">Ξ</div>
+        <span>Ethereum / Dollar — ETH/USD <small style="color:var(--muted);font-weight:400">Position 1 · Buy</small></span>
+      </div>
+      <div class="tw-live-price" id="eth-live">$—</div>
+    </div>
+    <div class="tw-rows">
+      <div class="tw-row"><span class="tw-label">Entry Price</span><span class="tw-val">$1,612.00</span></div>
+      <div class="tw-row"><span class="tw-label">Entry Date</span><span class="tw-val">Jun 25 · now</span></div>
+      <div class="tw-row"><span class="tw-label">Invested</span><span class="tw-val">$5,000,000</span></div>
+      <div class="tw-row"><span class="tw-label">P&amp;L</span><span class="tw-val" id="eth-pnl">$—</span></div>
+    </div>
+    <div class="tw-leverage">🔁 Leverage 1:200</div>
+    <div class="tw-status"><div class="tw-dot"></div><span id="eth-status">loading…</span></div>
   </div>
 
   <!-- XAG/USD POSITION 1 WIDGET -->
@@ -847,6 +872,11 @@
   const BTC_INV   = 2500000;
   const BTC_LEV   = 100;
 
+  // ETH/USD — Position 1
+  const ETH_ENTRY = 1612.00;
+  const ETH_INV   = 5000000;
+  const ETH_LEV   = 200;
+
   // XAG/USD — Position 1
   const XAG_ENTRY = 57.42;
   const XAG_INV   = 2500000;
@@ -873,19 +903,24 @@
   }
   function colorClass(n) { return n >= 0 ? 'green' : 'red'; }
 
-  let lastBtcPnl = null, lastXagPnl = null;
+  let lastBtcPnl = null, lastEthPnl = null, lastXagPnl = null;
 
   function refreshSummary() {
-    if (lastBtcPnl === null && lastXagPnl === null) return;
+    if (lastBtcPnl === null && lastEthPnl === null && lastXagPnl === null) return;
 
     const btcTotalPnl = lastBtcPnl ? lastBtcPnl.pnl : 0;
+    const ethTotalPnl = lastEthPnl ? lastEthPnl.pnl : 0;
     const xagTotalPnl = lastXagPnl ? lastXagPnl.pnl : 0;
-    const livePnl     = btcTotalPnl + xagTotalPnl;
+    const livePnl     = btcTotalPnl + ethTotalPnl + xagTotalPnl;
     const totalPnl    = CLOSED_PNL + livePnl;
 
     const sbtc = document.getElementById('sum-btc-val');
     sbtc.textContent = fmtWL(btcTotalPnl);
     sbtc.className   = 'roi-box-val ' + colorClass(btcTotalPnl);
+
+    const seth = document.getElementById('sum-eth-val');
+    seth.textContent = fmtWL(ethTotalPnl);
+    seth.className   = 'roi-box-val ' + colorClass(ethTotalPnl);
 
     const sxag = document.getElementById('sum-xag-val');
     sxag.textContent = fmtWL(xagTotalPnl);
@@ -901,7 +936,7 @@
 
     try {
       const [btcRes, xagRes] = await Promise.all([
-        fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd'),
+        fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd'),
         fetch('https://api.gold-api.com/price/XAG')
       ]);
 
@@ -911,6 +946,7 @@
       const xagData = await xagRes.json();
 
       const btcPrice = btcData.bitcoin.usd;
+      const ethPrice = btcData.ethereum.usd;
       const xagPrice = xagData.price;
 
       // ── BTC/USD position 1 ──
@@ -922,6 +958,15 @@
       btcEl.className   = 'tw-val ' + colorClass(btc.pnl);
       document.getElementById('btc-status').textContent = 'Updated · ' + now;
 
+      // ── ETH/USD position 1 ──
+      const eth = calcPnL(ethPrice, ETH_ENTRY, ETH_INV, ETH_LEV, 'buy');
+      document.getElementById('eth-live').textContent = fmtPrice(ethPrice, 2);
+      document.getElementById('eth-live').className   = 'tw-live-price ' + colorClass(ethPrice - ETH_ENTRY);
+      const ethEl = document.getElementById('eth-pnl');
+      ethEl.textContent = fmtWL(eth.pnl) + ' · ' + fmtROI(eth.roi);
+      ethEl.className   = 'tw-val ' + colorClass(eth.pnl);
+      document.getElementById('eth-status').textContent = 'Updated · ' + now;
+
       // ── XAG/USD position 1 ──
       const xag = calcPnL(xagPrice, XAG_ENTRY, XAG_INV, XAG_LEV, 'buy');
       document.getElementById('xag-live').textContent = fmtPrice(xagPrice, 2);
@@ -932,9 +977,10 @@
       document.getElementById('xag-status').textContent = 'Updated · ' + now;
 
       lastBtcPnl = btc;
+      lastEthPnl = eth;
       lastXagPnl = xag;
     } catch (e) {
-      ['btc-status','xag-status'].forEach(id => {
+      ['btc-status','eth-status','xag-status'].forEach(id => {
         document.getElementById(id).textContent = '⚠ Price feed unavailable — retrying';
       });
     }
