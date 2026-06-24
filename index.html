@@ -413,27 +413,27 @@
 
 <!-- ROI SUMMARY PANEL -->
 <div class="roi-summary">
-  <div class="roi-summary-title">📊 Simulated Portfolio — XAU/USD P1 (Buy) · XAU/USD P2 (Buy) · XAU/USD P3 (Buy) · XAU/USD P4 (Buy) · XAU/USD P5 (Buy) · XAG/USD P1 (Buy) · XAG/USD P2 (Buy) · XAG/USD P3 (Buy) · XAG/USD P4 (Buy) · XAG/USD P5 (Buy)</div>
+  <div class="roi-summary-title">📊 Simulated Portfolio — All positions closed</div>
   <div class="roi-summary-grid" style="grid-template-columns: repeat(5,1fr)">
     <div class="roi-box">
-      <div class="roi-box-label">Total Invested</div>
-      <div class="roi-box-val gold">$16,115,000</div>
+      <div class="roi-box-label">Total Invested (Open)</div>
+      <div class="roi-box-val gold">$0</div>
     </div>
     <div class="roi-box">
       <div class="roi-box-label">Closed P&amp;L</div>
-      <div class="roi-box-val green">+$3,737,004.31</div>
+      <div class="roi-box-val green">+$10,552,608.35</div>
     </div>
     <div class="roi-box">
       <div class="roi-box-label">XAU/USD P&L</div>
-      <div class="roi-box-val" id="sum-xau-val">$—</div>
+      <div class="roi-box-val" id="sum-xau-val">$0.00</div>
     </div>
     <div class="roi-box">
       <div class="roi-box-label">XAG/USD P&L</div>
-      <div class="roi-box-val" id="sum-xag-val">$—</div>
+      <div class="roi-box-val" id="sum-xag-val">$0.00</div>
     </div>
     <div class="roi-box">
       <div class="roi-box-label">Total W/L</div>
-      <div class="roi-box-val" id="sum-total">$—</div>
+      <div class="roi-box-val green" id="sum-total">+$10,552,608.35</div>
     </div>
   </div>
   <div class="roi-note">
@@ -444,203 +444,75 @@
 
 <!-- TICKER WIDGETS BAR -->
 <div class="ticker-bar" id="markets">
-
-  <!-- XAU/USD POSITION 1 WIDGET -->
-  <div class="ticker-widget xau">
-    <div class="tw-header">
-      <div class="tw-symbol">
-        <div class="tw-icon">🥇</div>
-        <span>Gold / Dollar — XAU/USD <small style="color:var(--muted);font-weight:400">Position 1 · Buy</small></span>
-      </div>
-      <div class="tw-live-price" id="xau-live">$—</div>
-    </div>
-    <div class="tw-rows">
-      <div class="tw-row"><span class="tw-label">Entry Price</span><span class="tw-val">$4,340.02</span></div>
-      <div class="tw-row"><span class="tw-label">Entry Date</span><span class="tw-val">Jun 16 · 09:30</span></div>
-      <div class="tw-row"><span class="tw-label">Invested</span><span class="tw-val">$50,000</span></div>
-      <div class="tw-row"><span class="tw-label">P&amp;L</span><span class="tw-val" id="xau1-pnl">$—</span></div>
-    </div>
-    <div class="tw-leverage">🔁 Leverage 1:100</div>
-    <div class="tw-status"><div class="tw-dot"></div><span id="xau-status">loading…</span></div>
+  <div style="grid-column:1/-1;text-align:center;padding:24px;color:var(--muted)">
+    No open positions — all gold and silver positions have been closed. See Closed Positions history below.
   </div>
-
-  <!-- XAU/USD POSITION 2 WIDGET -->
-  <div class="ticker-widget xau">
-    <div class="tw-header">
-      <div class="tw-symbol">
-        <div class="tw-icon">🥇</div>
-        <span>Gold / Dollar — XAU/USD <small style="color:var(--muted);font-weight:400">Position 2 · Buy</small></span>
-      </div>
-      <div class="tw-live-price" id="xau-live2">$—</div>
-    </div>
-    <div class="tw-rows">
-      <div class="tw-row"><span class="tw-label">Entry Price</span><span class="tw-val">$4,314.53</span></div>
-      <div class="tw-row"><span class="tw-label">Entry Date</span><span class="tw-val">Jun 16 · now</span></div>
-      <div class="tw-row"><span class="tw-label">Invested</span><span class="tw-val">$50,000</span></div>
-      <div class="tw-row"><span class="tw-label">P&amp;L</span><span class="tw-val" id="xau2-pnl">$—</span></div>
-    </div>
-    <div class="tw-leverage">🔁 Leverage 1:100</div>
-    <div class="tw-status"><div class="tw-dot"></div><span id="xau2-status">loading…</span></div>
-  </div>
-
-  <!-- XAG/USD POSITION 1 WIDGET -->
-  <div class="ticker-widget xag">
-    <div class="tw-header">
-      <div class="tw-symbol">
-        <div class="tw-icon">🥈</div>
-        <span>Silver / Dollar — XAG/USD <small style="color:var(--muted);font-weight:400">Position 1 · Buy</small></span>
-      </div>
-      <div class="tw-live-price" id="xag-live">$—</div>
-    </div>
-    <div class="tw-rows">
-      <div class="tw-row"><span class="tw-label">Entry Price</span><span class="tw-val">$70.68</span></div>
-      <div class="tw-row"><span class="tw-label">Entry Date</span><span class="tw-val">Jun 16 · now</span></div>
-      <div class="tw-row"><span class="tw-label">Invested</span><span class="tw-val">$15,000</span></div>
-      <div class="tw-row"><span class="tw-label">P&amp;L</span><span class="tw-val" id="xag-pnl">$—</span></div>
-    </div>
-    <div class="tw-leverage">🔁 Leverage 1:100</div>
-    <div class="tw-status"><div class="tw-dot"></div><span id="xag-status">loading…</span></div>
-  </div>
-
-  <!-- XAU/USD POSITION 3 WIDGET -->
-  <div class="ticker-widget xau">
-    <div class="tw-header">
-      <div class="tw-symbol">
-        <div class="tw-icon">🥇</div>
-        <span>Gold / Dollar — XAU/USD <small style="color:var(--muted);font-weight:400">Position 3 · Buy</small></span>
-      </div>
-      <div class="tw-live-price" id="xau-live3">$—</div>
-    </div>
-    <div class="tw-rows">
-      <div class="tw-row"><span class="tw-label">Entry Price</span><span class="tw-val">$4,079.07</span></div>
-      <div class="tw-row"><span class="tw-label">Entry Date</span><span class="tw-val">Jun 24 · now</span></div>
-      <div class="tw-row"><span class="tw-label">Invested</span><span class="tw-val">$500,000</span></div>
-      <div class="tw-row"><span class="tw-label">P&amp;L</span><span class="tw-val" id="xau3-pnl">$—</span></div>
-    </div>
-    <div class="tw-leverage">🔁 Leverage 1:100</div>
-    <div class="tw-status"><div class="tw-dot"></div><span id="xau3-status">loading…</span></div>
-  </div>
-
-  <!-- XAG/USD POSITION 2 WIDGET -->
-  <div class="ticker-widget xag">
-    <div class="tw-header">
-      <div class="tw-symbol">
-        <div class="tw-icon">🥈</div>
-        <span>Silver / Dollar — XAG/USD <small style="color:var(--muted);font-weight:400">Position 2 · Buy</small></span>
-      </div>
-      <div class="tw-live-price" id="xag-live2">$—</div>
-    </div>
-    <div class="tw-rows">
-      <div class="tw-row"><span class="tw-label">Entry Price</span><span class="tw-val">$61.272</span></div>
-      <div class="tw-row"><span class="tw-label">Entry Date</span><span class="tw-val">Jun 24 · now</span></div>
-      <div class="tw-row"><span class="tw-label">Invested</span><span class="tw-val">$500,000</span></div>
-      <div class="tw-row"><span class="tw-label">P&amp;L</span><span class="tw-val" id="xag2-pnl">$—</span></div>
-    </div>
-    <div class="tw-leverage">🔁 Leverage 1:100</div>
-    <div class="tw-status"><div class="tw-dot"></div><span id="xag2-status">loading…</span></div>
-  </div>
-
-  <!-- XAU/USD POSITION 4 WIDGET -->
-  <div class="ticker-widget xau">
-    <div class="tw-header">
-      <div class="tw-symbol">
-        <div class="tw-icon">🥇</div>
-        <span>Gold / Dollar — XAU/USD <small style="color:var(--muted);font-weight:400">Position 4 · Buy</small></span>
-      </div>
-      <div class="tw-live-price" id="xau-live4">$—</div>
-    </div>
-    <div class="tw-rows">
-      <div class="tw-row"><span class="tw-label">Entry Price</span><span class="tw-val">$4,059.30</span></div>
-      <div class="tw-row"><span class="tw-label">Entry Date</span><span class="tw-val">Jun 24 · now</span></div>
-      <div class="tw-row"><span class="tw-label">Invested</span><span class="tw-val">$500,000</span></div>
-      <div class="tw-row"><span class="tw-label">P&amp;L</span><span class="tw-val" id="xau4-pnl">$—</span></div>
-    </div>
-    <div class="tw-leverage">🔁 Leverage 1:100</div>
-    <div class="tw-status"><div class="tw-dot"></div><span id="xau4-status">loading…</span></div>
-  </div>
-
-  <!-- XAG/USD POSITION 3 WIDGET -->
-  <div class="ticker-widget xag">
-    <div class="tw-header">
-      <div class="tw-symbol">
-        <div class="tw-icon">🥈</div>
-        <span>Silver / Dollar — XAG/USD <small style="color:var(--muted);font-weight:400">Position 3 · Buy</small></span>
-      </div>
-      <div class="tw-live-price" id="xag-live3">$—</div>
-    </div>
-    <div class="tw-rows">
-      <div class="tw-row"><span class="tw-label">Entry Price</span><span class="tw-val">$60.82</span></div>
-      <div class="tw-row"><span class="tw-label">Entry Date</span><span class="tw-val">Jun 24 · now</span></div>
-      <div class="tw-row"><span class="tw-label">Invested</span><span class="tw-val">$500,000</span></div>
-      <div class="tw-row"><span class="tw-label">P&amp;L</span><span class="tw-val" id="xag3-pnl">$—</span></div>
-    </div>
-    <div class="tw-leverage">🔁 Leverage 1:100</div>
-    <div class="tw-status"><div class="tw-dot"></div><span id="xag3-status">loading…</span></div>
-  </div>
-
-  <!-- XAG/USD POSITION 4 WIDGET -->
-  <div class="ticker-widget xag">
-    <div class="tw-header">
-      <div class="tw-symbol">
-        <div class="tw-icon">🥈</div>
-        <span>Silver / Dollar — XAG/USD <small style="color:var(--muted);font-weight:400">Position 4 · Buy</small></span>
-      </div>
-      <div class="tw-live-price" id="xag-live4">$—</div>
-    </div>
-    <div class="tw-rows">
-      <div class="tw-row"><span class="tw-label">Entry Price</span><span class="tw-val">$57.39</span></div>
-      <div class="tw-row"><span class="tw-label">Entry Date</span><span class="tw-val">Jun 24 · now</span></div>
-      <div class="tw-row"><span class="tw-label">Invested</span><span class="tw-val">$2,000,000</span></div>
-      <div class="tw-row"><span class="tw-label">P&amp;L</span><span class="tw-val" id="xag4-pnl">$—</span></div>
-    </div>
-    <div class="tw-leverage">🔁 Leverage 1:200</div>
-    <div class="tw-status"><div class="tw-dot"></div><span id="xag4-status">loading…</span></div>
-  </div>
-
-  <!-- XAU/USD POSITION 5 WIDGET -->
-  <div class="ticker-widget xau">
-    <div class="tw-header">
-      <div class="tw-symbol">
-        <div class="tw-icon">🥇</div>
-        <span>Gold / Dollar — XAU/USD <small style="color:var(--muted);font-weight:400">Position 5 · Buy</small></span>
-      </div>
-      <div class="tw-live-price" id="xau-live5">$—</div>
-    </div>
-    <div class="tw-rows">
-      <div class="tw-row"><span class="tw-label">Entry Price</span><span class="tw-val">$3,980.60</span></div>
-      <div class="tw-row"><span class="tw-label">Entry Date</span><span class="tw-val">Jun 24 · now</span></div>
-      <div class="tw-row"><span class="tw-label">Invested</span><span class="tw-val">$2,000,000</span></div>
-      <div class="tw-row"><span class="tw-label">P&amp;L</span><span class="tw-val" id="xau5-pnl">$—</span></div>
-    </div>
-    <div class="tw-leverage">🔁 Leverage 1:200</div>
-    <div class="tw-status"><div class="tw-dot"></div><span id="xau5-status">loading…</span></div>
-  </div>
-
-  <!-- XAG/USD POSITION 5 WIDGET -->
-  <div class="ticker-widget xag">
-    <div class="tw-header">
-      <div class="tw-symbol">
-        <div class="tw-icon">🥈</div>
-        <span>Silver / Dollar — XAG/USD <small style="color:var(--muted);font-weight:400">Position 5 · Buy</small></span>
-      </div>
-      <div class="tw-live-price" id="xag-live5">$—</div>
-    </div>
-    <div class="tw-rows">
-      <div class="tw-row"><span class="tw-label">Entry Price</span><span class="tw-val">$57.66</span></div>
-      <div class="tw-row"><span class="tw-label">Entry Date</span><span class="tw-val">Jun 25 · now</span></div>
-      <div class="tw-row"><span class="tw-label">Invested</span><span class="tw-val">$10,000,000</span></div>
-      <div class="tw-row"><span class="tw-label">P&amp;L</span><span class="tw-val" id="xag5-pnl">$—</span></div>
-    </div>
-    <div class="tw-leverage">🔁 Leverage 1:200</div>
-    <div class="tw-status"><div class="tw-dot"></div><span id="xag5-status">loading…</span></div>
-  </div>
-
-
 </div>
+
 
 <!-- CLOSED POSITIONS HISTORY (small) -->
 <div class="closed-history">
   <div class="closed-history-title">📜 Closed Positions</div>
+  <div class="closed-row">
+    <span class="closed-pair">🥈 XAG/USD P5</span>
+    <span class="closed-detail">Entry $57.66 → Close $57.90</span>
+    <span class="closed-date">Jun 25</span>
+    <span class="closed-pnl green">+$8,324,661.81 · +83.25%</span>
+  </div>
+  <div class="closed-row">
+    <span class="closed-pair">🥈 XAG/USD P4</span>
+    <span class="closed-detail">Entry $57.39 → Close $57.90</span>
+    <span class="closed-date">Jun 25</span>
+    <span class="closed-pnl green">+$3,554,626.24 · +177.73%</span>
+  </div>
+  <div class="closed-row">
+    <span class="closed-pair">🥇 XAU/USD P5</span>
+    <span class="closed-detail">Entry $3,980.60 → Close $4,006.80</span>
+    <span class="closed-date">Jun 25</span>
+    <span class="closed-pnl green">+$2,632,768.93 · +131.64%</span>
+  </div>
+  <div class="closed-row">
+    <span class="closed-pair">🥈 XAG/USD P1</span>
+    <span class="closed-detail">Entry $70.68 → Close $57.90</span>
+    <span class="closed-date">Jun 25</span>
+    <span class="closed-pnl red">-$271,222.41 · -1808.15%</span>
+  </div>
+  <div class="closed-row">
+    <span class="closed-pair">🥈 XAG/USD P2</span>
+    <span class="closed-detail">Entry $61.272 → Close $57.90</span>
+    <span class="closed-date">Jun 25</span>
+    <span class="closed-pnl red">-$2,751,664.71 · -550.33%</span>
+  </div>
+  <div class="closed-row">
+    <span class="closed-pair">🥈 XAG/USD P3</span>
+    <span class="closed-detail">Entry $60.82 → Close $57.90</span>
+    <span class="closed-date">Jun 25</span>
+    <span class="closed-pnl red">-$2,400,526.14 · -480.11%</span>
+  </div>
+  <div class="closed-row">
+    <span class="closed-pair">🥇 XAU/USD P1</span>
+    <span class="closed-detail">Entry $4,340.02 → Close $4,006.80</span>
+    <span class="closed-date">Jun 25</span>
+    <span class="closed-pnl red">-$383,892.24 · -767.78%</span>
+  </div>
+  <div class="closed-row">
+    <span class="closed-pair">🥇 XAU/USD P2</span>
+    <span class="closed-detail">Entry $4,314.53 → Close $4,006.80</span>
+    <span class="closed-date">Jun 25</span>
+    <span class="closed-pnl red">-$356,620.54 · -713.24%</span>
+  </div>
+  <div class="closed-row">
+    <span class="closed-pair">🥇 XAU/USD P3</span>
+    <span class="closed-detail">Entry $4,079.07 → Close $4,006.80</span>
+    <span class="closed-date">Jun 25</span>
+    <span class="closed-pnl red">-$885,863.69 · -177.17%</span>
+  </div>
+  <div class="closed-row">
+    <span class="closed-pair">🥇 XAU/USD P4</span>
+    <span class="closed-detail">Entry $4,059.30 → Close $4,006.80</span>
+    <span class="closed-date">Jun 25</span>
+    <span class="closed-pnl red">-$646,663.22 · -129.33%</span>
+  </div>
   <div class="closed-row">
     <span class="closed-pair">₿ BTC/USD (Sell)</span>
     <span class="closed-detail">Entry $64,136.97 → Close $62,646.17</span>
@@ -932,208 +804,10 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
 <script>
-  // ─── CONFIG ──────────────────────────────────────────────
-  // XAU/USD — Gold
-  const XAU_ENTRY1 = 4340.02;   // Position 1 entry
-  const XAU_ENTRY2 = 4314.53;   // Position 2 entry
-  const XAU_ENTRY3 = 4079.07;   // Position 3 entry
-  const XAU_ENTRY4 = 4059.30;   // Position 4 entry
-  const XAU_INV1   = 50000;
-  const XAU_INV2   = 50000;
-  const XAU_INV3   = 500000;
-  const XAU_INV4   = 500000;
-  const XAU_LEV    = 100;
-
-  // XAG/USD — Silver
-  const XAG_ENTRY  = 70.68;
-  const XAG_ENTRY2 = 61.272;    // Position 2 entry
-  const XAG_ENTRY3 = 60.82;     // Position 3 entry
-  const XAG_ENTRY4 = 57.39;     // Position 4 entry
-  const XAG_INV    = 15000;
-  const XAG_INV2   = 500000;
-  const XAG_INV3   = 500000;
-  const XAG_INV4   = 2000000;
-  const XAG_LEV    = 100;
-  const XAG_LEV4   = 200;
-
-  // XAU/USD — Gold Position 5
-  const XAU_ENTRY5 = 3980.60;   // Position 5 entry
-  const XAU_INV5   = 2000000;
-  const XAU_LEV5   = 200;
-
-  // XAG/USD — Silver Position 5
-  const XAG_ENTRY5 = 57.66;     // Position 5 entry
-  const XAG_INV5   = 10000000;
-  const XAG_LEV5   = 200;
-
-  const CLOSED_PNL = 3737004.31; // Sum of all closed positions (incl. BTC/USD sell closed @ $62,646.17, XAU P4 closed @ $4,196.00, XAG P3 closed @ $66.10, XAU P5 closed @ $4,176.00, XAG P3-prior closed @ $64.90)
-  const TOTAL_INV  = 16115000; // Sum of CURRENTLY OPEN positions only (XAU P1+P2+P3+P4+P5, XAG P1+P2+P3+P4+P5)
-
-  function calcPnL(livePrice, entryPrice, invested, leverage, side) {
-    const dir          = side === 'sell' ? -1 : 1;
-    const pctMove       = dir * (livePrice - entryPrice) / entryPrice;
-    const leveragedPnL = invested * pctMove * leverage;
-    const roi          = (leveragedPnL / invested) * 100;
-    return { pnl: leveragedPnL, roi };
-  }
-
-  function fmtWL(n) {
-    return (n >= 0 ? '+$' : '-$') + Math.abs(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  }
-  function fmtPrice(n, dec) {
-    return '$' + n.toLocaleString('en-US', { minimumFractionDigits: dec, maximumFractionDigits: dec });
-  }
-  function fmtROI(r) {
-    return (r >= 0 ? '+' : '') + r.toFixed(2) + '%';
-  }
-  function colorClass(n) { return n >= 0 ? 'green' : 'red'; }
-
-  let lastXauPnl = null, lastXagPnl = null;
-
-  function refreshSummary() {
-    if (lastXauPnl === null && lastXagPnl === null) return;
-
-    const xauTotalPnl = lastXauPnl ? (lastXauPnl.p1.pnl + lastXauPnl.p2.pnl + lastXauPnl.p3.pnl + lastXauPnl.p4.pnl + lastXauPnl.p5.pnl) : 0;
-    const xagTotalPnl = lastXagPnl ? (lastXagPnl.p1.pnl + lastXagPnl.p2.pnl + lastXagPnl.p3.pnl + lastXagPnl.p4.pnl + lastXagPnl.p5.pnl) : 0;
-    const livePnl     = xauTotalPnl + xagTotalPnl;
-    const totalPnl    = CLOSED_PNL + livePnl;
-
-    const sxau = document.getElementById('sum-xau-val');
-    sxau.textContent = fmtWL(xauTotalPnl);
-    sxau.className   = 'roi-box-val ' + colorClass(xauTotalPnl);
-
-    const sxag = document.getElementById('sum-xag-val');
-    sxag.textContent = fmtWL(xagTotalPnl);
-    sxag.className   = 'roi-box-val ' + colorClass(xagTotalPnl);
-
-    const st = document.getElementById('sum-total');
-    st.textContent = fmtWL(totalPnl);
-    st.className   = 'roi-box-val ' + colorClass(totalPnl);
-  }
-
-  async function updateMetals() {
-    const now = new Date().toLocaleTimeString();
-
-    try {
-      // gold-api.com: free, no key, CORS-enabled, no rate limit
-      const [xauRes, xagRes] = await Promise.all([
-        fetch('https://api.gold-api.com/price/XAU'),
-        fetch('https://api.gold-api.com/price/XAG')
-      ]);
-
-      if (!xauRes.ok || !xagRes.ok) throw new Error('Metals API error');
-
-      const xauData = await xauRes.json();
-      const xagData = await xagRes.json();
-
-      const xauPrice = xauData.price;   // USD per troy oz
-      const xagPrice = xagData.price;   // USD per troy oz
-
-      // ── XAU/USD position 1 ──
-      const xau1 = calcPnL(xauPrice, XAU_ENTRY1, XAU_INV1, XAU_LEV, 'buy');
-      document.getElementById('xau-live').textContent  = fmtPrice(xauPrice, 2);
-      document.getElementById('xau-live').className    = 'tw-live-price ' + colorClass(xauPrice - XAU_ENTRY1);
-      const p1El = document.getElementById('xau1-pnl');
-      p1El.textContent = fmtWL(xau1.pnl) + ' · ' + fmtROI(xau1.roi);
-      p1El.className   = 'tw-val ' + colorClass(xau1.pnl);
-      document.getElementById('xau-status').textContent = 'Updated · ' + now;
-
-      // ── XAU/USD position 2 ──
-      const xau2 = calcPnL(xauPrice, XAU_ENTRY2, XAU_INV2, XAU_LEV, 'buy');
-      document.getElementById('xau-live2').textContent = fmtPrice(xauPrice, 2);
-      document.getElementById('xau-live2').className   = 'tw-live-price ' + colorClass(xauPrice - XAU_ENTRY2);
-      const p2El = document.getElementById('xau2-pnl');
-      p2El.textContent = fmtWL(xau2.pnl) + ' · ' + fmtROI(xau2.roi);
-      p2El.className   = 'tw-val ' + colorClass(xau2.pnl);
-      document.getElementById('xau2-status').textContent = 'Updated · ' + now;
-
-      // ── XAU/USD position 3 ──
-      const xau3 = calcPnL(xauPrice, XAU_ENTRY3, XAU_INV3, XAU_LEV, 'buy');
-      document.getElementById('xau-live3').textContent = fmtPrice(xauPrice, 2);
-      document.getElementById('xau-live3').className   = 'tw-live-price ' + colorClass(xauPrice - XAU_ENTRY3);
-      const p3El = document.getElementById('xau3-pnl');
-      p3El.textContent = fmtWL(xau3.pnl) + ' · ' + fmtROI(xau3.roi);
-      p3El.className   = 'tw-val ' + colorClass(xau3.pnl);
-      document.getElementById('xau3-status').textContent = 'Updated · ' + now;
-
-      // ── XAU/USD position 4 ──
-      const xau4 = calcPnL(xauPrice, XAU_ENTRY4, XAU_INV4, XAU_LEV, 'buy');
-      document.getElementById('xau-live4').textContent = fmtPrice(xauPrice, 2);
-      document.getElementById('xau-live4').className   = 'tw-live-price ' + colorClass(xauPrice - XAU_ENTRY4);
-      const p4El = document.getElementById('xau4-pnl');
-      p4El.textContent = fmtWL(xau4.pnl) + ' · ' + fmtROI(xau4.roi);
-      p4El.className   = 'tw-val ' + colorClass(xau4.pnl);
-      document.getElementById('xau4-status').textContent = 'Updated · ' + now;
-
-      // ── XAG/USD position 1 ──
-      const xag = calcPnL(xagPrice, XAG_ENTRY, XAG_INV, XAG_LEV, 'buy');
-      document.getElementById('xag-live').textContent = fmtPrice(xagPrice, 2);
-      document.getElementById('xag-live').className   = 'tw-live-price ' + colorClass(xagPrice - XAG_ENTRY);
-      const xagEl = document.getElementById('xag-pnl');
-      xagEl.textContent = fmtWL(xag.pnl) + ' · ' + fmtROI(xag.roi);
-      xagEl.className   = 'tw-val ' + colorClass(xag.pnl);
-      document.getElementById('xag-status').textContent = 'Updated · ' + now;
-
-      // ── XAG/USD position 2 ──
-      const xag2 = calcPnL(xagPrice, XAG_ENTRY2, XAG_INV2, XAG_LEV, 'buy');
-      document.getElementById('xag-live2').textContent = fmtPrice(xagPrice, 2);
-      document.getElementById('xag-live2').className   = 'tw-live-price ' + colorClass(xagPrice - XAG_ENTRY2);
-      const xag2El = document.getElementById('xag2-pnl');
-      xag2El.textContent = fmtWL(xag2.pnl) + ' · ' + fmtROI(xag2.roi);
-      xag2El.className   = 'tw-val ' + colorClass(xag2.pnl);
-      document.getElementById('xag2-status').textContent = 'Updated · ' + now;
-
-      // ── XAG/USD position 3 ──
-      const xag3 = calcPnL(xagPrice, XAG_ENTRY3, XAG_INV3, XAG_LEV, 'buy');
-      document.getElementById('xag-live3').textContent = fmtPrice(xagPrice, 2);
-      document.getElementById('xag-live3').className   = 'tw-live-price ' + colorClass(xagPrice - XAG_ENTRY3);
-      const xag3El = document.getElementById('xag3-pnl');
-      xag3El.textContent = fmtWL(xag3.pnl) + ' · ' + fmtROI(xag3.roi);
-      xag3El.className   = 'tw-val ' + colorClass(xag3.pnl);
-      document.getElementById('xag3-status').textContent = 'Updated · ' + now;
-
-      // ── XAG/USD position 4 ──
-      const xag4 = calcPnL(xagPrice, XAG_ENTRY4, XAG_INV4, XAG_LEV4, 'buy');
-      document.getElementById('xag-live4').textContent = fmtPrice(xagPrice, 2);
-      document.getElementById('xag-live4').className   = 'tw-live-price ' + colorClass(xagPrice - XAG_ENTRY4);
-      const xag4El = document.getElementById('xag4-pnl');
-      xag4El.textContent = fmtWL(xag4.pnl) + ' · ' + fmtROI(xag4.roi);
-      xag4El.className   = 'tw-val ' + colorClass(xag4.pnl);
-      document.getElementById('xag4-status').textContent = 'Updated · ' + now;
-
-      // ── XAG/USD position 5 ──
-      const xag5 = calcPnL(xagPrice, XAG_ENTRY5, XAG_INV5, XAG_LEV5, 'buy');
-      document.getElementById('xag-live5').textContent = fmtPrice(xagPrice, 2);
-      document.getElementById('xag-live5').className   = 'tw-live-price ' + colorClass(xagPrice - XAG_ENTRY5);
-      const xag5El = document.getElementById('xag5-pnl');
-      xag5El.textContent = fmtWL(xag5.pnl) + ' · ' + fmtROI(xag5.roi);
-      xag5El.className   = 'tw-val ' + colorClass(xag5.pnl);
-      document.getElementById('xag5-status').textContent = 'Updated · ' + now;
-
-      // ── XAU/USD position 5 ──
-      const xau5 = calcPnL(xauPrice, XAU_ENTRY5, XAU_INV5, XAU_LEV5, 'buy');
-      document.getElementById('xau-live5').textContent = fmtPrice(xauPrice, 2);
-      document.getElementById('xau-live5').className   = 'tw-live-price ' + colorClass(xauPrice - XAU_ENTRY5);
-      const p5El = document.getElementById('xau5-pnl');
-      p5El.textContent = fmtWL(xau5.pnl) + ' · ' + fmtROI(xau5.roi);
-      p5El.className   = 'tw-val ' + colorClass(xau5.pnl);
-      document.getElementById('xau5-status').textContent = 'Updated · ' + now;
-
-      lastXauPnl = { p1: xau1, p2: xau2, p3: xau3, p4: xau4, p5: xau5 };
-      lastXagPnl = { p1: xag, p2: xag2, p3: xag3, p4: xag4, p5: xag5 };
-    } catch (e) {
-      ['xau-status','xau2-status','xau3-status','xau4-status','xau5-status','xag-status','xag2-status','xag3-status','xag4-status','xag5-status'].forEach(id => {
-        document.getElementById(id).textContent = '⚠ Price feed unavailable — retrying';
-      });
-    }
-
-    refreshSummary();
-  }
-
-  // Initial load + refresh every 60s
-  updateMetals();
-  setInterval(updateMetals, 60000);
-
+  // ─── PORTFOLIO STATUS ────────────────────────────────────
+  // All XAU/USD and XAG/USD positions were closed on Jun 25.
+  // Closed P&L total is rendered statically above and in the
+  // Closed Positions history section — no live price feed needed.
   // ─── CLIENT-REPORTED ROI (shared via Firebase Firestore) ──
   // Fill in your own Firebase project config below — see README.md for
   // step-by-step setup instructions. Until this is configured, the form
