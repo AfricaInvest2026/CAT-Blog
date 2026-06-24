@@ -417,7 +417,7 @@
   <div class="roi-summary-grid" style="grid-template-columns: repeat(5,1fr)">
     <div class="roi-box">
       <div class="roi-box-label">Total Invested</div>
-      <div class="roi-box-val gold">$2,490,000</div>
+      <div class="roi-box-val gold">$1,115,000</div>
     </div>
     <div class="roi-box">
       <div class="roi-box-label">Closed P&amp;L</div>
@@ -855,7 +855,7 @@
   const XAG_LEV    = 100;
 
   const CLOSED_PNL = 3737004.31; // Sum of all closed positions (incl. BTC/USD sell closed @ $62,646.17, XAU P4 closed @ $4,196.00, XAG P3 closed @ $66.10, XAU P5 closed @ $4,176.00, XAG P3-prior closed @ $64.90)
-  const TOTAL_INV  = 2490000;
+  const TOTAL_INV  = 1115000; // Sum of CURRENTLY OPEN positions only (XAU P1+P2+P3, XAG P1+P2)
 
   function calcPnL(livePrice, entryPrice, invested, leverage, side) {
     const dir          = side === 'sell' ? -1 : 1;
@@ -885,7 +885,6 @@
     const xagTotalPnl = lastXagPnl ? (lastXagPnl.p1.pnl + lastXagPnl.p2.pnl) : 0;
     const livePnl     = xauTotalPnl + xagTotalPnl;
     const totalPnl    = CLOSED_PNL + livePnl;
-    const combinedROI = (totalPnl / TOTAL_INV) * 100;
 
     const sxau = document.getElementById('sum-xau-val');
     sxau.textContent = fmtWL(xauTotalPnl);
@@ -898,10 +897,6 @@
     const st = document.getElementById('sum-total');
     st.textContent = fmtWL(totalPnl);
     st.className   = 'roi-box-val ' + colorClass(totalPnl);
-
-    const sr = document.getElementById('sum-roi');
-    sr.textContent = fmtROI(combinedROI);
-    sr.className   = 'roi-box-val ' + colorClass(combinedROI);
   }
 
   async function updateMetals() {
