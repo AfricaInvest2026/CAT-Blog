@@ -302,7 +302,7 @@
     .roi-note a { color: var(--gold); text-decoration: none; }
     .roi-note a:hover { text-decoration: underline; }
 
-    /* CLIENT-REPORTED ROI SECTION */
+    /* FOLLOWER-REPORTED ROI SECTION */
     .client-roi-intro { max-width: 700px; }
     .client-roi-disclaimer {
       background: var(--card); border: 1px solid var(--border); border-left: 3px solid var(--gold);
@@ -396,7 +396,7 @@
     <li><a href="#blog">Blog</a></li>
   </ul>
   <div class="nav-btns">
-    <a href="login-private.html" class="btn-outline">🔐 Client Login</a>
+    <a href="login-private.html" class="btn-outline">🔐 Follower Login</a>
   </div>
   <button class="nav-hamburger" id="hamburger" aria-label="Menu">
     <span></span><span></span><span></span>
@@ -410,7 +410,7 @@
   <a href="#how" onclick="closeMobile()">How It Works</a>
   <a href="#blog" onclick="closeMobile()">Blog</a>
   <div class="mob-btns">
-    <a href="login-private.html" class="btn-outline" onclick="closeMobile()">🔐 Client Login</a>
+    <a href="login-private.html" class="btn-outline" onclick="closeMobile()">🔐 Follower Login</a>
   </div>
 </div>
 
@@ -444,8 +444,8 @@
     </div>
   </div>
   <div class="roi-note">
-    ℹ️ "Combined ROI" is no longer shown as a single company figure here. Real ROI varies per client, per plan, and per entry/exit timing.
-    See <a href="#client-roi">Client-Reported Returns</a> below — figures submitted and verified by our own clients, not by us.
+    ℹ️ "Combined ROI" is no longer shown as a single company figure here. Real ROI varies per follower, per plan, and per entry/exit timing.
+    See <a href="#client-roi">Follower-Reported Returns</a> below — figures submitted and verified by our own followers, not by us.
   </div>
 </div>
 
@@ -623,7 +623,7 @@
     <a href="#how" class="btn-ghost">How It Works</a>
   </div>
   <div class="stats-row">
-    <div class="stat"><div class="stat-num" id="stat-avg-roi">—</div><div class="stat-label">Avg. ROI Reported by Clients</div></div>
+    <div class="stat"><div class="stat-num" id="stat-avg-roi">—</div><div class="stat-label">Avg. ROI Reported by Followers</div></div>
     <div class="stat"><div class="stat-num">7</div><div class="stat-label">Days per Contract</div></div>
     <div class="stat"><div class="stat-num">24h</div><div class="stat-label">Payout Delay</div></div>
     <div class="stat"><div class="stat-num">4</div><div class="stat-label">Markets Traded</div></div>
@@ -674,7 +674,7 @@
       <div class="plan-icon">🌱</div>
       <div class="plan-name">Starter</div>
       <div class="plan-range">$10 — $50</div>
-      <div class="plan-rate" id="rate-starter"><span class="plan-rate-pending">Based on client results</span></div>
+      <div class="plan-rate" id="rate-starter"><span class="plan-rate-pending">Based on follower results</span></div>
       <ul class="plan-features">
         <li>7-day contract duration</li>
         <li>Payout within 24h of maturity</li>
@@ -690,7 +690,7 @@
       <div class="plan-icon">🚀</div>
       <div class="plan-name">Growth</div>
       <div class="plan-range">$51 — $150</div>
-      <div class="plan-rate" id="rate-growth"><span class="plan-rate-pending">Based on client results</span></div>
+      <div class="plan-rate" id="rate-growth"><span class="plan-rate-pending">Based on follower results</span></div>
       <ul class="plan-features">
         <li>7-day contract duration</li>
         <li>Payout within 24h of maturity</li>
@@ -705,7 +705,7 @@
       <div class="plan-icon">💎</div>
       <div class="plan-name">Elite</div>
       <div class="plan-range">$151 — $300</div>
-      <div class="plan-rate" id="rate-elite"><span class="plan-rate-pending">Based on client results</span></div>
+      <div class="plan-rate" id="rate-elite"><span class="plan-rate-pending">Based on follower results</span></div>
       <ul class="plan-features">
         <li>7-day contract duration</li>
         <li>Payout within 24h of maturity</li>
@@ -716,7 +716,7 @@
       <a href="register-private.html?plan=Elite" class="btn-plan">Start Now →</a>
     </div>
   </div>
-  <p class="plans-disclaimer">⚠️ We don't publish a fixed or maximum weekly return — past results, simulated or client-reported, never guarantee future ones. The figures shown above each plan are averages computed automatically from results that clients have <a href="#client-roi" style="color:var(--gold)">submitted themselves</a>, not numbers we set or promise.</p>
+  <p class="plans-disclaimer">⚠️ We don't publish a fixed or maximum weekly return — past results, simulated or follower-reported, never guarantee future ones. The figures shown above each plan are averages computed automatically from results that followers have <a href="#client-roi" style="color:var(--gold)">submitted themselves</a>, not numbers we set or promise.</p>
 </section>
 
 <!-- HOW IT WORKS -->
@@ -748,14 +748,14 @@
   </div>
 </section>
 
-<!-- CLIENT-REPORTED ROI -->
+<!-- FOLLOWER-REPORTED ROI -->
 <section id="client-roi">
   <div class="section-label">Transparency</div>
-  <h2 class="section-title">Client-Reported <em>Returns</em></h2>
-  <p class="section-sub client-roi-intro">The dashboard above shows our live trading positions, not a guaranteed return. The numbers below are submitted directly by our own clients, in their own words, about their own results — we don't write them and we don't pick which ones to show.</p>
+  <h2 class="section-title">Follower-Reported <em>Returns</em></h2>
+  <p class="section-sub client-roi-intro">The dashboard above shows our live trading positions, not a guaranteed return. The numbers below are submitted directly by our own followers, in their own words, about their own results — we don't write them and we don't pick which ones to show.</p>
 
   <div class="client-roi-disclaimer">
-    ⚠️ <strong>Important:</strong> Every figure in this section is <strong>self-reported by the client</strong> who submitted it, not calculated or guaranteed by CAT. New submissions go through a basic review (spam/duplicate check) before appearing publicly — that review is not an audit of the figure itself, and we do not independently verify every entry. Treat these as client testimonials, not as official performance data. Past results — reported or simulated — never guarantee future returns.
+    ⚠️ <strong>Important:</strong> Every figure in this section is <strong>self-reported by the follower</strong> who submitted it, not calculated or guaranteed by CAT. New submissions go through a basic review (spam/duplicate check) before appearing publicly — that review is not an audit of the figure itself, and we do not independently verify every entry. Treat these as follower testimonials, not as official performance data. Past results — reported or simulated — never guarantee future returns.
   </div>
 
   <div class="croi-layout">
@@ -861,7 +861,7 @@
   <div class="footer-disc">⚠ All investments carry risk. Past performance does not guarantee future results. Only invest capital you can afford to lose.</div>
 </footer>
 
-<!-- Firebase (shared storage for client-reported ROI submissions) -->
+<!-- Firebase (shared storage for follower-reported ROI submissions) -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
@@ -992,7 +992,7 @@
   updatePrices();
   setInterval(updatePrices, 60000);
 
-  // ─── CLIENT-REPORTED ROI (shared via Firebase Firestore) ──
+  // ─── FOLLOWER-REPORTED ROI (shared via Firebase Firestore) ──
   // Fill in your own Firebase project config below — see README.md for
   // step-by-step setup instructions. Until this is configured, the form
   // is disabled and a clear notice is shown instead of failing silently.
@@ -1032,7 +1032,7 @@
     const el = document.getElementById('croiList');
     if (!el) return;
     if (items.length === 0) {
-      el.innerHTML = '<div class="croi-empty">No client results submitted yet. Be the first to share yours →</div>';
+      el.innerHTML = '<div class="croi-empty">No follower results submitted yet. Be the first to share yours →</div>';
     } else {
       el.innerHTML = items.map(item => {
         const roiNum = parseFloat(item.roi);
@@ -1056,7 +1056,7 @@
     croiUpdatePlanRates(items);
   }
 
-  // Computes per-plan average ROI strictly from client-submitted entries.
+  // Computes per-plan average ROI strictly from follower-submitted entries.
   // No fixed or maximum percentage is ever hardcoded here.
   function croiUpdatePlanRates(list) {
     const plans = { Starter: [], Growth: [], Elite: [] };
@@ -1071,10 +1071,10 @@
       const target = document.getElementById('rate-' + planName.toLowerCase());
       if (!target) return;
       if (values.length === 0) {
-        target.innerHTML = '<span class="plan-rate-pending">Based on client results</span>';
+        target.innerHTML = '<span class="plan-rate-pending">Based on follower results</span>';
       } else {
         const avg = values.reduce((a, b) => a + b, 0) / values.length;
-        target.innerHTML = (avg >= 0 ? '+' : '') + avg.toFixed(2) + '% <span>avg · ' + values.length + ' client' + (values.length > 1 ? 's' : '') + '</span>';
+        target.innerHTML = (avg >= 0 ? '+' : '') + avg.toFixed(2) + '% <span>avg · ' + values.length + ' follower' + (values.length > 1 ? 's' : '') + '</span>';
         allValues = allValues.concat(values);
       }
     });
@@ -1095,7 +1095,7 @@
 
   if (!croiFirebaseReady) {
     const el = document.getElementById('croiList');
-    if (el) el.innerHTML = '<div class="croi-empty">⚠️ Shared storage isn\'t configured yet. See README.md to connect Firebase — once set up, every visitor will see the same client-submitted results.</div>';
+    if (el) el.innerHTML = '<div class="croi-empty">⚠️ Shared storage isn\'t configured yet. See README.md to connect Firebase — once set up, every visitor will see the same follower-submitted results.</div>';
     if (croiForm) {
       croiForm.addEventListener('submit', function (e) {
         e.preventDefault();
@@ -1110,7 +1110,7 @@
       }, function (err) {
         console.error('Firestore read error:', err);
         const el = document.getElementById('croiList');
-        if (el) el.innerHTML = '<div class="croi-empty">Could not load client results right now. Please refresh.</div>';
+        if (el) el.innerHTML = '<div class="croi-empty">Could not load follower results right now. Please refresh.</div>';
       });
 
     croiForm.addEventListener('submit', function (e) {
