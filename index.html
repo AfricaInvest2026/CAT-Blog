@@ -420,11 +420,11 @@
   <div class="roi-summary-grid" style="grid-template-columns: repeat(5,1fr)">
     <div class="roi-box">
       <div class="roi-box-label">Total Invested (Open)</div>
-      <div class="roi-box-val gold">$27,500,000</div>
+      <div class="roi-box-val gold">$5,000,000</div>
     </div>
     <div class="roi-box">
       <div class="roi-box-label">Closed P&amp;L</div>
-      <div class="roi-box-val green">+$167,462,501.85</div>
+      <div class="roi-box-val green">+$261,394,653.49</div>
     </div>
     <div class="roi-box">
       <div class="roi-box-label">BTC/USD P&L</div>
@@ -472,14 +472,14 @@
     <div class="tw-header">
       <div class="tw-symbol">
         <div class="tw-icon">Ξ</div>
-        <span>Ethereum / Dollar — ETH/USD <small style="color:var(--muted);font-weight:400">Position 1 · Buy</small></span>
+        <span>Ethereum / Dollar — ETH/USD <small style="color:var(--muted);font-weight:400">Position 1 · Buy · 10% remaining</small></span>
       </div>
       <div class="tw-live-price" id="eth-live">$—</div>
     </div>
     <div class="tw-rows">
       <div class="tw-row"><span class="tw-label">Entry Price</span><span class="tw-val">$1,549.19</span></div>
       <div class="tw-row"><span class="tw-label">Entry Date</span><span class="tw-val">Jun 25 · now</span></div>
-      <div class="tw-row"><span class="tw-label">Invested</span><span class="tw-val">$25,000,000</span></div>
+      <div class="tw-row"><span class="tw-label">Invested</span><span class="tw-val">$2,500,000</span></div>
       <div class="tw-row"><span class="tw-label">P&amp;L</span><span class="tw-val" id="eth-pnl">$—</span></div>
     </div>
     <div class="tw-leverage">🔁 Leverage 1:250</div>
@@ -493,6 +493,12 @@
 <!-- CLOSED POSITIONS HISTORY (small) -->
 <div class="closed-history">
   <div class="closed-history-title">📜 Closed Positions</div>
+  <div class="closed-row">
+    <span class="closed-pair">Ξ ETH/USD (90%)</span>
+    <span class="closed-detail">Entry $1,549.19 → Close $1,575.06</span>
+    <span class="closed-date">Jun 25</span>
+    <span class="closed-pnl green">+$93,932,151.64 · +417.48%</span>
+  </div>
   <div class="closed-row">
     <span class="closed-pair">🥈 XAG/USD P3</span>
     <span class="closed-detail">Entry $56.87 → Close $58.00</span>
@@ -876,11 +882,11 @@
 
   // ETH/USD — Position 1
   const ETH_ENTRY = 1549.19;
-  const ETH_INV   = 25000000;
+  const ETH_INV   = 2500000;
   const ETH_LEV   = 250;
 
 
-  const CLOSED_PNL = 167462501.85; // Sum of all closed positions to date
+  const CLOSED_PNL = 261394653.49; // Sum of all closed positions to date
 
   function calcPnL(livePrice, entryPrice, invested, leverage, side) {
     const dir          = side === 'sell' ? -1 : 1;
