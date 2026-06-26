@@ -416,11 +416,11 @@
 
 <!-- ROI SUMMARY PANEL -->
 <div class="roi-summary">
-  <div class="roi-summary-title">📊 Simulated Portfolio — BTC/USD (Buy) · ETH/USD (Buy)</div>
+  <div class="roi-summary-title">📊 Simulated Portfolio — BTC/USD P1 (Buy) · BTC/USD P2 (Buy) · ETH/USD (Buy)</div>
   <div class="roi-summary-grid" style="grid-template-columns: repeat(5,1fr)">
     <div class="roi-box">
       <div class="roi-box-label">Total Invested (Open)</div>
-      <div class="roi-box-val gold">$5,000,000</div>
+      <div class="roi-box-val gold">$55,000,000</div>
     </div>
     <div class="roi-box">
       <div class="roi-box-label">Closed P&amp;L</div>
@@ -465,6 +465,25 @@
     </div>
     <div class="tw-leverage">🔁 Leverage 1:100</div>
     <div class="tw-status"><div class="tw-dot"></div><span id="btc-status">loading…</span></div>
+  </div>
+
+  <!-- BTC/USD POSITION 2 WIDGET -->
+  <div class="ticker-widget btc">
+    <div class="tw-header">
+      <div class="tw-symbol">
+        <div class="tw-icon">₿</div>
+        <span>Bitcoin / Dollar — BTC/USD <small style="color:var(--muted);font-weight:400">Position 2 · Buy</small></span>
+      </div>
+      <div class="tw-live-price" id="btc2-live">$—</div>
+    </div>
+    <div class="tw-rows">
+      <div class="tw-row"><span class="tw-label">Entry Price</span><span class="tw-val">$59,800.50</span></div>
+      <div class="tw-row"><span class="tw-label">Entry Date</span><span class="tw-val">Jun 25 · now</span></div>
+      <div class="tw-row"><span class="tw-label">Invested</span><span class="tw-val">$50,000,000</span></div>
+      <div class="tw-row"><span class="tw-label">P&amp;L</span><span class="tw-val" id="btc2-pnl">$—</span></div>
+    </div>
+    <div class="tw-leverage">🔁 Leverage 1:300</div>
+    <div class="tw-status"><div class="tw-dot"></div><span id="btc2-status">loading…</span></div>
   </div>
 
   <!-- ETH/USD POSITION 1 WIDGET -->
@@ -880,6 +899,11 @@
   const BTC_INV   = 2500000;
   const BTC_LEV   = 100;
 
+  // BTC/USD — Position 2
+  const BTC_ENTRY2 = 59800.50;
+  const BTC_INV2   = 50000000;
+  const BTC_LEV2   = 300;
+
   // ETH/USD — Position 1
   const ETH_ENTRY = 1549.19;
   const ETH_INV   = 2500000;
@@ -912,7 +936,7 @@
   function refreshSummary() {
     if (lastBtcPnl === null && lastEthPnl === null) return;
 
-    const btcTotalPnl = lastBtcPnl ? lastBtcPnl.pnl : 0;
+    const btcTotalPnl = lastBtcPnl ? (lastBtcPnl.p1.pnl + lastBtcPnl.p2.pnl) : 0;
     const ethTotalPnl = lastEthPnl ? lastEthPnl.pnl : 0;
     const livePnl     = btcTotalPnl + ethTotalPnl;
     const totalPnl    = CLOSED_PNL + livePnl;
@@ -951,6 +975,15 @@
       btcEl.className   = 'tw-val ' + colorClass(btc.pnl);
       document.getElementById('btc-status').textContent = 'Updated · ' + now;
 
+      // ── BTC/USD position 2 ──
+      const btc2 = calcPnL(btcPrice, BTC_ENTRY2, BTC_INV2, BTC_LEV2, 'buy');
+      document.getElementById('btc2-live').textContent = fmtPrice(btcPrice, 2);
+      document.getElementById('btc2-live').className   = 'tw-live-price ' + colorClass(btcPrice - BTC_ENTRY2);
+      const btc2El = document.getElementById('btc2-pnl');
+      btc2El.textContent = fmtWL(btc2.pnl) + ' · ' + fmtROI(btc2.roi);
+      btc2El.className   = 'tw-val ' + colorClass(btc2.pnl);
+      document.getElementById('btc2-status').textContent = 'Updated · ' + now;
+
       // ── ETH/USD position 1 ──
       const eth = calcPnL(ethPrice, ETH_ENTRY, ETH_INV, ETH_LEV, 'buy');
       document.getElementById('eth-live').textContent = fmtPrice(ethPrice, 2);
@@ -960,10 +993,10 @@
       ethEl.className   = 'tw-val ' + colorClass(eth.pnl);
       document.getElementById('eth-status').textContent = 'Updated · ' + now;
 
-      lastBtcPnl = btc;
+      lastBtcPnl = { p1: btc, p2: btc2 };
       lastEthPnl = eth;
     } catch (e) {
-      ['btc-status','eth-status'].forEach(id => {
+      ['btc-status','btc2-status','eth-status'].forEach(id => {
         document.getElementById(id).textContent = '⚠ Price feed unavailable — retrying';
       });
     }
