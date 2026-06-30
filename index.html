@@ -416,15 +416,23 @@
 
 <!-- ROI SUMMARY PANEL -->
 <div class="roi-summary">
-  <div class="roi-summary-title">📊 Simulated Portfolio — All positions closed</div>
-  <div class="roi-summary-grid" style="grid-template-columns: repeat(2,1fr)">
+  <div class="roi-summary-title">📊 Simulated Portfolio — BTC/USD (Buy)</div>
+  <div class="roi-summary-grid" style="grid-template-columns: repeat(4,1fr)">
     <div class="roi-box">
       <div class="roi-box-label">Total Invested (Open)</div>
-      <div class="roi-box-val gold">$0</div>
+      <div class="roi-box-val gold">$1,000,000</div>
     </div>
     <div class="roi-box">
       <div class="roi-box-label">Closed P&amp;L</div>
       <div class="roi-box-val green">+$766,078,645.73</div>
+    </div>
+    <div class="roi-box">
+      <div class="roi-box-label">BTC/USD P&L</div>
+      <div class="roi-box-val" id="sum-btc-val">$—</div>
+    </div>
+    <div class="roi-box">
+      <div class="roi-box-label">Total W/L</div>
+      <div class="roi-box-val" id="sum-total">$—</div>
     </div>
   </div>
   <div class="roi-note">
@@ -435,9 +443,26 @@
 
 <!-- TICKER WIDGETS BAR -->
 <div class="ticker-bar" id="markets">
-  <div style="grid-column:1/-1;text-align:center;padding:24px;color:var(--muted)">
-    No open positions. See Closed Positions history below.
+
+  <!-- BTC/USD POSITION 1 WIDGET -->
+  <div class="ticker-widget btc">
+    <div class="tw-header">
+      <div class="tw-symbol">
+        <div class="tw-icon">₿</div>
+        <span>Bitcoin / Dollar — BTC/USD <small style="color:var(--muted);font-weight:400">Position 1 · Buy</small></span>
+      </div>
+      <div class="tw-live-price" id="btc-live">$—</div>
+    </div>
+    <div class="tw-rows">
+      <div class="tw-row"><span class="tw-label">Entry Price</span><span class="tw-val">$58,732.00</span></div>
+      <div class="tw-row"><span class="tw-label">Entry Date</span><span class="tw-val">Jun 29 · now</span></div>
+      <div class="tw-row"><span class="tw-label">Invested</span><span class="tw-val">$1,000,000</span></div>
+      <div class="tw-row"><span class="tw-label">P&amp;L</span><span class="tw-val" id="btc-pnl">$—</span></div>
+    </div>
+    <div class="tw-leverage">🔁 Leverage 1:300</div>
+    <div class="tw-status"><div class="tw-dot"></div><span id="btc-status">loading…</span></div>
   </div>
+
 </div>
 
 
@@ -851,10 +876,84 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
 <script>
-  // ─── PORTFOLIO STATUS ────────────────────────────────────
-  // All BTC/USD positions were closed on Jun 29.
-  // Closed P&L total is rendered statically above and in the
-  // Closed Positions history section — no live price feed needed.
+  // ─── CONFIG ──────────────────────────────────────────────
+  // BTC/USD — Position 1
+  const BTC_ENTRY = 58732.00;
+  const BTC_INV   = 1000000;
+  const BTC_LEV   = 300;
+
+  const CLOSED_PNL = 766078645.73; // Sum of all closed positions to date
+
+  function calcPnL(livePrice, entryPrice, invested, leverage, side) {
+    const dir          = side === 'sell' ? -1 : 1;
+    const pctMove      = dir * (livePrice - entryPrice) / entryPrice;
+    const leveragedPnL = invested * pctMove * leverage;
+    const roi          = (leveragedPnL / invested) * 100;
+    return { pnl: leveragedPnL, roi };
+  }
+
+  function fmtWL(n) {
+    return (n >= 0 ? '+$' : '-$') + Math.abs(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+  function fmtPrice(n, dec) {
+    return '$' + n.toLocaleString('en-US', { minimumFractionDigits: dec, maximumFractionDigits: dec });
+  }
+  function fmtROI(r) {
+    return (r >= 0 ? '+' : '') + r.toFixed(2) + '%';
+  }
+  function colorClass(n) { return n >= 0 ? 'green' : 'red'; }
+
+  let lastBtcPnl = null;
+
+  function refreshSummary() {
+    if (lastBtcPnl === null) return;
+
+    const btcTotalPnl = lastBtcPnl ? lastBtcPnl.pnl : 0;
+    const livePnl     = btcTotalPnl;
+    const totalPnl    = CLOSED_PNL + livePnl;
+
+    const sbtc = document.getElementById('sum-btc-val');
+    sbtc.textContent = fmtWL(btcTotalPnl);
+    sbtc.className   = 'roi-box-val ' + colorClass(btcTotalPnl);
+
+    const st = document.getElementById('sum-total');
+    st.textContent = fmtWL(totalPnl);
+    st.className   = 'roi-box-val ' + colorClass(totalPnl);
+  }
+
+  async function updatePrices() {
+    const now = new Date().toLocaleTimeString();
+
+    try {
+      const btcRes = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
+
+      if (!btcRes.ok) throw new Error('Price feed error');
+
+      const btcData = await btcRes.json();
+      const btcPrice = btcData.bitcoin.usd;
+
+      // ── BTC/USD position 1 ──
+      const btc = calcPnL(btcPrice, BTC_ENTRY, BTC_INV, BTC_LEV, 'buy');
+      document.getElementById('btc-live').textContent = fmtPrice(btcPrice, 2);
+      document.getElementById('btc-live').className   = 'tw-live-price ' + colorClass(btcPrice - BTC_ENTRY);
+      const btcEl = document.getElementById('btc-pnl');
+      btcEl.textContent = fmtWL(btc.pnl) + ' · ' + fmtROI(btc.roi);
+      btcEl.className   = 'tw-val ' + colorClass(btc.pnl);
+      document.getElementById('btc-status').textContent = 'Updated · ' + now;
+
+      lastBtcPnl = btc;
+    } catch (e) {
+      ['btc-status'].forEach(id => {
+        document.getElementById(id).textContent = '⚠ Price feed unavailable — retrying';
+      });
+    }
+
+    refreshSummary();
+  }
+
+  // Initial load + refresh every 60s
+  updatePrices();
+  setInterval(updatePrices, 60000);
 
   // ─── FOLLOWER-REPORTED ROI (shared via Firebase Firestore) ──
   // Fill in your own Firebase project config below — see README.md for
